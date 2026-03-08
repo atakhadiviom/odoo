@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #017e84; }
+        h2 { color: #017e84; border-bottom: 2px solid #017e84; padding-bottom: 6px; margin-top: 32px; }
+        h3 { color: #444; }
+        .badge { display: inline-block; background: #017e84; color: #fff; border-radius: 4px; padding: 2px 10px; font-size: 13px; margin-right: 6px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        .feature-card { background: #f7f7f7; border-left: 4px solid #017e84; padding: 14px 16px; border-radius: 4px; }
+        .feature-card h3 { margin: 0 0 6px; font-size: 15px; }
+        .feature-card p { margin: 0; font-size: 14px; color: #555; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th { background: #017e84; color: #fff; padding: 8px 12px; text-align: left; }
+        td { padding: 8px 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; }
+        tr:nth-child(even) td { background: #f9f9f9; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+        .note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; font-size: 14px; }
+        .steps { counter-reset: step; }
+        .step { counter-increment: step; display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .step-num { background: #017e84; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+    </style>
+</head>
+<body>
+
+<h1>Barcode Nomenclature Enable</h1>
+
+<p>
+    <span class="badge">Odoo 19</span>
+    <span class="badge">Community</span>
+    <span class="badge">Free</span>
+    <span class="badge">Inventory</span>
+</p>
+
+<p>
+    In Odoo 19 Community Edition, the <strong>Barcode Nomenclature</strong> configuration menu is
+    intentionally hidden from all users. This module unlocks it for Inventory Managers — giving
+    you full control over how barcodes are parsed across Inventory, POS, and Barcode app operations.
+</p>
+
+<h2>The Problem</h2>
+<p>
+    Out of the box, <strong>Inventory → Configuration → Products → Barcode Nomenclatures</strong>
+    is restricted to a system group that no real user belongs to (<code>base.group_no_one</code>).
+    Even administrators cannot access it. This prevents teams from:
+</p>
+<ul>
+    <li>Configuring weight-embedded barcodes from their weighing scales</li>
+    <li>Adding price-embedded barcode rules for variable-price products</li>
+    <li>Managing custom barcode prefixes for different warehouses or POS terminals</li>
+    <li>Viewing or auditing the active nomenclature rules</li>
+</ul>
+
+<h2>The Solution</h2>
+<p>
+    A single, focused override that makes the menu visible to users with the
+    <strong>Inventory / Administrator</strong> role. No patches, no hacks — just the right
+    group assignment.
+</p>
+
+<h2>Features</h2>
+<div class="feature-grid">
+    <div class="feature-card">
+        <h3>Menu Access Restored</h3>
+        <p>Inventory → Configuration → Products → Barcode Nomenclatures is fully visible and accessible.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Full CRUD</h3>
+        <p>Create, edit, and delete nomenclatures and their barcode rules without developer mode.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Scale Barcode Support</h3>
+        <p>Define custom weight rules for scale-generated barcodes (prefix 20, 21, or any custom prefix).</p>
+    </div>
+    <div class="feature-card">
+        <h3>Price Barcode Support</h3>
+        <p>Configure price-embedded EAN-13 rules for variable-price products in POS.</p>
+    </div>
+    <div class="feature-card">
+        <h3>GS1 Compatible</h3>
+        <p>Works alongside the built-in GS1 Nomenclature module included with Odoo stock.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Zero Footprint</h3>
+        <p>No new models, no Python code, no database changes. One XML file, one menu override.</p>
+    </div>
+</div>
+
+<h2>Supported Barcode Types</h2>
+<table>
+    <tr><th>Type</th><th>Example Pattern</th><th>Use Case</th></tr>
+    <tr><td>Product</td><td><code>.*</code></td><td>Fixed EAN-13 / EAN-8 / QR product barcodes</td></tr>
+    <tr><td>Weight</td><td><code>21.....{NNDDD}</code></td><td>Scale-printed weight labels (1.250 kg → qty 1.250)</td></tr>
+    <tr><td>Weight (custom)</td><td><code>20.....{NNDDD}</code></td><td>Scales that use prefix 20 instead of 21</td></tr>
+    <tr><td>Price</td><td><code>23.....{NNNDD}</code></td><td>Price-embedded labels ($12.99 overrides list price)</td></tr>
+    <tr><td>Discount</td><td><code>22{NN}</code></td><td>Discount barcodes for POS promotions</td></tr>
+    <tr><td>Lot / Serial</td><td><code>10</code></td><td>GS1 lot traceability barcodes</td></tr>
+</table>
+
+<h2>How to Install</h2>
+<div class="steps">
+    <div class="step">
+        <div class="step-num">1</div>
+        <div>Copy the <code>barcode_nomenclature_enable</code> folder to your custom addons path.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div>Make sure the path is listed in <code>addons_path</code> inside your <code>odoo.conf</code>.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">3</div>
+        <div>Go to <strong>Settings → Apps</strong>, click <strong>Update App List</strong>, then search for <em>Barcode Nomenclature Enable</em> and install it.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">4</div>
+        <div>Navigate to <strong>Inventory → Configuration → Products → Barcode Nomenclatures</strong> — the menu is now visible.</div>
+    </div>
+</div>
+
+<h2>Requirements</h2>
+<table>
+    <tr><th>Dependency</th><th>Notes</th></tr>
+    <tr><td><code>barcodes</code></td><td>Included in Odoo 19 CE — provides barcode.nomenclature model</td></tr>
+    <tr><td><code>stock</code></td><td>Inventory module — provides the menu container and manager group</td></tr>
+</table>
+
+<div class="note">
+    <strong>Note:</strong> This module only changes menu visibility. All barcode parsing logic,
+    access rights, and data models are provided by the standard Odoo <code>barcodes</code> module.
+</div>
+
+<h2>About SynthoERP</h2>
+<p>
+    <strong>SynthoERP</strong> builds practical, focused Odoo modules that solve real problems for
+    businesses using Odoo Community Edition. Visit us at
+    <a href="https://www.synthoerp.com/">www.synthoerp.com</a>.
+</p>
+
+</body>
+</html>
