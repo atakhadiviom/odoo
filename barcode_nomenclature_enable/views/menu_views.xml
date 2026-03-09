@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="stock.menu_wms_barcode_nomenclature_all"
+              name="Barcode Nomenclatures"
               groups="stock.group_stock_manager"/>
 </odoo>
