@@ -1,0 +1,29 @@
+{
+    'name': 'Product Unique Internal Reference',
+    'version': '19.0.1.0.0',
+    'summary': 'Enforce unique internal references for products',
+    'description': """
+Product Unique Internal Reference
+=================================
+
+A frequent request on Reddit and from Odoo users is to prevent duplicate Internal References (SKUs) across products.
+This module enforces that every product must have a unique internal reference (default_code), while still allowing empty/blank references if desired.
+
+Features
+--------
+* Enforces uniqueness for the Internal Reference (default_code) field on Product Templates.
+* Enforces uniqueness for the Internal Reference (default_code) field on Product Variants.
+* Avoids unique constraint errors when the field is left empty or False.
+
+Use Cases
+---------
+* Maintaining a strict, clean catalog where no two products share the same SKU.
+* Preventing user errors during data entry.
+    """,
+    'author': 'Odoo Community',
+    'category': 'Sales/Sales',
+    'depends': ['product'],
+    'installable': True,
+    'auto_install': False,
+    'license': 'LGPL-3',
+}
