@@ -1,5 +1,5 @@
 {
-    'name': 'Product Unique Internal Reference',
+    'name': 'Unique Product Ref',
     'version': '19.0.1.0.0',
     'summary': 'Enforce unique internal references for products',
     'description': """
