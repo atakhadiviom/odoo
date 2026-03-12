@@ -1,5 +1,5 @@
 {
-    'name': 'Unique Product Ref',
+    'name': 'Syntho Unique Product Ref',
     'version': '19.0.1.0.0',
     'summary': 'Enforce unique internal references for products',
     'description': """
@@ -20,7 +20,8 @@ Use Cases
 * Maintaining a strict, clean catalog where no two products share the same SKU.
 * Preventing user errors during data entry.
     """,
-    'author': 'Odoo Community',
+    'author': 'SynthoERP',
+    'website': 'https://www.synthoerp.com/',
     'category': 'Sales/Sales',
     'depends': ['product'],
     'installable': True,

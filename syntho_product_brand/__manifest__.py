@@ -1,5 +1,5 @@
 {
-    'name': 'Product Brand',
+    'name': 'Syntho Product Brand',
     'version': '19.0.1.0.0',
     'summary': 'Manage product brands',
     'description': """
@@ -9,7 +9,8 @@ Product Brand
 A very common request from Odoo users is to organize products by Brand.
 This module adds a Brand model and links it to Product Templates.
     """,
-    'author': 'Odoo Community',
+    'author': 'SynthoERP',
+    'website': 'https://www.synthoerp.com/',
     'category': 'Sales/Sales',
     'depends': ['product', 'sale'],
     'data': [

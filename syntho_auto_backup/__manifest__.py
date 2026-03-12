@@ -1,5 +1,5 @@
 {
-    'name': 'Auto Backup',
+    'name': 'Syntho Auto Backup',
     'version': '19.0.1.0.0',
     'summary': 'Automatic database backup',
     'description': """
@@ -9,7 +9,8 @@ Auto Backup
 Automatically backup your Odoo database on a schedule.
 This is a very frequently requested feature on forums.
     """,
-    'author': 'Odoo Community',
+    'author': 'SynthoERP',
+    'website': 'https://www.synthoerp.com/',
     'category': 'Administration',
     'depends': ['base'],
     'data': [
