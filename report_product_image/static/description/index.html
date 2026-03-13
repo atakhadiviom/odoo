@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #017e84; }
+        h2 { color: #017e84; border-bottom: 2px solid #017e84; padding-bottom: 6px; margin-top: 32px; }
+        h3 { color: #444; }
+        .badge { display: inline-block; background: #017e84; color: #fff; border-radius: 4px; padding: 2px 10px; font-size: 13px; margin-right: 6px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        .feature-card { background: #f7f7f7; border-left: 4px solid #017e84; padding: 14px 16px; border-radius: 4px; }
+        .feature-card h3 { margin: 0 0 6px; font-size: 15px; }
+        .feature-card p { margin: 0; font-size: 14px; color: #555; }
+        .note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; font-size: 14px; }
+        .steps { counter-reset: step; }
+        .step { counter-increment: step; display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .step-num { background: #017e84; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th { background: #017e84; color: #fff; padding: 8px 12px; text-align: left; }
+        td { padding: 8px 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<h1>Product Images on Reports</h1>
+
+<p>
+    <span class="badge">Odoo 19</span>
+    <span class="badge">Community</span>
+    <span class="badge">Free</span>
+    <span class="badge">Sales</span>
+</p>
+
+<p>
+    Display product thumbnail images directly on your PDF reports — quotations, sales orders,
+    customer invoices, and purchase orders. Help customers and vendors instantly recognize the
+    correct products without reading part numbers.
+</p>
+
+<h2>Features</h2>
+<div class="feature-grid">
+    <div class="feature-card">
+        <h3>Quotations &amp; Sales Orders</h3>
+        <p>Product images appear as a column in Sale Order / Quotation PDF reports.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Customer Invoices</h3>
+        <p>Product thumbnails on invoice PDFs reduce disputes and speed up payment verification.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Purchase Orders</h3>
+        <p>Vendor POs show images so warehouse staff can pick the right item without ambiguity.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Graceful Fallback</h3>
+        <p>If a product has no image, the column is simply empty — no broken placeholders.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Lightweight</h3>
+        <p>Pure QWeb template inheritance. No new models, no Python code, no database changes.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Automatic Sizing</h3>
+        <p>Images are constrained to 50×50 px with object-fit: contain to preserve aspect ratio.</p>
+    </div>
+</div>
+
+<h2>How to Install</h2>
+<div class="steps">
+    <div class="step">
+        <div class="step-num">1</div>
+        <div>Copy the <code>report_product_image</code> folder to your custom addons path.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">2</div>
+        <div>Add the path to <code>addons_path</code> in your <code>odoo.conf</code>.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">3</div>
+        <div>Go to <strong>Settings → Apps</strong>, click <strong>Update App List</strong>, search for <em>Product Images on Reports</em> and install.</div>
+    </div>
+    <div class="step">
+        <div class="step-num">4</div>
+        <div>Print any quotation, invoice, or purchase order — product images will appear automatically.</div>
+    </div>
+</div>
+
+<h2>Requirements</h2>
+<table>
+    <tr><th>Dependency</th><th>Notes</th></tr>
+    <tr><td><code>sale</code></td><td>Required for Sale Order / Quotation reports</td></tr>
+    <tr><td><code>account</code></td><td>Required for Customer Invoice reports</td></tr>
+    <tr><td><code>purchase</code></td><td>Required for Purchase Order reports</td></tr>
+</table>
+
+<div class="note">
+    <strong>Note:</strong> Product images must be uploaded to each product record. Use the
+    <strong>Image</strong> field on the product form. The module uses <code>image_128</code>
+    (128×128 px thumbnail) for optimal PDF rendering performance.
+</div>
+
+</body>
+</html>

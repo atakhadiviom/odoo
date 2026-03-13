@@ -24,7 +24,10 @@ Use Cases
     'category': 'Sales/Sales',
     'website': 'https://www.synthoerp.com/',
     'depends': ['product'],
+    'images': ['static/description/banner.png'],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',
+    'price': 0,
+    'currency': 'USD',
 }

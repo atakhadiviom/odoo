@@ -18,7 +18,10 @@ This module adds a Brand model and links it to Product Templates.
         'views/product_brand_views.xml',
         'views/product_template_views.xml',
     ],
+    'images': ['static/description/banner.png'],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',
+    'price': 0,
+    'currency': 'USD',
 }

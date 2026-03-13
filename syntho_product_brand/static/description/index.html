@@ -1,10 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Product Brand</title>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #017e84; }
+        h2 { color: #017e84; border-bottom: 2px solid #017e84; padding-bottom: 6px; margin-top: 32px; }
+        h3 { color: #444; }
+        .badge { display: inline-block; background: #017e84; color: #fff; border-radius: 4px; padding: 2px 10px; font-size: 13px; margin-right: 6px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        .feature-card { background: #f7f7f7; border-left: 4px solid #017e84; padding: 14px 16px; border-radius: 4px; }
+        .feature-card h3 { margin: 0 0 6px; font-size: 15px; }
+        .feature-card p { margin: 0; font-size: 14px; color: #555; }
+        .note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; font-size: 14px; }
+        .step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .step-num { background: #017e84; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+    </style>
 </head>
 <body>
-    <h1>Product Brand</h1>
-    <p>Manage product brands easily.</p>
+
+<h1>Syntho Product Brand</h1>
+
+<p>
+    <span class="badge">Odoo 19</span>
+    <span class="badge">Community</span>
+    <span class="badge">Free</span>
+    <span class="badge">Sales</span>
+</p>
+
+<p>
+    Add a <strong>Brand</strong> field to your products. Organize your product catalog by brand,
+    filter and group products by brand in list views, and display brand information on product pages.
+</p>
+
+<h2>Features</h2>
+<div class="feature-grid">
+    <div class="feature-card">
+        <h3>Brand Model</h3>
+        <p>A dedicated Brand record with name and description — manage your full brand portfolio in one place.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Product Integration</h3>
+        <p>Brand field added directly to Product Templates, visible on the product form and in list views.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Filter &amp; Group</h3>
+        <p>Use Odoo's built-in grouping and filtering to browse products by brand in any list view.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Access Control</h3>
+        <p>All internal users can read brands; only administrators can create, edit, or delete them.</p>
+    </div>
+</div>
+
+<h2>How to Install</h2>
+<div class="step">
+    <div class="step-num">1</div>
+    <div>Copy the <code>syntho_product_brand</code> folder to your custom addons path.</div>
+</div>
+<div class="step">
+    <div class="step-num">2</div>
+    <div>Add the path to <code>addons_path</code> in your <code>odoo.conf</code>.</div>
+</div>
+<div class="step">
+    <div class="step-num">3</div>
+    <div>Go to <strong>Settings → Apps</strong>, click <strong>Update App List</strong>, search for <em>Syntho Product Brand</em> and install.</div>
+</div>
+<div class="step">
+    <div class="step-num">4</div>
+    <div>Navigate to <strong>Sales → Configuration → Product Brands</strong> to create your brands, then assign them on product forms.</div>
+</div>
+
+<div class="note">
+    <strong>Note:</strong> The Brand field appears on the <em>General Information</em> tab of the
+    Product Template form. It is optional — existing products without a brand continue to work
+    normally.
+</div>
+
+<h2>About SynthoERP</h2>
+<p>
+    <strong>SynthoERP</strong> builds practical, focused Odoo modules that solve real problems for
+    businesses using Odoo Community Edition. Visit us at
+    <a href="https://www.synthoerp.com/">www.synthoerp.com</a>.
+</p>
+
 </body>
 </html>

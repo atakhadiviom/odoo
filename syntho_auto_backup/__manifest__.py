@@ -18,7 +18,10 @@ This is a very frequently requested feature on forums.
         'data/cron_data.xml',
         'views/backup_config_views.xml',
     ],
+    'images': ['static/description/banner.png'],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',
+    'price': 0,
+    'currency': 'USD',
 }

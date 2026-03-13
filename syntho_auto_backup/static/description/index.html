@@ -1,10 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Auto Backup</title>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #017e84; }
+        h2 { color: #017e84; border-bottom: 2px solid #017e84; padding-bottom: 6px; margin-top: 32px; }
+        h3 { color: #444; }
+        .badge { display: inline-block; background: #017e84; color: #fff; border-radius: 4px; padding: 2px 10px; font-size: 13px; margin-right: 6px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        .feature-card { background: #f7f7f7; border-left: 4px solid #017e84; padding: 14px 16px; border-radius: 4px; }
+        .feature-card h3 { margin: 0 0 6px; font-size: 15px; }
+        .feature-card p { margin: 0; font-size: 14px; color: #555; }
+        .note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; font-size: 14px; }
+        .step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .step-num { background: #017e84; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+    </style>
 </head>
 <body>
-    <h1>Auto Backup</h1>
-    <p>Automatic database backups.</p>
+
+<h1>Syntho Auto Backup</h1>
+
+<p>
+    <span class="badge">Odoo 19</span>
+    <span class="badge">Community</span>
+    <span class="badge">Free</span>
+    <span class="badge">Administration</span>
+</p>
+
+<p>
+    Automatically back up your Odoo database on a configurable schedule. Never lose critical
+    business data due to a missed manual backup.
+</p>
+
+<h2>Features</h2>
+<div class="feature-grid">
+    <div class="feature-card">
+        <h3>Scheduled Backups</h3>
+        <p>Configure automated backups via an Odoo cron job at any frequency — hourly, daily, weekly.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Local Storage</h3>
+        <p>Backups are saved to a configurable local directory path on the server.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Multiple Formats</h3>
+        <p>Choose between <code>zip</code> (includes filestore) or <code>dump</code> (SQL only) backup formats.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Retention Policy</h3>
+        <p>Automatically remove old backups to keep disk usage under control.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Manual Trigger</h3>
+        <p>Run a backup on demand at any time from the configuration screen.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Admin UI</h3>
+        <p>Simple settings form accessible under Settings — no server SSH access needed.</p>
+    </div>
+</div>
+
+<h2>How to Install</h2>
+<div class="step">
+    <div class="step-num">1</div>
+    <div>Copy the <code>syntho_auto_backup</code> folder to your custom addons path.</div>
+</div>
+<div class="step">
+    <div class="step-num">2</div>
+    <div>Add the path to <code>addons_path</code> in your <code>odoo.conf</code>.</div>
+</div>
+<div class="step">
+    <div class="step-num">3</div>
+    <div>Go to <strong>Settings → Apps</strong>, click <strong>Update App List</strong>, search for <em>Syntho Auto Backup</em> and install.</div>
+</div>
+<div class="step">
+    <div class="step-num">4</div>
+    <div>Configure your backup schedule and storage path under the Auto Backup configuration.</div>
+</div>
+
+<div class="note">
+    <strong>Note:</strong> Ensure the Odoo server process has write permission to the backup
+    destination directory.
+</div>
+
+<h2>About SynthoERP</h2>
+<p>
+    <strong>SynthoERP</strong> builds practical, focused Odoo modules that solve real problems for
+    businesses using Odoo Community Edition. Visit us at
+    <a href="https://www.synthoerp.com/">www.synthoerp.com</a>.
+</p>
+
 </body>
 </html>

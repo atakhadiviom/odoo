@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Sale Order / Quotation PDF report to add product images -->
+    <template id="report_saleorder_inherit_product_image"
+              inherit_id="sale.report_saleorder_document">
+
+        <!-- Add image column header after the Description header -->
+        <xpath expr="//th[@name='th_description']" position="before">
+            <th name="th_product_image" class="text-center" style="width:60px;">Image</th>
+        </xpath>
+
+        <!-- Add image cell for each product line (td_product_name is the description cell) -->
+        <xpath expr="//td[@name='td_product_name']" position="before">
+            <td name="td_product_image" class="text-center align-middle" style="width:60px;">
+                <t t-if="line.product_id and line.product_id.image_128">
+                    <img t-att-src="image_data_uri(line.product_id.image_128)"
+                         style="max-width:50px; max-height:50px; object-fit:contain;"/>
+                </t>
+            </td>
+        </xpath>
+
+        <!-- Add empty cell for section/note lines to maintain column alignment -->
+        <xpath expr="//td[@name='td_section_name']" position="before">
+            <td name="td_section_image" style="width:60px;"></td>
+        </xpath>
+
+        <xpath expr="//td[@name='td_note_name']" position="before">
+            <td name="td_note_image" style="width:60px;"></td>
+        </xpath>
+
+    </template>
+</odoo>
