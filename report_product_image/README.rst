@@ -1,7 +1,7 @@
 Product Images on Reports
 =========================
 
-**Version:** 19.0.1.0.0 | **License:** LGPL-3 | **Author:** Murjan Global
+**Version:** 19.0.1.0.0 | **License:** LGPL-3 | **Author:** SynthoERP
 
 Display product thumbnail images on PDF reports — quotations, sales orders,
 customer invoices, and purchase orders.

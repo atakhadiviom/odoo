@@ -24,8 +24,8 @@ Use Cases
 * Include product photos on invoices to reduce disputes
 * Verify the correct items on purchase orders at a glance
     """,
-    'author': 'Murjan Global',
-    'website': 'https://apps.odoo.com',
+    'author': 'SynthoERP',
+    'website': 'https://www.synthoerp.com/',
     'category': 'Sales/Sales',
     'depends': ['sale', 'account', 'purchase'],
     'data': [
