@@ -17,6 +17,7 @@ allowing users to assign multiple barcodes to the same product (including box/ca
     'data': [
         'views/product_template_views.xml',
     ],
+    'images': ['static/description/banner.png'],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',

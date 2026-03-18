@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #017e84; }
+        h2 { color: #017e84; border-bottom: 2px solid #017e84; padding-bottom: 6px; margin-top: 32px; }
+        h3 { color: #444; }
+        .badge { display: inline-block; background: #017e84; color: #fff; border-radius: 4px; padding: 2px 10px; font-size: 13px; margin-right: 6px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        .feature-card { background: #f7f7f7; border-left: 4px solid #017e84; padding: 14px 16px; border-radius: 4px; }
+        .feature-card h3 { margin: 0 0 6px; font-size: 15px; }
+        .feature-card p { margin: 0; font-size: 14px; color: #555; }
+        .note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; font-size: 14px; }
+        .step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .step-num { background: #017e84; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+        .contact-box { background: #f0fafa; border: 2px solid #017e84; border-radius: 8px; padding: 20px 24px; margin-top: 12px; }
+        .contact-box p { margin: 6px 0; font-size: 15px; }
+        .wa-btn { display: inline-block; background: #25D366; color: #fff; padding: 8px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px; }
+        .wa-btn:hover { background: #1ebe5d; }
+    </style>
+</head>
+<body>
+
+<h1>Product Packaging Barcode</h1>
+
+<p>
+    <span class="badge">Odoo 19</span>
+    <span class="badge">Inventory</span>
+    <span class="badge" style="background: #e2e8f0; color: #475569;">Community Edition</span>
+</p>
+
+<p>
+    In Odoo 19, the <strong>Packaging / Barcode</strong> section is no longer visible in the Inventory tab by default. This module restores the visibility of the packaging section in the product Inventory tab, allowing users to assign multiple barcodes to the same product (including box/carton barcodes).
+</p>
+
+<h2>Features</h2>
+
+<div class="feature-grid">
+    <div class="feature-card">
+        <h3>Packaging Tab Restored</h3>
+        <p>Restores the Packaging/Barcode section in the product Inventory tab to Odoo 19.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Multiple Barcodes per Product</h3>
+        <p>Easily manage and assign multiple barcodes (like box, carton, or pallet barcodes) to the same product directly from the product form.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Seamless Integration</h3>
+        <p>Uses standard Odoo XML view inheritance to cleanly add the Packaging field without breaking existing views or logic.</p>
+    </div>
+</div>
+
+<h2>How to Use</h2>
+
+<div class="step">
+    <div class="step-num">1</div>
+    <div>Install the <strong>Product Packaging Barcode</strong> module from your Apps list.</div>
+</div>
+<div class="step">
+    <div class="step-num">2</div>
+    <div>Navigate to <strong>Inventory &gt; Products &gt; Products</strong> and open any product.</div>
+</div>
+<div class="step">
+    <div class="step-num">3</div>
+    <div>Go to the <strong>Inventory</strong> tab of the product form.</div>
+</div>
+<div class="step">
+    <div class="step-num">4</div>
+    <div>Scroll down to the <strong>Packaging</strong> section to add your packaging types, quantities, and their respective barcodes.</div>
+</div>
+
+<h2>Support</h2>
+<div class="contact-box">
+    <p><strong>Need help or customization?</strong></p>
+    <p>Our team at SynthoERP provides dedicated Odoo support, custom development, and integration services.</p>
+    <p>Email: <a href="mailto:support@synthoerp.com">support@synthoerp.com</a></p>
+    <p>Website: <a href="https://www.synthoerp.com" target="_blank">www.synthoerp.com</a></p>
+</div>
+
+</body>
+</html>
