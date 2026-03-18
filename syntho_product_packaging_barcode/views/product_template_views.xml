@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_packaging_form_inherit" model="ir.ui.view">
+        <field name="name">product.template.packaging.form.inherit.syntho</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='inventory']" position="inside">
+                <group name="packaging" string="Packaging">
+                    <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'stock.product_packaging_tree_view', 'form_view_ref':'stock.product_packaging_form_view'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
