@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #017e84; }
+        h2 { color: #017e84; border-bottom: 2px solid #017e84; padding-bottom: 6px; margin-top: 32px; }
+        h3 { color: #444; }
+        .badge { display: inline-block; background: #017e84; color: #fff; border-radius: 4px; padding: 2px 10px; font-size: 13px; margin-right: 6px; }
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+        .feature-card { background: #f7f7f7; border-left: 4px solid #017e84; padding: 14px 16px; border-radius: 4px; }
+        .feature-card h3 { margin: 0 0 6px; font-size: 15px; }
+        .feature-card p { margin: 0; font-size: 14px; color: #555; }
+        .note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; font-size: 14px; }
+        .step { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+        .step-num { background: #017e84; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+        .contact-box { background: #f0fafa; border: 2px solid #017e84; border-radius: 8px; padding: 20px 24px; margin-top: 12px; }
+        .contact-box p { margin: 6px 0; font-size: 15px; }
+        .wa-btn { display: inline-block; background: #25D366; color: #fff; padding: 8px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px; }
+        .wa-btn:hover { background: #1ebe5d; }
+    </style>
+</head>
+<body>
+
+<h1>Syntho Product Packaging Barcode</h1>
+
+<p>
+    <span class="badge">Odoo 19</span>
+    <span class="badge">Community</span>
+    <span class="badge">Free</span>
+    <span class="badge">Inventory</span>
+</p>
+
+<p>
+    In Odoo 19, the <strong>Packaging / Barcode</strong> section is no longer visible in the
+    product Inventory tab by default. This module restores it — allowing you to assign multiple
+    barcodes to the same product (box barcode, carton barcode, unit barcode) without any workarounds.
+</p>
+
+<h2>The Problem</h2>
+<p>
+    Out of the box, Odoo 19 hides the <strong>Packaging</strong> table from the product Inventory tab.
+    Businesses that rely on packaging barcodes for warehouse scanning — such as receiving full boxes
+    or cartons — cannot configure them through the standard UI.
+</p>
+
+<h2>The Solution</h2>
+<p>
+    A focused XPath override that restores the packaging group inside the Inventory tab, exactly
+    as it appeared in previous Odoo versions. No new models, no database changes — just the
+    visibility fix you need.
+</p>
+
+<h2>Features</h2>
+<div class="feature-grid">
+    <div class="feature-card">
+        <h3>Packaging Section Restored</h3>
+        <p>The Packaging table reappears on the Inventory tab of every product form.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Multiple Barcodes per Product</h3>
+        <p>Assign unit, box, and carton barcodes to the same product for accurate warehouse scanning.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Works with Barcode App</h3>
+        <p>Packaging barcodes are recognised by the Odoo Barcode and Inventory apps out of the box.</p>
+    </div>
+    <div class="feature-card">
+        <h3>Zero Footprint</h3>
+        <p>Pure XPath view inheritance — no Python code, no new models, no database migration.</p>
+    </div>
+</div>
+
+<h2>How to Install</h2>
+<div class="step">
+    <div class="step-num">1</div>
+    <div>Copy the <code>syntho_product_packaging_barcode</code> folder to your custom addons path.</div>
+</div>
+<div class="step">
+    <div class="step-num">2</div>
+    <div>Add the path to <code>addons_path</code> in your <code>odoo.conf</code>.</div>
+</div>
+<div class="step">
+    <div class="step-num">3</div>
+    <div>Go to <strong>Settings → Apps</strong>, click <strong>Update App List</strong>, search for <em>Syntho Product Packaging Barcode</em> and install.</div>
+</div>
+<div class="step">
+    <div class="step-num">4</div>
+    <div>Open any product → <strong>Inventory tab</strong> — the Packaging section is now visible.</div>
+</div>
+
+<div class="note">
+    <strong>Note:</strong> This module depends on <code>stock</code>. The packaging data model and
+    barcode scanning logic are provided by Odoo's standard inventory module — this module only
+    restores the UI visibility.
+</div>
+
+<h2>Need Odoo Support in Oman?</h2>
+<div class="contact-box">
+    <p>💡 <strong>Need Odoo implementation or support in Oman? Contact SynthoERP.</strong></p>
+    <p>We help businesses across Oman set up, customise, and support Odoo Community &amp; Enterprise.</p>
+    <p>
+        🌐 <a href="https://www.synthoerp.com/">www.synthoerp.com</a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        📧 <a href="mailto:info@synthoerp.com">info@synthoerp.com</a>
+    </p>
+    <a class="wa-btn" href="https://wa.me/96871150483">💬 WhatsApp: +968 7115 0483</a>
+</div>
+
+</body>
+</html>
