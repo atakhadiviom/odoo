@@ -1,3 +1,4 @@
+import odoo
 from odoo import models, fields, api
 import os
 import datetime
@@ -37,7 +38,6 @@ class BackupConfig(models.Model):
                         _logger.error(f"Error during pg_dump for {db_name}: {e}")
                 else:
                     # For zip format, use odoo built-in db dump_db
-                    import odoo
                     try:
                         with open(filepath, 'wb') as f:
                             odoo.service.db.dump_db(db_name, f, 'zip')
