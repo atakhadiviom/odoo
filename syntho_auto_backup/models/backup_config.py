@@ -1,5 +1,6 @@
 import odoo
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 import os
 import datetime
 import subprocess
@@ -18,11 +19,28 @@ class BackupConfig(models.Model):
         ('dump', 'Dump')
     ], string='Format', default='zip')
 
+    @api.constrains('folder')
+    def _check_folder_path(self):
+        for record in self:
+            if not record.folder:
+                continue
+
+            base_dir = self.env['ir.config_parameter'].sudo().get_param('auto_backup.base_dir', '/var/lib/odoo/backups')
+            abs_base_dir = os.path.abspath(base_dir)
+            abs_folder = os.path.abspath(record.folder)
+
+            try:
+                if os.path.commonpath([abs_base_dir, abs_folder]) != abs_base_dir:
+                    raise ValidationError(f"Backup directory must be within {abs_base_dir}")
+            except ValueError:
+                raise ValidationError(f"Backup directory must be within {abs_base_dir}")
+
     @api.model
     def schedule_backup(self):
         configs = self.search([])
         for config in configs:
             try:
+                config._check_folder_path()
                 os.makedirs(config.folder, exist_ok=True)
                 db_name = self.env.cr.dbname
                 date_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')

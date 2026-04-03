@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="auto_backup_base_dir" model="ir.config_parameter">
+        <field name="key">auto_backup.base_dir</field>
+        <field name="value">/var/lib/odoo/backups</field>
+    </record>
+</odoo>

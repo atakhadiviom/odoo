@@ -15,6 +15,7 @@ This is a very frequently requested feature on forums.
     'depends': ['base'],
     'data': [
         'security/ir.model.access.csv',
+        'data/config_data.xml',
         'data/cron_data.xml',
         'views/backup_config_views.xml',
     ],
