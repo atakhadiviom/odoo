@@ -33,6 +33,11 @@ Use Cases
         'views/account_report_inherit.xml',
         'views/purchase_order_inherit.xml',
     ],
+    'assets': {
+        'web.report_assets_common': [
+            'report_product_image/static/src/css/report_product_image.css',
+        ],
+    },
     'images': ['static/description/banner.png'],
     'installable': True,
     'auto_install': False,
