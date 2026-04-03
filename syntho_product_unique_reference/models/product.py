@@ -16,7 +16,7 @@ class ProductProduct(models.Model):
         counts = Counter(codes)
         duplicates_in_batch = [code for code, count in counts.items() if count > 1]
         if duplicates_in_batch:
-            raise ValidationError("The Internal Reference '%s' must be unique across all products!" % duplicates_in_batch[0])
+            raise ValidationError(f"The Internal Reference '{duplicates_in_batch[0]}' must be unique across all products!")
 
         # 3. Check for duplicates against the database in a single query
         domain = [
@@ -25,4 +25,4 @@ class ProductProduct(models.Model):
         ]
         duplicate = self.search(domain, limit=1)
         if duplicate:
-            raise ValidationError("The Internal Reference '%s' must be unique across all products!" % duplicate.default_code)
+            raise ValidationError(f"The Internal Reference '{duplicate.default_code}' must be unique across all products!")
