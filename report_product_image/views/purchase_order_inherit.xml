@@ -10,7 +10,7 @@
         </xpath>
 
         <!-- Add image cell for each product line -->
-        <xpath expr="//td[@name='td_product_name']" position="before">
+        <xpath expr="//td[@id='product']" position="before">
             <td name="td_product_image" class="text-center align-middle report_product_image_cell">
                 <t t-if="line.product_id and line.product_id.image_128">
                     <img t-att-src="image_data_uri(line.product_id.image_128)"
@@ -19,5 +19,13 @@
             </td>
         </xpath>
 
+        <!-- Add empty cells for section/note rows to keep the columns aligned -->
+        <xpath expr="//td[@id='section']" position="before">
+            <td name="td_section_image" class="report_product_image_cell"></td>
+        </xpath>
+
+        <xpath expr="//td[@id='note']" position="before">
+            <td name="td_note_image" class="report_product_image_cell"></td>
+        </xpath>
     </template>
 </odoo>

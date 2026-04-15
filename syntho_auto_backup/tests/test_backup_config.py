@@ -6,6 +6,7 @@ class TestBackupConfig(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.config_model = cls.env['auto.backup.config']
+        cls.env['ir.config_parameter'].sudo().set_param('auto_backup.base_dir', '/tmp')
         cls.config_model.search([]).unlink() # Clear existing configs
         cls.config_model.create({
             'name': 'Test Zip',

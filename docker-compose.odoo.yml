@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_USER: odoo
+      PGDATA: /var/lib/postgresql/data/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - odoo19-db-data:/var/lib/postgresql/data/pgdata
+
+  web:
+    image: odoo:19.0-20260409
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      HOST: db
+      PASSWORD: odoo
+      USER: odoo
+    ports:
+      - "8069:8069"
+    command: ["odoo", "--config", "/etc/odoo/odoo.conf"]
+    volumes:
+      - odoo19-web-data:/var/lib/odoo
+      - ./docker/odoo:/etc/odoo
+      - .:/mnt/extra-addons
+
+volumes:
+  odoo19-db-data:
+  odoo19-web-data:
