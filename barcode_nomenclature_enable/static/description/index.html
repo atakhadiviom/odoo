@@ -2,150 +2,347 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
+    <title>Barcode Nomenclature Enable</title>
     <style>
-        body { font-family: Arial, sans-serif; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
-        h1 { color: #017e84; }
-        h2 { color: #017e84; border-bottom: 2px solid #017e84; padding-bottom: 6px; margin-top: 32px; }
-        h3 { color: #444; }
-        .badge { display: inline-block; background: #017e84; color: #fff; border-radius: 4px; padding: 2px 10px; font-size: 13px; margin-right: 6px; }
-        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
-        .feature-card { background: #f7f7f7; border-left: 4px solid #017e84; padding: 14px 16px; border-radius: 4px; }
-        .feature-card h3 { margin: 0 0 6px; font-size: 15px; }
-        .feature-card p { margin: 0; font-size: 14px; color: #555; }
-        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-        th { background: #017e84; color: #fff; padding: 8px 12px; text-align: left; }
-        td { padding: 8px 12px; border-bottom: 1px solid #e0e0e0; font-size: 14px; }
-        tr:nth-child(even) td { background: #f9f9f9; }
-        code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
-        .note { background: #fff8e1; border-left: 4px solid #ffc107; padding: 12px 16px; border-radius: 4px; font-size: 14px; }
-        .contact-box { background: #f0fafa; border: 2px solid #017e84; border-radius: 8px; padding: 20px 24px; margin-top: 12px; }
-        .contact-box p { margin: 6px 0; font-size: 15px; }
-        .wa-btn { display: inline-block; background: #25D366; color: #fff; padding: 8px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px; }
-        .wa-btn:hover { background: #1ebe5d; }
-        .steps { counter-reset: step; }
-        .step { counter-increment: step; display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
-        .step-num { background: #017e84; color: #fff; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        :root {
+            --brand: #0f6d75;
+            --brand-deep: #12364a;
+            --ink: #20303c;
+            --muted: #5b6b76;
+            --line: #dbe4ea;
+            --panel: #f4f8fa;
+            --soft: #edf6f7;
+        }
+        body {
+            margin: 0;
+            padding: 24px;
+            background: #eef3f6;
+            color: var(--ink);
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+        }
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(18, 54, 74, 0.12);
+        }
+        .hero {
+            background: linear-gradient(135deg, var(--brand-deep), var(--brand));
+            color: #ffffff;
+            padding: 42px 42px 30px;
+        }
+        .eyebrow {
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            font-size: 12px;
+            opacity: 0.78;
+            margin: 0 0 14px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 42px;
+            line-height: 1.08;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+        .hero p {
+            margin: 18px 0 0;
+            max-width: 760px;
+            font-size: 18px;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.92);
+        }
+        .chips {
+            margin-top: 22px;
+        }
+        .chip {
+            display: inline-block;
+            margin: 0 10px 10px 0;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .hero-media {
+            margin-top: 26px;
+            padding: 10px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .hero-media img {
+            display: block;
+            width: 100%;
+            border-radius: 16px;
+        }
+        .section {
+            padding: 34px 42px;
+            border-top: 1px solid var(--line);
+        }
+        h2 {
+            margin: 0 0 16px;
+            font-size: 28px;
+            line-height: 1.2;
+            font-family: Georgia, "Times New Roman", serif;
+            color: var(--brand-deep);
+        }
+        .lead {
+            margin: 0;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.75;
+        }
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 24px;
+        }
+        .card {
+            flex: 1 1 270px;
+            padding: 22px;
+            border-radius: 20px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+        }
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: var(--brand-deep);
+        }
+        .card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+        .highlight {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, #f8fcfc, var(--soft));
+            border: 1px solid #cfe0e4;
+        }
+        .highlight ul {
+            margin: 14px 0 0 18px;
+            padding: 0;
+            color: var(--muted);
+            line-height: 1.9;
+        }
+        .steps {
+            margin-top: 24px;
+        }
+        .step {
+            display: flex;
+            gap: 16px;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        .step:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+        .step-no {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--brand);
+            color: #ffffff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 36px;
+        }
+        .step strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--brand-deep);
+        }
+        .step span {
+            color: var(--muted);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+        .meta {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 22px;
+            overflow: hidden;
+            border-radius: 18px;
+        }
+        .meta td {
+            padding: 14px 16px;
+            border: 1px solid var(--line);
+            font-size: 15px;
+        }
+        .meta td:first-child {
+            width: 200px;
+            background: #f7fbfc;
+            color: var(--brand-deep);
+            font-weight: bold;
+        }
+        .support {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 20px;
+            background: #143949;
+            color: rgba(255, 255, 255, 0.92);
+        }
+        .support h3 {
+            margin: 0 0 10px;
+            font-size: 22px;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+        .support p {
+            margin: 0 0 8px;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+        .support a {
+            color: #9ee7dd;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .hero, .section { padding: 26px 22px; }
+            h1 { font-size: 34px; }
+        }
     </style>
 </head>
 <body>
-
-<h1>Barcode Nomenclature Enable</h1>
-
-<p>
-    <span class="badge">Odoo 19</span>
-    <span class="badge">Community</span>
-    <span class="badge">Free</span>
-    <span class="badge">Inventory</span>
-</p>
-
-<p>
-    In Odoo 19 Community Edition, the <strong>Barcode Nomenclature</strong> configuration menu is
-    intentionally hidden from all users. This module unlocks it for Inventory Managers — giving
-    you full control over how barcodes are parsed across Inventory, POS, and Barcode app operations.
-</p>
-
-<h2>The Problem</h2>
-<p>
-    Out of the box, <strong>Inventory → Configuration → Products → Barcode Nomenclatures</strong>
-    is restricted to a system group that no real user belongs to (<code>base.group_no_one</code>).
-    Even administrators cannot access it. This prevents teams from:
-</p>
-<ul>
-    <li>Configuring weight-embedded barcodes from their weighing scales</li>
-    <li>Adding price-embedded barcode rules for variable-price products</li>
-    <li>Managing custom barcode prefixes for different warehouses or POS terminals</li>
-    <li>Viewing or auditing the active nomenclature rules</li>
-</ul>
-
-<h2>The Solution</h2>
-<p>
-    A single, focused override that makes the menu visible to users with the
-    <strong>Inventory / Administrator</strong> role. No patches, no hacks — just the right
-    group assignment.
-</p>
-
-<h2>Features</h2>
-<div class="feature-grid">
-    <div class="feature-card">
-        <h3>Menu Access Restored</h3>
-        <p>Inventory → Configuration → Products → Barcode Nomenclatures is fully visible and accessible.</p>
+<div class="wrap">
+    <div class="hero">
+        <p class="eyebrow">Inventory Configuration</p>
+        <h1>Barcode Nomenclature Enable</h1>
+        <p>
+            Unlock the hidden Barcode Nomenclatures menu in Odoo 19 Community and
+            give Inventory Managers access to the barcode rules they actually need
+            to manage day-to-day operations.
+        </p>
+        <div class="chips">
+            <span class="chip">Odoo 19</span>
+            <span class="chip">Community</span>
+            <span class="chip">Inventory</span>
+            <span class="chip">No Python Logic</span>
+        </div>
+        <div class="hero-media">
+            <img src="banner.png" alt="Barcode Nomenclature Enable banner"/>
+        </div>
     </div>
-    <div class="feature-card">
-        <h3>Full CRUD</h3>
-        <p>Create, edit, and delete nomenclatures and their barcode rules without developer mode.</p>
+
+    <div class="section">
+        <h2>Why This Add-on Exists</h2>
+        <p class="lead">
+            In standard Odoo 19 Community, the Barcode Nomenclatures menu is hidden
+            from normal business users. That makes it unnecessarily hard to review,
+            tune, or maintain barcode rules for warehouse scanners, POS labels, or
+            weighing-scale formats. This module restores the menu to Inventory Managers
+            without changing the underlying barcode engine.
+        </p>
+        <div class="highlight">
+            <strong>What changes:</strong>
+            <ul>
+                <li>The Barcode Nomenclatures menu becomes visible under Inventory configuration.</li>
+                <li>Managers can maintain nomenclatures and their rules through the standard UI.</li>
+                <li>Existing Odoo barcode behavior remains untouched.</li>
+            </ul>
+        </div>
     </div>
-    <div class="feature-card">
-        <h3>Scale Barcode Support</h3>
-        <p>Define custom weight rules for scale-generated barcodes (prefix 20, 21, or any custom prefix).</p>
+
+    <div class="section">
+        <h2>What You Get</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Menu Access Restored</h3>
+                <p>
+                    Makes the standard Barcode Nomenclatures screen available to the
+                    stock manager role directly from Inventory settings.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Rule Maintenance in the UI</h3>
+                <p>
+                    Create, edit, review, and remove nomenclature rules without relying
+                    on developer mode or technical menus.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Compatible With Real Barcode Flows</h3>
+                <p>
+                    Useful for weight barcodes, price barcodes, and custom prefix setups
+                    commonly used in retail, warehousing, and POS environments.
+                </p>
+            </div>
+            <div class="card">
+                <h3>Safe and Focused</h3>
+                <p>
+                    This is a small visibility override only. It does not replace Odoo's
+                    barcode parsing models or alter existing barcode logic.
+                </p>
+            </div>
+        </div>
     </div>
-    <div class="feature-card">
-        <h3>Price Barcode Support</h3>
-        <p>Configure price-embedded EAN-13 rules for variable-price products in POS.</p>
+
+    <div class="section">
+        <h2>Installation</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-no">1</div>
+                <div>
+                    <strong>Place the module in your custom addons path</strong>
+                    <span>Copy <code>barcode_nomenclature_enable</code> into the addons directory used by your Odoo server.</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-no">2</div>
+                <div>
+                    <strong>Update the app list</strong>
+                    <span>Refresh the Apps list from Odoo so the module becomes available for installation.</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-no">3</div>
+                <div>
+                    <strong>Install the add-on</strong>
+                    <span>Search for <em>Barcode Nomenclature Enable</em> and install it like any other Odoo app.</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-no">4</div>
+                <div>
+                    <strong>Open the restored menu</strong>
+                    <span>Go to Inventory -&gt; Configuration -&gt; Products -&gt; Barcode Nomenclatures.</span>
+                </div>
+            </div>
+        </div>
+        <table class="meta">
+            <tr>
+                <td>Dependencies</td>
+                <td><code>barcodes</code>, <code>stock</code></td>
+            </tr>
+            <tr>
+                <td>Best For</td>
+                <td>Teams using barcode scanning, POS labels, weighted products, or custom barcode prefixes</td>
+            </tr>
+            <tr>
+                <td>Technical Scope</td>
+                <td>Menu visibility only, using standard Odoo views and security groups</td>
+            </tr>
+        </table>
     </div>
-    <div class="feature-card">
-        <h3>GS1 Compatible</h3>
-        <p>Works alongside the built-in GS1 Nomenclature module included with Odoo stock.</p>
-    </div>
-    <div class="feature-card">
-        <h3>Zero Footprint</h3>
-        <p>No new models, no Python code, no database changes. One XML file, one menu override.</p>
+
+    <div class="section">
+        <div class="support">
+            <h3>SynthoERP Support</h3>
+            <p>Need help deploying, extending, or supporting Odoo in Oman?</p>
+            <p>Website: <a href="https://www.synthoerp.com/">www.synthoerp.com</a></p>
+            <p>Email: <a href="mailto:info@synthoerp.com">info@synthoerp.com</a></p>
+            <p>WhatsApp: <a href="https://wa.me/96871150483">+968 7115 0483</a></p>
+        </div>
     </div>
 </div>
-
-<h2>Supported Barcode Types</h2>
-<table>
-    <tr><th>Type</th><th>Example Pattern</th><th>Use Case</th></tr>
-    <tr><td>Product</td><td><code>.*</code></td><td>Fixed EAN-13 / EAN-8 / QR product barcodes</td></tr>
-    <tr><td>Weight</td><td><code>21.....{NNDDD}</code></td><td>Scale-printed weight labels (1.250 kg → qty 1.250)</td></tr>
-    <tr><td>Weight (custom)</td><td><code>20.....{NNDDD}</code></td><td>Scales that use prefix 20 instead of 21</td></tr>
-    <tr><td>Price</td><td><code>23.....{NNNDD}</code></td><td>Price-embedded labels ($12.99 overrides list price)</td></tr>
-    <tr><td>Discount</td><td><code>22{NN}</code></td><td>Discount barcodes for POS promotions</td></tr>
-    <tr><td>Lot / Serial</td><td><code>10</code></td><td>GS1 lot traceability barcodes</td></tr>
-</table>
-
-<h2>How to Install</h2>
-<div class="steps">
-    <div class="step">
-        <div class="step-num">1</div>
-        <div>Copy the <code>barcode_nomenclature_enable</code> folder to your custom addons path.</div>
-    </div>
-    <div class="step">
-        <div class="step-num">2</div>
-        <div>Make sure the path is listed in <code>addons_path</code> inside your <code>odoo.conf</code>.</div>
-    </div>
-    <div class="step">
-        <div class="step-num">3</div>
-        <div>Go to <strong>Settings → Apps</strong>, click <strong>Update App List</strong>, then search for <em>Barcode Nomenclature Enable</em> and install it.</div>
-    </div>
-    <div class="step">
-        <div class="step-num">4</div>
-        <div>Navigate to <strong>Inventory → Configuration → Products → Barcode Nomenclatures</strong> — the menu is now visible.</div>
-    </div>
-</div>
-
-<h2>Requirements</h2>
-<table>
-    <tr><th>Dependency</th><th>Notes</th></tr>
-    <tr><td><code>barcodes</code></td><td>Included in Odoo 19 CE — provides barcode.nomenclature model</td></tr>
-    <tr><td><code>stock</code></td><td>Inventory module — provides the menu container and manager group</td></tr>
-</table>
-
-<div class="note">
-    <strong>Note:</strong> This module only changes menu visibility. All barcode parsing logic,
-    access rights, and data models are provided by the standard Odoo <code>barcodes</code> module.
-</div>
-
-<h2>Need Odoo Support in Oman?</h2>
-<div class="contact-box">
-    <p>💡 <strong>Need Odoo implementation or support in Oman? Contact SynthoERP.</strong></p>
-    <p>We help businesses across Oman set up, customise, and support Odoo Community &amp; Enterprise.</p>
-    <p>
-        🌐 <a href="https://www.synthoerp.com/">www.synthoerp.com</a>
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        📧 <a href="mailto:info@synthoerp.com">info@synthoerp.com</a>
-    </p>
-    <a class="wa-btn" href="https://wa.me/96871150483">💬 WhatsApp: +968 7115 0483</a>
-</div>
-
 </body>
 </html>
