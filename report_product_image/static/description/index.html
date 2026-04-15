@@ -1,347 +1,148 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Product Images on Reports</title>
-    <style>
-        :root {
-            --brand: #8a5a17;
-            --brand-deep: #372515;
-            --ink: #2f251c;
-            --muted: #6c6158;
-            --line: #e8ddd2;
-            --panel: #fcf8f2;
-            --soft: #f8efe4;
-        }
-        body {
-            margin: 0;
-            padding: 24px;
-            background: #f4f1ec;
-            color: var(--ink);
-            font-family: "Trebuchet MS", Verdana, sans-serif;
-        }
-        .wrap {
-            max-width: 980px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 24px 60px rgba(55, 37, 21, 0.12);
-        }
-        .hero {
-            background: linear-gradient(135deg, var(--brand-deep), var(--brand));
-            color: #ffffff;
-            padding: 42px 42px 30px;
-        }
-        .eyebrow {
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            font-size: 12px;
-            opacity: 0.78;
-            margin: 0 0 14px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 42px;
-            line-height: 1.08;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .hero p {
-            margin: 18px 0 0;
-            max-width: 760px;
-            font-size: 18px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .chips { margin-top: 22px; }
-        .chip {
-            display: inline-block;
-            margin: 0 10px 10px 0;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .hero-media {
-            margin-top: 26px;
-            padding: 10px;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .hero-media img {
-            display: block;
-            width: 100%;
-            border-radius: 16px;
-        }
-        .section {
-            padding: 34px 42px;
-            border-top: 1px solid var(--line);
-        }
-        h2 {
-            margin: 0 0 16px;
-            font-size: 28px;
-            line-height: 1.2;
-            font-family: Georgia, "Times New Roman", serif;
-            color: var(--brand-deep);
-        }
-        .lead {
-            margin: 0;
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.75;
-        }
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 24px;
-        }
-        .card {
-            flex: 1 1 270px;
-            padding: 22px;
-            border-radius: 20px;
-            background: var(--panel);
-            border: 1px solid var(--line);
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 18px;
-            color: var(--brand-deep);
-        }
-        .card p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .split {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin-top: 24px;
-        }
-        .split .panel {
-            flex: 1 1 320px;
-            padding: 22px;
-            border-radius: 20px;
-            background: linear-gradient(180deg, #fffaf5, var(--soft));
-            border: 1px solid var(--line);
-        }
-        .split .panel ul {
-            margin: 12px 0 0 18px;
-            padding: 0;
-            color: var(--muted);
-            line-height: 1.9;
-        }
-        .steps {
-            margin-top: 24px;
-        }
-        .step {
-            display: flex;
-            gap: 16px;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .step:last-child {
-            border-bottom: 0;
-            padding-bottom: 0;
-        }
-        .step-no {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--brand);
-            color: #ffffff;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 36px;
-        }
-        .step strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--brand-deep);
-        }
-        .step span {
-            color: var(--muted);
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        .meta {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 22px;
-        }
-        .meta td {
-            padding: 14px 16px;
-            border: 1px solid var(--line);
-            font-size: 15px;
-        }
-        .meta td:first-child {
-            width: 200px;
-            background: #fffaf5;
-            color: var(--brand-deep);
-            font-weight: bold;
-        }
-        .support {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: #3b2a1b;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .support h3 {
-            margin: 0 0 10px;
-            font-size: 22px;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .support p {
-            margin: 0 0 8px;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-        .support a {
-            color: #ffd8a8;
-            text-decoration: none;
-        }
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            .hero, .section { padding: 26px 22px; }
-            h1 { font-size: 34px; }
-        }
-    </style>
-</head>
-<body>
-<div class="wrap">
-    <div class="hero">
-        <p class="eyebrow">PDF Documents</p>
-        <h1>Product Images on Reports</h1>
-        <p>
-            Add clean product thumbnails to quotations, invoices, and purchase
-            orders so customers, buyers, and warehouse teams can identify the
-            right items at a glance.
-        </p>
-        <div class="chips">
-            <span class="chip">Odoo 19</span>
-            <span class="chip">Sales</span>
-            <span class="chip">Accounting</span>
-            <span class="chip">Purchase</span>
+<section class="container my-5">
+    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
+        <div class="col-lg-6 p-5">
+            <div class="d-flex align-items-center mb-4">
+                <img src="icon.png" alt="Product Images on Reports icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
+                <div>
+                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Visual Documents</div>
+                    <h1 class="h2 font-weight-bold mb-0">Product Images on Reports</h1>
+                </div>
+            </div>
+            <p class="lead text-muted mb-4">
+                Add product thumbnails to quotations, sales orders, invoices, and
+                purchase orders so printed documents are easier to verify at a glance.
+            </p>
+            <div class="d-flex flex-wrap">
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Sales</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Accounting</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Purchase</span>
+            </div>
         </div>
-        <div class="hero-media">
-            <img src="banner.png" alt="Product Images on Reports banner"/>
+        <div class="col-lg-6 p-4 bg-light text-center">
+            <img src="banner.png" alt="Product Images on Reports preview" class="img-fluid rounded border shadow-sm"/>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Designed for Better Documents</h2>
-        <p class="lead">
-            This module extends Odoo's standard QWeb report templates and inserts a
-            dedicated image column before the product description. It keeps the layout
-            clean, leaves section and note rows aligned, and shows nothing when a
-            product has no thumbnail available.
-        </p>
-        <div class="grid">
-            <div class="card">
-                <h3>Sales Orders and Quotations</h3>
-                <p>Show product visuals directly on customer-facing proposals and confirmations.</p>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 font-weight-bold">Document Coverage</h2>
+            <p class="text-muted mb-0">The module enhances standard PDF reports without adding new business objects.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Quotations and Sales Orders</h3>
+                <p class="text-muted mb-0">Show item thumbnails on sales documents for clearer customer-facing proposals.</p>
             </div>
-            <div class="card">
-                <h3>Customer Invoices</h3>
-                <p>Help finance teams and customers cross-check what was billed more quickly.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Customer Invoices</h3>
+                <p class="text-muted mb-0">Help customers match billed products visually and reduce confusion on final invoices.</p>
             </div>
-            <div class="card">
-                <h3>Purchase Orders</h3>
-                <p>Give suppliers and receiving teams a clearer reference for ordered products.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Purchase Orders</h3>
+                <p class="text-muted mb-0">Give buyers and vendors a faster visual check when ordering similar-looking products.</p>
             </div>
-            <div class="card">
-                <h3>Lightweight by Design</h3>
-                <p>No extra models or backend configuration - only report template inheritance and CSS.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Graceful Fallback</h3>
+                <p class="text-muted mb-0">If a product has no image, the report still renders cleanly without broken placeholders.</p>
             </div>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Business Value</h2>
-        <div class="split">
-            <div class="panel">
-                <h3>Useful When</h3>
-                <ul>
-                    <li>your products are easier to identify visually than by SKU alone</li>
-                    <li>you send quotations for furniture, retail, trading, or catalog-heavy items</li>
-                    <li>buyers and vendors need a quick visual check before approving a document</li>
-                </ul>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="bg-white border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Implementation Approach</h2>
+                <p class="text-muted mb-0">
+                    The addon uses QWeb template inheritance and report styling only.
+                    There are no new models, no business logic changes, and no extra
+                    settings screen to maintain.
+                </p>
             </div>
-            <div class="panel">
-                <h3>How It Behaves</h3>
-                <ul>
-                    <li>uses the product thumbnail image for better PDF performance</li>
-                    <li>keeps report rows aligned for products, sections, and note lines</li>
-                    <li>falls back cleanly when no product image is stored</li>
+        </div>
+        <div class="col-lg-5 mb-4">
+            <div class="bg-light border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Best Fit</h2>
+                <ul class="text-muted mb-0 pl-3">
+                    <li class="mb-2">Product catalogs with many similar items</li>
+                    <li class="mb-2">Teams sending branded, visual quotations</li>
+                    <li class="mb-0">Companies wanting clearer vendor and customer PDFs</li>
                 </ul>
             </div>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Installation</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-no">1</div>
-                <div>
-                    <strong>Copy the add-on to your custom addons path</strong>
-                    <span>Place <code>report_product_image</code> in the directory your Odoo server reads for custom modules.</span>
+<section class="container mb-4">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Installation</h2>
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
+                    <p class="text-muted mb-0">Copy <code>report_product_image</code> into your addons path.</p>
                 </div>
             </div>
-            <div class="step">
-                <div class="step-no">2</div>
-                <div>
-                    <strong>Refresh the Apps list</strong>
-                    <span>Update the app registry so Odoo recognizes the module.</span>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
+                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
                 </div>
             </div>
-            <div class="step">
-                <div class="step-no">3</div>
-                <div>
-                    <strong>Install Product Images on Reports</strong>
-                    <span>Install from the Apps menu like any other Odoo add-on.</span>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
+                    <p class="text-muted mb-0">Install <strong>Product Images on Reports</strong>.</p>
                 </div>
             </div>
-            <div class="step">
-                <div class="step-no">4</div>
-                <div>
-                    <strong>Print your documents</strong>
-                    <span>Quotation, invoice, and purchase order PDFs will automatically include the image column.</span>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
+                    <p class="text-muted mb-0">Print a quotation, invoice, or purchase order and the thumbnails appear automatically.</p>
                 </div>
             </div>
         </div>
-        <table class="meta">
-            <tr>
-                <td>Dependencies</td>
-                <td><code>sale</code>, <code>account</code>, <code>purchase</code></td>
-            </tr>
-            <tr>
-                <td>Image Source</td>
-                <td>Uses the product thumbnail image for efficient report rendering</td>
-            </tr>
-            <tr>
-                <td>Technical Scope</td>
-                <td>QWeb report inheritance plus report asset styling</td>
-            </tr>
-        </table>
     </div>
+</section>
 
-    <div class="section">
-        <div class="support">
-            <h3>SynthoERP Support</h3>
-            <p>Need help refining reports, branding documents, or deploying Odoo in Oman?</p>
-            <p>Website: <a href="https://www.synthoerp.com/">www.synthoerp.com</a></p>
-            <p>Email: <a href="mailto:info@synthoerp.com">info@synthoerp.com</a></p>
-            <p>WhatsApp: <a href="https://wa.me/96871150483">+968 7115 0483</a></p>
+<section class="container mb-5">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm mb-0">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">Dependencies</td>
+                        <td><code>sale</code>, <code>account</code>, <code>purchase</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Report Targets</td>
+                        <td>Sale order, invoice, and purchase order PDFs</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Implementation</td>
+                        <td>QWeb view inheritance plus report asset styling</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Extra Models</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Support Contact</td>
+                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
-</body>
-</html>
+</section>

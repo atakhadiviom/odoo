@@ -1,327 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Syntho Unique Product Reference</title>
-    <style>
-        :root {
-            --brand: #935316;
-            --brand-deep: #4b2d10;
-            --ink: #342919;
-            --muted: #716452;
-            --line: #eadfce;
-            --panel: #fcf8f1;
-            --soft: #f8efe3;
-        }
-        body {
-            margin: 0;
-            padding: 24px;
-            background: #f5f1ea;
-            color: var(--ink);
-            font-family: "Trebuchet MS", Verdana, sans-serif;
-        }
-        .wrap {
-            max-width: 980px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 24px 60px rgba(75, 45, 16, 0.12);
-        }
-        .hero {
-            background: linear-gradient(135deg, var(--brand-deep), var(--brand));
-            color: #ffffff;
-            padding: 42px 42px 30px;
-        }
-        .eyebrow {
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            font-size: 12px;
-            opacity: 0.78;
-            margin: 0 0 14px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 42px;
-            line-height: 1.08;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .hero p {
-            margin: 18px 0 0;
-            max-width: 760px;
-            font-size: 18px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .chips { margin-top: 22px; }
-        .chip {
-            display: inline-block;
-            margin: 0 10px 10px 0;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .hero-media {
-            margin-top: 26px;
-            padding: 10px;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .hero-media img {
-            display: block;
-            width: 100%;
-            border-radius: 16px;
-        }
-        .section {
-            padding: 34px 42px;
-            border-top: 1px solid var(--line);
-        }
-        h2 {
-            margin: 0 0 16px;
-            font-size: 28px;
-            line-height: 1.2;
-            font-family: Georgia, "Times New Roman", serif;
-            color: var(--brand-deep);
-        }
-        .lead {
-            margin: 0;
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.75;
-        }
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 24px;
-        }
-        .card {
-            flex: 1 1 270px;
-            padding: 22px;
-            border-radius: 20px;
-            background: var(--panel);
-            border: 1px solid var(--line);
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 18px;
-            color: var(--brand-deep);
-        }
-        .card p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .story {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: linear-gradient(180deg, #fffaf4, var(--soft));
-            border: 1px solid var(--line);
-        }
-        .story ul {
-            margin: 12px 0 0 18px;
-            padding: 0;
-            color: var(--muted);
-            line-height: 1.9;
-        }
-        .steps {
-            margin-top: 24px;
-        }
-        .step {
-            display: flex;
-            gap: 16px;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .step:last-child {
-            border-bottom: 0;
-            padding-bottom: 0;
-        }
-        .step-no {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--brand);
-            color: #ffffff;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 36px;
-        }
-        .step strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--brand-deep);
-        }
-        .step span {
-            color: var(--muted);
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        .meta {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 22px;
-        }
-        .meta td {
-            padding: 14px 16px;
-            border: 1px solid var(--line);
-            font-size: 15px;
-        }
-        .meta td:first-child {
-            width: 220px;
-            background: #fffaf4;
-            color: var(--brand-deep);
-            font-weight: bold;
-        }
-        .support {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: #4c3117;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .support h3 {
-            margin: 0 0 10px;
-            font-size: 22px;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .support p {
-            margin: 0 0 8px;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-        .support a {
-            color: #ffd9a6;
-            text-decoration: none;
-        }
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            .hero, .section { padding: 26px 22px; }
-            h1 { font-size: 34px; }
-        }
-    </style>
-</head>
-<body>
-<div class="wrap">
-    <div class="hero">
-        <p class="eyebrow">Catalog Integrity</p>
-        <h1>Syntho Unique Product Reference</h1>
-        <p>
-            Keep internal references clean and dependable by blocking duplicate
-            SKUs anywhere in the product catalog while still allowing blank
-            references when your workflow requires them.
-        </p>
-        <div class="chips">
-            <span class="chip">Odoo 19</span>
-            <span class="chip">Product</span>
-            <span class="chip">Data Quality</span>
-            <span class="chip">Validation Constraint</span>
+<section class="container my-5">
+    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
+        <div class="col-lg-6 p-5">
+            <div class="d-flex align-items-center mb-4">
+                <img src="icon.png" alt="Syntho Unique Product Reference icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
+                <div>
+                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Catalog Integrity</div>
+                    <h1 class="h2 font-weight-bold mb-0">Syntho Unique Product Reference</h1>
+                </div>
+            </div>
+            <p class="lead text-muted mb-4">
+                Prevent duplicate internal references across products and variants
+                so the catalog stays clean, searchable, and safe for downstream
+                sales, stock, and purchasing flows.
+            </p>
+            <div class="d-flex flex-wrap">
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Product</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">SKU Control</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Validation</span>
+            </div>
         </div>
-        <div class="hero-media">
-            <img src="banner.png" alt="Syntho Unique Product Reference banner"/>
+        <div class="col-lg-6 p-4 bg-light text-center">
+            <img src="banner.png" alt="Syntho Unique Product Reference preview" class="img-fluid rounded border shadow-sm"/>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>What It Protects</h2>
-        <p class="lead">
-            Duplicate internal references can break warehouse processes, barcode
-            expectations, purchasing logic, and reporting. This module adds a
-            validation rule on products so Odoo raises a clear error before a
-            duplicate SKU enters the database.
-        </p>
-        <div class="grid">
-            <div class="card">
-                <h3>Duplicate Prevention</h3>
-                <p>Stops users from saving a product when the same internal reference already exists elsewhere.</p>
-            </div>
-            <div class="card">
-                <h3>Batch Creation Coverage</h3>
-                <p>Checks duplicates created in the same batch as well as duplicates already present in the database.</p>
-            </div>
-            <div class="card">
-                <h3>Blank Values Still Allowed</h3>
-                <p>Only filled references must be unique; empty or unset values continue to work normally.</p>
-            </div>
-            <div class="card">
-                <h3>Pure Business Logic</h3>
-                <p>No menus, no XML configuration, and no additional models - just a focused Python constraint.</p>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 font-weight-bold">Key Capabilities</h2>
+            <p class="text-muted mb-0">A focused safeguard for teams that rely on unique internal references.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Single Source of Truth</h3>
+                <p class="text-muted mb-0">Stops the same internal reference from being reused elsewhere in the product catalog.</p>
             </div>
         </div>
-        <div class="story">
-            <strong>Especially useful when:</strong>
-            <ul>
-                <li>multiple users create products or variants in parallel</li>
-                <li>catalogs are imported from spreadsheets or external systems</li>
-                <li>SKUs are treated as a strict operational key in inventory and sales</li>
-            </ul>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Batch-Safe Validation</h3>
+                <p class="text-muted mb-0">Checks duplicates inside the current create or update batch before anything is saved.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Database Check</h3>
+                <p class="text-muted mb-0">Also searches existing records so duplicates cannot slip through from earlier data.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Blank Values Allowed</h3>
+                <p class="text-muted mb-0">The rule only applies when an internal reference is set, so optional SKUs still work.</p>
+            </div>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Installation</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-no">1</div>
-                <div>
-                    <strong>Copy the module to your addons path</strong>
-                    <span>Place <code>syntho_product_unique_reference</code> in the custom addons directory used by your Odoo server.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">2</div>
-                <div>
-                    <strong>Refresh the Apps list</strong>
-                    <span>Update the module registry so Odoo detects the add-on.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">3</div>
-                <div>
-                    <strong>Install the module</strong>
-                    <span>Install <em>Syntho Unique Prod Ref</em> from the Apps menu.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">4</div>
-                <div>
-                    <strong>Work as usual</strong>
-                    <span>From that point on, duplicate internal references are blocked automatically during save or batch create.</span>
-                </div>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="bg-white border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Where It Helps</h2>
+                <ul class="text-muted mb-0 pl-3">
+                    <li class="mb-2">Teams importing or creating products in bulk and needing SKU discipline.</li>
+                    <li class="mb-2">Companies where stock, sales, or purchasing rely on internal references for daily operations.</li>
+                    <li class="mb-0">Catalog clean-up projects where duplicate SKUs must be blocked going forward.</li>
+                </ul>
             </div>
         </div>
-        <table class="meta">
-            <tr>
-                <td>Dependency</td>
-                <td><code>product</code></td>
-            </tr>
-            <tr>
-                <td>Validated Field</td>
-                <td><code>default_code</code> on product records</td>
-            </tr>
-            <tr>
-                <td>Technical Scope</td>
-                <td>Python-level uniqueness validation with clear error messaging</td>
-            </tr>
-        </table>
+        <div class="col-lg-5 mb-4">
+            <div class="bg-light border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Implementation Style</h2>
+                <p class="text-muted mb-0">
+                    The module is intentionally lightweight: it adds a Python constraint on
+                    <code>product.product</code> and does not introduce new models, menus,
+                    or configuration screens.
+                </p>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="section">
-        <div class="support">
-            <h3>SynthoERP Support</h3>
-            <p>Need help improving master data quality or extending Odoo in Oman?</p>
-            <p>Website: <a href="https://www.synthoerp.com/">www.synthoerp.com</a></p>
-            <p>Email: <a href="mailto:info@synthoerp.com">info@synthoerp.com</a></p>
-            <p>WhatsApp: <a href="https://wa.me/96871150483">+968 7115 0483</a></p>
+<section class="container mb-4">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Installation</h2>
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
+                    <p class="text-muted mb-0">Copy <code>syntho_product_unique_reference</code> into your addons path.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
+                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
+                    <p class="text-muted mb-0">Install <strong>Syntho Unique Product Reference</strong>.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
+                    <p class="text-muted mb-0">From that point onward, duplicate internal references are blocked automatically.</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+</section>
+
+<section class="container mb-5">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm mb-0">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">Dependency</td>
+                        <td><code>product</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Target Field</td>
+                        <td><code>default_code</code> on product variants</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Validation Scope</td>
+                        <td>Current batch plus existing database records</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Blank References</td>
+                        <td>Allowed</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Support Contact</td>
+                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

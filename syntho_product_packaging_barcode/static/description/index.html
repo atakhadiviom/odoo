@@ -1,327 +1,148 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Syntho Product Packaging Barcode</title>
-    <style>
-        :root {
-            --brand: #1f7a63;
-            --brand-deep: #13463a;
-            --ink: #21352f;
-            --muted: #61756f;
-            --line: #d5e7df;
-            --panel: #f2faf7;
-            --soft: #e9f5f0;
-        }
-        body {
-            margin: 0;
-            padding: 24px;
-            background: #edf6f2;
-            color: var(--ink);
-            font-family: "Trebuchet MS", Verdana, sans-serif;
-        }
-        .wrap {
-            max-width: 980px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 24px 60px rgba(19, 70, 58, 0.12);
-        }
-        .hero {
-            background: linear-gradient(135deg, var(--brand-deep), var(--brand));
-            color: #ffffff;
-            padding: 42px 42px 30px;
-        }
-        .eyebrow {
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            font-size: 12px;
-            opacity: 0.78;
-            margin: 0 0 14px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 42px;
-            line-height: 1.08;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .hero p {
-            margin: 18px 0 0;
-            max-width: 760px;
-            font-size: 18px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .chips { margin-top: 22px; }
-        .chip {
-            display: inline-block;
-            margin: 0 10px 10px 0;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .hero-media {
-            margin-top: 26px;
-            padding: 10px;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .hero-media img {
-            display: block;
-            width: 100%;
-            border-radius: 16px;
-        }
-        .section {
-            padding: 34px 42px;
-            border-top: 1px solid var(--line);
-        }
-        h2 {
-            margin: 0 0 16px;
-            font-size: 28px;
-            line-height: 1.2;
-            font-family: Georgia, "Times New Roman", serif;
-            color: var(--brand-deep);
-        }
-        .lead {
-            margin: 0;
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.75;
-        }
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 24px;
-        }
-        .card {
-            flex: 1 1 270px;
-            padding: 22px;
-            border-radius: 20px;
-            background: var(--panel);
-            border: 1px solid var(--line);
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 18px;
-            color: var(--brand-deep);
-        }
-        .card p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .note-box {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: linear-gradient(180deg, #f7fcfa, var(--soft));
-            border: 1px solid var(--line);
-        }
-        .note-box ul {
-            margin: 12px 0 0 18px;
-            padding: 0;
-            color: var(--muted);
-            line-height: 1.9;
-        }
-        .steps {
-            margin-top: 24px;
-        }
-        .step {
-            display: flex;
-            gap: 16px;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .step:last-child {
-            border-bottom: 0;
-            padding-bottom: 0;
-        }
-        .step-no {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--brand);
-            color: #ffffff;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 36px;
-        }
-        .step strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--brand-deep);
-        }
-        .step span {
-            color: var(--muted);
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        .meta {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 22px;
-        }
-        .meta td {
-            padding: 14px 16px;
-            border: 1px solid var(--line);
-            font-size: 15px;
-        }
-        .meta td:first-child {
-            width: 220px;
-            background: #f7fcfa;
-            color: var(--brand-deep);
-            font-weight: bold;
-        }
-        .support {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: #1e4b3f;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .support h3 {
-            margin: 0 0 10px;
-            font-size: 22px;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .support p {
-            margin: 0 0 8px;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-        .support a {
-            color: #a6f0d4;
-            text-decoration: none;
-        }
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            .hero, .section { padding: 26px 22px; }
-            h1 { font-size: 34px; }
-        }
-    </style>
-</head>
-<body>
-<div class="wrap">
-    <div class="hero">
-        <p class="eyebrow">Inventory and Barcodes</p>
-        <h1>Syntho Product Packaging Barcode</h1>
-        <p>
-            Restore a practical Packaging / Barcodes block on the product Inventory
-            tab in Odoo 19 so teams can maintain packaging-related barcodes directly
-            from the product screen.
-        </p>
-        <div class="chips">
-            <span class="chip">Odoo 19</span>
-            <span class="chip">Inventory</span>
-            <span class="chip">Single Variant Flow</span>
-            <span class="chip">Barcode Entry</span>
+<section class="container my-5">
+    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
+        <div class="col-lg-6 p-5">
+            <div class="d-flex align-items-center mb-4">
+                <img src="icon.png" alt="Syntho Product Packaging Barcode icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
+                <div>
+                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Inventory Usability</div>
+                    <h1 class="h2 font-weight-bold mb-0">Syntho Product Packaging Barcode</h1>
+                </div>
+            </div>
+            <p class="lead text-muted mb-4">
+                Restore the Packaging / Barcodes block in the Odoo 19 product
+                Inventory tab for single-variant products so barcode packaging lines
+                are editable again from the product form.
+            </p>
+            <div class="d-flex flex-wrap">
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Inventory</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Single Variant</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Packaging Barcodes</span>
+            </div>
         </div>
-        <div class="hero-media">
-            <img src="banner.png" alt="Syntho Product Packaging Barcode banner"/>
+        <div class="col-lg-6 p-4 bg-light text-center">
+            <img src="banner.png" alt="Syntho Product Packaging Barcode preview" class="img-fluid rounded border shadow-sm"/>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>What It Restores</h2>
-        <p class="lead">
-            Odoo 19 changed how packaging barcode data is handled. This add-on brings
-            back an editable Packaging / Barcodes block inside the Inventory tab for
-            single-variant products, making the barcode workflow easier to reach from
-            the product form.
-        </p>
-        <div class="grid">
-            <div class="card">
-                <h3>Inline Barcode Maintenance</h3>
-                <p>Add or edit packaging barcode rows directly inside the product form.</p>
-            </div>
-            <div class="card">
-                <h3>Built on Odoo 19 Data Models</h3>
-                <p>Uses Odoo 19's packaging barcode relation instead of introducing new custom tables.</p>
-            </div>
-            <div class="card">
-                <h3>Cleaner Inventory Workflow</h3>
-                <p>Warehouse or operations users can maintain barcode-related packaging data without leaving the product record.</p>
-            </div>
-            <div class="card">
-                <h3>Minimal Functional Scope</h3>
-                <p>The module focuses on restoring a useful entry point in the standard UI rather than replacing Odoo's barcode engine.</p>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 font-weight-bold">What This Restores</h2>
+            <p class="text-muted mb-0">A focused view enhancement for teams that manage packaging barcodes on the product form.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Inventory Tab Block</h3>
+                <p class="text-muted mb-0">Brings back the Packaging / Barcodes group inside the product Inventory page.</p>
             </div>
         </div>
-        <div class="note-box">
-            <strong>Important behavior:</strong>
-            <ul>
-                <li>the block is shown for single-variant products</li>
-                <li>multi-variant products still follow Odoo's variant-based workflow</li>
-                <li>the add-on depends on the standard inventory and barcode behavior already present in Odoo</li>
-            </ul>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Inline Editing</h3>
+                <p class="text-muted mb-0">Barcode packaging lines can be edited directly from the product form with an inline list.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Odoo 19 Relation</h3>
+                <p class="text-muted mb-0">Uses the current packaging relation on the underlying single product variant.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Minimal Scope</h3>
+                <p class="text-muted mb-0">The section is shown only when the product template has exactly one variant.</p>
+            </div>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Installation</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-no">1</div>
-                <div>
-                    <strong>Copy the add-on to your custom addons path</strong>
-                    <span>Place <code>syntho_product_packaging_barcode</code> in your Odoo custom addons directory.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">2</div>
-                <div>
-                    <strong>Update the Apps list</strong>
-                    <span>Refresh Odoo's app list so the new module is visible for installation.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">3</div>
-                <div>
-                    <strong>Install the module</strong>
-                    <span>Search for <em>Syntho Product Packaging Barcode</em> and install it.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">4</div>
-                <div>
-                    <strong>Open a product and go to Inventory</strong>
-                    <span>For single-variant products, the Packaging / Barcodes section appears inside the Inventory tab.</span>
-                </div>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="bg-white border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">When It Helps</h2>
+                <ul class="text-muted mb-0 pl-3">
+                    <li class="mb-2">Warehouses maintaining multiple packaging barcodes for a single stock item.</li>
+                    <li class="mb-2">Teams that want packaging data available directly on the product template form.</li>
+                    <li class="mb-0">Odoo 19 databases where the standard view no longer exposes the desired block clearly.</li>
+                </ul>
             </div>
         </div>
-        <table class="meta">
-            <tr>
-                <td>Dependency</td>
-                <td><code>stock</code></td>
-            </tr>
-            <tr>
-                <td>Target Screen</td>
-                <td>Product template form, Inventory tab</td>
-            </tr>
-            <tr>
-                <td>Technical Scope</td>
-                <td>View extension plus a related field bridge for Odoo 19 packaging barcode records</td>
-            </tr>
-        </table>
+        <div class="col-lg-5 mb-4">
+            <div class="bg-light border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Editable Fields</h2>
+                <p class="text-muted mb-0">
+                    The embedded list lets users maintain the packaging barcode and
+                    unit of measure for each packaging line.
+                </p>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="section">
-        <div class="support">
-            <h3>SynthoERP Support</h3>
-            <p>Need help refining inventory workflows or barcode operations in Oman?</p>
-            <p>Website: <a href="https://www.synthoerp.com/">www.synthoerp.com</a></p>
-            <p>Email: <a href="mailto:info@synthoerp.com">info@synthoerp.com</a></p>
-            <p>WhatsApp: <a href="https://wa.me/96871150483">+968 7115 0483</a></p>
+<section class="container mb-4">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Installation</h2>
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
+                    <p class="text-muted mb-0">Copy <code>syntho_product_packaging_barcode</code> into your addons path.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
+                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
+                    <p class="text-muted mb-0">Install <strong>Syntho Product Packaging Barcode</strong>.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
+                    <p class="text-muted mb-0">Open a single-variant product and manage packaging barcodes from the Inventory tab.</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+</section>
+
+<section class="container mb-5">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm mb-0">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">Dependency</td>
+                        <td><code>stock</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">View Target</td>
+                        <td>Product template Inventory tab</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Related Field</td>
+                        <td><code>product_variant_id.product_uom_ids</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Visible When</td>
+                        <td>The product template has exactly one variant</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Support Contact</td>
+                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

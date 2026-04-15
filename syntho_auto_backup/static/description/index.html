@@ -1,327 +1,166 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Syntho Auto Backup</title>
-    <style>
-        :root {
-            --brand: #2e4f7a;
-            --brand-deep: #1d2d45;
-            --ink: #243041;
-            --muted: #647286;
-            --line: #d7e0ea;
-            --panel: #f4f8fc;
-            --soft: #edf3f9;
-        }
-        body {
-            margin: 0;
-            padding: 24px;
-            background: #edf2f7;
-            color: var(--ink);
-            font-family: "Trebuchet MS", Verdana, sans-serif;
-        }
-        .wrap {
-            max-width: 980px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 24px 60px rgba(29, 45, 69, 0.12);
-        }
-        .hero {
-            background: linear-gradient(135deg, var(--brand-deep), var(--brand));
-            color: #ffffff;
-            padding: 42px 42px 30px;
-        }
-        .eyebrow {
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            font-size: 12px;
-            opacity: 0.78;
-            margin: 0 0 14px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 42px;
-            line-height: 1.08;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .hero p {
-            margin: 18px 0 0;
-            max-width: 760px;
-            font-size: 18px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .chips { margin-top: 22px; }
-        .chip {
-            display: inline-block;
-            margin: 0 10px 10px 0;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .hero-media {
-            margin-top: 26px;
-            padding: 10px;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .hero-media img {
-            display: block;
-            width: 100%;
-            border-radius: 16px;
-        }
-        .section {
-            padding: 34px 42px;
-            border-top: 1px solid var(--line);
-        }
-        h2 {
-            margin: 0 0 16px;
-            font-size: 28px;
-            line-height: 1.2;
-            font-family: Georgia, "Times New Roman", serif;
-            color: var(--brand-deep);
-        }
-        .lead {
-            margin: 0;
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.75;
-        }
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 24px;
-        }
-        .card {
-            flex: 1 1 270px;
-            padding: 22px;
-            border-radius: 20px;
-            background: var(--panel);
-            border: 1px solid var(--line);
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 18px;
-            color: var(--brand-deep);
-        }
-        .card p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .notice {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: linear-gradient(180deg, #f8fbfe, var(--soft));
-            border: 1px solid #ccd9e7;
-        }
-        .notice ul {
-            margin: 14px 0 0 18px;
-            padding: 0;
-            color: var(--muted);
-            line-height: 1.9;
-        }
-        .steps {
-            margin-top: 24px;
-        }
-        .step {
-            display: flex;
-            gap: 16px;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .step:last-child {
-            border-bottom: 0;
-            padding-bottom: 0;
-        }
-        .step-no {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--brand);
-            color: #ffffff;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 36px;
-        }
-        .step strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--brand-deep);
-        }
-        .step span {
-            color: var(--muted);
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        .meta {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 22px;
-        }
-        .meta td {
-            padding: 14px 16px;
-            border: 1px solid var(--line);
-            font-size: 15px;
-        }
-        .meta td:first-child {
-            width: 210px;
-            background: #f8fbfe;
-            color: var(--brand-deep);
-            font-weight: bold;
-        }
-        .support {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: #223549;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .support h3 {
-            margin: 0 0 10px;
-            font-size: 22px;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .support p {
-            margin: 0 0 8px;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-        .support a {
-            color: #abd1ff;
-            text-decoration: none;
-        }
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            .hero, .section { padding: 26px 22px; }
-            h1 { font-size: 34px; }
-        }
-    </style>
-</head>
-<body>
-<div class="wrap">
-    <div class="hero">
-        <p class="eyebrow">Database Safety</p>
-        <h1>Syntho Auto Backup</h1>
-        <p>
-            Create scheduled Odoo database backups with a simple admin screen,
-            timestamped files, and a controlled backup directory structure that
-            fits cleanly into Odoo 19 operations.
-        </p>
-        <div class="chips">
-            <span class="chip">Odoo 19</span>
-            <span class="chip">Administration</span>
-            <span class="chip">Zip or Dump</span>
-            <span class="chip">Scheduled Cron</span>
+<section class="container my-5">
+    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
+        <div class="col-lg-6 p-5">
+            <div class="d-flex align-items-center mb-4">
+                <img src="icon.png" alt="Syntho Auto Backup icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
+                <div>
+                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Database Safety</div>
+                    <h1 class="h2 font-weight-bold mb-0">Syntho Auto Backup</h1>
+                </div>
+            </div>
+            <p class="lead text-muted mb-4">
+                Schedule Odoo database backups from a simple administration screen,
+                choose the output format you need, and keep backup folders inside a
+                controlled base directory.
+            </p>
+            <div class="d-flex flex-wrap">
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Administration</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Zip or Dump</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Scheduled Cron</span>
+            </div>
         </div>
-        <div class="hero-media">
-            <img src="banner.png" alt="Syntho Auto Backup banner"/>
+        <div class="col-lg-6 p-4 bg-light text-center">
+            <img src="banner.png" alt="Syntho Auto Backup preview" class="img-fluid rounded border shadow-sm"/>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>What This Module Does</h2>
-        <p class="lead">
-            The module introduces a backup configuration model where administrators
-            can define a backup name, destination folder, and output format. An Odoo
-            scheduled action runs the backup process and generates timestamped files
-            using either Odoo's zip dump or PostgreSQL custom dump format.
-        </p>
-        <div class="grid">
-            <div class="card">
-                <h3>Scheduled Execution</h3>
-                <p>The module includes an Odoo cron job ready to run database backups automatically.</p>
-            </div>
-            <div class="card">
-                <h3>Two Output Formats</h3>
-                <p>Choose between zip backups through Odoo or custom dump backups through <code>pg_dump</code>.</p>
-            </div>
-            <div class="card">
-                <h3>Multiple Backup Configurations</h3>
-                <p>Create more than one backup rule when you need different folders or output formats.</p>
-            </div>
-            <div class="card">
-                <h3>Controlled File Paths</h3>
-                <p>Backup folders are validated against the configured base backup directory for safer storage handling.</p>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 font-weight-bold">What You Get</h2>
+            <p class="text-muted mb-0">A small Odoo 19 utility focused on repeatable, server-side database backups.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Scheduled Execution</h3>
+                <p class="text-muted mb-0">
+                    The module ships with an Odoo scheduled action that processes all
+                    configured backup rules automatically.
+                </p>
             </div>
         </div>
-        <div class="notice">
-            <strong>Operational note:</strong>
-            <ul>
-                <li>the Odoo service user must be able to write to the configured backup folder</li>
-                <li><code>dump</code> format relies on PostgreSQL dump tooling on the server</li>
-                <li>backup folders must stay within the configured base backup directory</li>
-            </ul>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Two Output Formats</h3>
+                <p class="text-muted mb-0">
+                    Generate either a zip backup through Odoo or a PostgreSQL custom
+                    dump through <code>pg_dump</code>.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Multiple Configurations</h3>
+                <p class="text-muted mb-0">
+                    Create more than one backup rule when different folders or formats
+                    are needed for the same database.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Safer Paths</h3>
+                <p class="text-muted mb-0">
+                    Backup directories are validated against a configured base path to
+                    reduce accidental writes outside the intended storage area.
+                </p>
+            </div>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Installation</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-no">1</div>
-                <div>
-                    <strong>Copy the module into your addons path</strong>
-                    <span>Place <code>syntho_auto_backup</code> in the custom addons directory used by your server.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">2</div>
-                <div>
-                    <strong>Update the Apps list</strong>
-                    <span>Refresh Odoo's app registry so the backup module appears in Apps.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">3</div>
-                <div>
-                    <strong>Install Syntho Auto Backup</strong>
-                    <span>Install the module from Apps and open the Auto Backup menu.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">4</div>
-                <div>
-                    <strong>Create your backup configuration</strong>
-                    <span>Define the folder and format, then enable or schedule the cron according to your policy.</span>
-                </div>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="bg-white border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">How It Works</h2>
+                <p class="text-muted">
+                    Administrators create backup configurations with a name, a folder,
+                    and a format. The scheduled action loops through those records,
+                    creates timestamped filenames, and writes the backup file on the server.
+                </p>
+                <ul class="text-muted mb-0 pl-3">
+                    <li class="mb-2">Each backup file includes the database name and a timestamp.</li>
+                    <li class="mb-2">Zip format uses Odoo's own database dump routine.</li>
+                    <li class="mb-0">Dump format uses PostgreSQL tools available on the host machine.</li>
+                </ul>
             </div>
         </div>
-        <table class="meta">
-            <tr>
-                <td>Dependency</td>
-                <td><code>base</code></td>
-            </tr>
-            <tr>
-                <td>Configuration Fields</td>
-                <td>Name, backup directory, and backup format</td>
-            </tr>
-            <tr>
-                <td>Output Naming</td>
-                <td>Database name plus timestamped file naming for easier backup tracking</td>
-            </tr>
-        </table>
+        <div class="col-lg-5 mb-4">
+            <div class="bg-light border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Operational Notes</h2>
+                <ul class="text-muted mb-0 pl-3">
+                    <li class="mb-2">The Odoo service user must be able to write to the selected folder.</li>
+                    <li class="mb-2"><code>pg_dump</code> must be available on the server for dump format.</li>
+                    <li class="mb-0">Configured folders must stay within the base backup directory.</li>
+                </ul>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="section">
-        <div class="support">
-            <h3>SynthoERP Support</h3>
-            <p>Need help setting up backup routines, hosting, or Odoo support in Oman?</p>
-            <p>Website: <a href="https://www.synthoerp.com/">www.synthoerp.com</a></p>
-            <p>Email: <a href="mailto:info@synthoerp.com">info@synthoerp.com</a></p>
-            <p>WhatsApp: <a href="https://wa.me/96871150483">+968 7115 0483</a></p>
+<section class="container mb-4">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Installation</h2>
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
+                    <p class="text-muted mb-0">Copy <code>syntho_auto_backup</code> into your custom addons path.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
+                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
+                    <p class="text-muted mb-0">Install <strong>Syntho Auto Backup</strong> from Apps.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
+                    <p class="text-muted mb-0">Open <strong>Auto Backup</strong>, create your configurations, and schedule the cron as needed.</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+</section>
+
+<section class="container mb-5">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm mb-0">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">Dependency</td>
+                        <td><code>base</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Configuration Model</td>
+                        <td><code>auto.backup.config</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Fields</td>
+                        <td>Name, backup directory, and backup format</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Output Naming</td>
+                        <td>Database name plus a timestamped filename for easier tracking</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Support Contact</td>
+                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

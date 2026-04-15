@@ -1,327 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <title>Syntho Product Brand</title>
-    <style>
-        :root {
-            --brand: #7a2f56;
-            --brand-deep: #42182f;
-            --ink: #31212a;
-            --muted: #71636a;
-            --line: #ead7e1;
-            --panel: #fcf5f8;
-            --soft: #f8edf2;
-        }
-        body {
-            margin: 0;
-            padding: 24px;
-            background: #f5edf1;
-            color: var(--ink);
-            font-family: "Trebuchet MS", Verdana, sans-serif;
-        }
-        .wrap {
-            max-width: 980px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 24px 60px rgba(66, 24, 47, 0.12);
-        }
-        .hero {
-            background: linear-gradient(135deg, var(--brand-deep), var(--brand));
-            color: #ffffff;
-            padding: 42px 42px 30px;
-        }
-        .eyebrow {
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            font-size: 12px;
-            opacity: 0.78;
-            margin: 0 0 14px;
-        }
-        h1 {
-            margin: 0;
-            font-size: 42px;
-            line-height: 1.08;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .hero p {
-            margin: 18px 0 0;
-            max-width: 760px;
-            font-size: 18px;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .chips { margin-top: 22px; }
-        .chip {
-            display: inline-block;
-            margin: 0 10px 10px 0;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.14);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .hero-media {
-            margin-top: 26px;
-            padding: 10px;
-            border-radius: 22px;
-            background: rgba(255, 255, 255, 0.08);
-        }
-        .hero-media img {
-            display: block;
-            width: 100%;
-            border-radius: 16px;
-        }
-        .section {
-            padding: 34px 42px;
-            border-top: 1px solid var(--line);
-        }
-        h2 {
-            margin: 0 0 16px;
-            font-size: 28px;
-            line-height: 1.2;
-            font-family: Georgia, "Times New Roman", serif;
-            color: var(--brand-deep);
-        }
-        .lead {
-            margin: 0;
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.75;
-        }
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 24px;
-        }
-        .card {
-            flex: 1 1 270px;
-            padding: 22px;
-            border-radius: 20px;
-            background: var(--panel);
-            border: 1px solid var(--line);
-        }
-        .card h3 {
-            margin: 0 0 10px;
-            font-size: 18px;
-            color: var(--brand-deep);
-        }
-        .card p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .feature-band {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: linear-gradient(180deg, #fff9fb, var(--soft));
-            border: 1px solid var(--line);
-        }
-        .feature-band ul {
-            margin: 12px 0 0 18px;
-            padding: 0;
-            color: var(--muted);
-            line-height: 1.9;
-        }
-        .steps {
-            margin-top: 24px;
-        }
-        .step {
-            display: flex;
-            gap: 16px;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--line);
-        }
-        .step:last-child {
-            border-bottom: 0;
-            padding-bottom: 0;
-        }
-        .step-no {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--brand);
-            color: #ffffff;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 36px;
-        }
-        .step strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--brand-deep);
-        }
-        .step span {
-            color: var(--muted);
-            line-height: 1.7;
-            font-size: 15px;
-        }
-        .meta {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 22px;
-        }
-        .meta td {
-            padding: 14px 16px;
-            border: 1px solid var(--line);
-            font-size: 15px;
-        }
-        .meta td:first-child {
-            width: 210px;
-            background: #fff9fb;
-            color: var(--brand-deep);
-            font-weight: bold;
-        }
-        .support {
-            margin-top: 24px;
-            padding: 24px;
-            border-radius: 20px;
-            background: #462033;
-            color: rgba(255, 255, 255, 0.92);
-        }
-        .support h3 {
-            margin: 0 0 10px;
-            font-size: 22px;
-            font-family: Georgia, "Times New Roman", serif;
-        }
-        .support p {
-            margin: 0 0 8px;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-        .support a {
-            color: #ffd2e6;
-            text-decoration: none;
-        }
-        @media (max-width: 768px) {
-            body { padding: 12px; }
-            .hero, .section { padding: 26px 22px; }
-            h1 { font-size: 34px; }
-        }
-    </style>
-</head>
-<body>
-<div class="wrap">
-    <div class="hero">
-        <p class="eyebrow">Catalog Structure</p>
-        <h1>Syntho Product Brand</h1>
-        <p>
-            Add a dedicated brand master to your Odoo product catalog and assign
-            brands directly on product templates with a clean, business-friendly
-            management screen.
-        </p>
-        <div class="chips">
-            <span class="chip">Odoo 19</span>
-            <span class="chip">Product Catalog</span>
-            <span class="chip">Sales</span>
-            <span class="chip">Brand Master Data</span>
+<section class="container my-5">
+    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
+        <div class="col-lg-6 p-5">
+            <div class="d-flex align-items-center mb-4">
+                <img src="icon.png" alt="Syntho Product Brand icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
+                <div>
+                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Catalog Structure</div>
+                    <h1 class="h2 font-weight-bold mb-0">Syntho Product Brand</h1>
+                </div>
+            </div>
+            <p class="lead text-muted mb-4">
+                Add a dedicated brand master to Odoo 19 and link it directly to
+                product templates for cleaner catalog organization.
+            </p>
+            <div class="d-flex flex-wrap">
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Product</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Brand Master</span>
+                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Sales Ready</span>
+            </div>
         </div>
-        <div class="hero-media">
-            <img src="banner.png" alt="Syntho Product Brand banner"/>
+        <div class="col-lg-6 p-4 bg-light text-center">
+            <img src="banner.png" alt="Syntho Product Brand preview" class="img-fluid rounded border shadow-sm"/>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Why Teams Use It</h2>
-        <p class="lead">
-            Odoo's standard product model does not provide a simple brand entity for
-            many businesses that sell third-party or multi-brand catalogs. This module
-            introduces a dedicated <code>product.brand</code> model and links it to the
-            product template form so brand information becomes a first-class catalog field.
-        </p>
-        <div class="grid">
-            <div class="card">
-                <h3>Dedicated Brand Records</h3>
-                <p>Create and manage brand entries with a name, description, and logo.</p>
-            </div>
-            <div class="card">
-                <h3>Product Template Integration</h3>
-                <p>Assign a brand directly on the product form without changing your existing product structure.</p>
-            </div>
-            <div class="card">
-                <h3>Clean Admin Navigation</h3>
-                <p>Brand records are available from the Sales catalog menu for easy maintenance.</p>
-            </div>
-            <div class="card">
-                <h3>Access Control Included</h3>
-                <p>Internal users can read brand data while administrators manage brand records.</p>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="h3 font-weight-bold">Core Features</h2>
+            <p class="text-muted mb-0">Everything needed to introduce brands without overcomplicating the product model.</p>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Dedicated Brand Model</h3>
+                <p class="text-muted mb-0">Create brand records with a name, description, logo, and related products.</p>
             </div>
         </div>
-        <div class="feature-band">
-            <strong>Good fit for:</strong>
-            <ul>
-                <li>trading companies and distributors with multi-brand catalogs</li>
-                <li>manufacturers that want consistent brand tagging across product templates</li>
-                <li>teams preparing exports, reports, or automation flows that depend on brand data</li>
-            </ul>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Brand on Product Form</h3>
+                <p class="text-muted mb-0">A brand field is added to the product template form right next to core catalog fields.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Readable Catalog Data</h3>
+                <p class="text-muted mb-0">Give sales and inventory teams a cleaner way to capture brand information at source.</p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="h-100 bg-white border rounded shadow-sm p-4">
+                <h3 class="h5 font-weight-bold">Controlled Access</h3>
+                <p class="text-muted mb-0">Internal users can read brands, while system administrators manage the master data.</p>
+            </div>
         </div>
     </div>
+</section>
 
-    <div class="section">
-        <h2>Installation</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-no">1</div>
-                <div>
-                    <strong>Copy the module to your addons path</strong>
-                    <span>Place <code>syntho_product_brand</code> inside the custom addons directory used by your Odoo instance.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">2</div>
-                <div>
-                    <strong>Refresh the Apps list</strong>
-                    <span>Update the app registry so Odoo can detect the module.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">3</div>
-                <div>
-                    <strong>Install Syntho Product Brand</strong>
-                    <span>Install the add-on from Apps and open the Product Brands menu.</span>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-no">4</div>
-                <div>
-                    <strong>Create brands and assign them to products</strong>
-                    <span>Maintain brand records from Sales, then select the brand on each product template.</span>
-                </div>
+<section class="container mb-4">
+    <div class="row">
+        <div class="col-lg-7 mb-4">
+            <div class="bg-white border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Where It Fits</h2>
+                <ul class="text-muted mb-0 pl-3">
+                    <li class="mb-2">Businesses that sell multiple brands and want that relationship visible on products.</li>
+                    <li class="mb-2">Teams preparing cleaner catalogs before building custom reports, filters, or portals.</li>
+                    <li class="mb-0">Odoo instances where brand should be part of the core product record rather than free text.</li>
+                </ul>
             </div>
         </div>
-        <table class="meta">
-            <tr>
-                <td>Dependencies</td>
-                <td><code>product</code>, <code>sale</code></td>
-            </tr>
-            <tr>
-                <td>Main Fields</td>
-                <td>Brand name, description, logo, and product template link</td>
-            </tr>
-            <tr>
-                <td>Technical Scope</td>
-                <td>One new brand model plus a simple extension of the product template form</td>
-            </tr>
-        </table>
+        <div class="col-lg-5 mb-4">
+            <div class="bg-light border rounded shadow-sm p-4 h-100">
+                <h2 class="h4 font-weight-bold">Data Model</h2>
+                <p class="text-muted mb-0">
+                    The addon introduces a new <code>product.brand</code> model and links it
+                    to <code>product.template</code> through a many-to-one brand field.
+                </p>
+            </div>
+        </div>
     </div>
+</section>
 
-    <div class="section">
-        <div class="support">
-            <h3>SynthoERP Support</h3>
-            <p>Need help shaping a cleaner product catalog or extending Odoo in Oman?</p>
-            <p>Website: <a href="https://www.synthoerp.com/">www.synthoerp.com</a></p>
-            <p>Email: <a href="mailto:info@synthoerp.com">info@synthoerp.com</a></p>
-            <p>WhatsApp: <a href="https://wa.me/96871150483">+968 7115 0483</a></p>
+<section class="container mb-4">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Installation</h2>
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
+                    <p class="text-muted mb-0">Copy <code>syntho_product_brand</code> into your addons path.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
+                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
+                    <p class="text-muted mb-0">Install <strong>Syntho Product Brand</strong>.</p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="border rounded p-3 h-100">
+                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
+                    <p class="text-muted mb-0">Create brand records and assign them on product templates.</p>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+</section>
+
+<section class="container mb-5">
+    <div class="bg-white border rounded shadow-sm p-4">
+        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm mb-0">
+                <tbody>
+                    <tr>
+                        <td class="font-weight-bold">Dependencies</td>
+                        <td><code>product</code>, <code>sale</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">New Model</td>
+                        <td><code>product.brand</code></td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Brand Fields</td>
+                        <td>Name, description, logo, and related products</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Access Rules</td>
+                        <td>Read for internal users, full management for system administrators</td>
+                    </tr>
+                    <tr>
+                        <td class="font-weight-bold">Support Contact</td>
+                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
