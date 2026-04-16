@@ -38,12 +38,16 @@ class BackupConfig(models.Model):
     @api.model
     def schedule_backup(self):
         configs = self.search([])
+        if not configs:
+            return
+
+        db_name = self.env.cr.dbname
+        date_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+
         for config in configs:
             try:
                 config._check_folder_path()
                 os.makedirs(config.folder, exist_ok=True)
-                db_name = self.env.cr.dbname
-                date_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
                 filename = f"{db_name}_{date_str}.{config.format}"
                 filepath = os.path.join(config.folder, filename)
 
