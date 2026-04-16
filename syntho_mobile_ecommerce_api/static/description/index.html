@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SynthoShop Mobile Commerce</title>
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #142633; background: #fbf9f4; }
+    .hero { padding: 64px 32px; background: linear-gradient(135deg, #142633, #00a09d); color: white; }
+    .wrap { max-width: 1080px; margin: 0 auto; }
+    .eyebrow { letter-spacing: .18em; text-transform: uppercase; font-weight: 800; opacity: .78; }
+    h1 { font-size: clamp(40px, 6vw, 76px); line-height: .95; margin: 12px 0 18px; }
+    h2 { font-size: 34px; margin: 0 0 16px; }
+    p { font-size: 18px; line-height: 1.65; }
+    .banner { max-width: 100%; border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,.18); margin-top: 28px; }
+    .section { padding: 52px 32px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+    .card { background: white; border: 1px solid #e7dfd4; border-radius: 22px; padding: 24px; }
+    .card h3 { margin: 0 0 8px; font-size: 20px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .chip { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28); border-radius: 999px; padding: 10px 14px; font-weight: 700; }
+    .contact { background: #142633; color: white; }
+    code { background: #eee8df; padding: 2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Odoo 19 Community Mobile Commerce</div>
+      <h1>SynthoShop mobile storefront for Odoo.</h1>
+      <p>Native mobile catalog, cart, checkout, wishlist, reviews, brands, and barcode lookup with Odoo keeping prices, taxes, delivery, and payment flows authoritative.</p>
+      <div class="chips">
+        <span class="chip">Flutter Ready</span>
+        <span class="chip">Hybrid Payments</span>
+        <span class="chip">Wishlist</span>
+        <span class="chip">Ratings</span>
+        <span class="chip">Brands</span>
+        <span class="chip">Barcode Lookup</span>
+      </div>
+      <img class="banner" src="banner.png" alt="SynthoShop mobile commerce banner">
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <h2>What it includes</h2>
+      <div class="grid">
+        <div class="card"><h3>Mobile API</h3><p>Session-based JSON-RPC endpoints for home, catalog, product detail, cart, checkout, account, orders, brands, wishlist, reviews, and barcode lookup.</p></div>
+        <div class="card"><h3>Odoo App Control</h3><p>Backend menus to control mobile app colors, versions, maintenance mode, navigation, banners, content pages, and home sections.</p></div>
+        <div class="card"><h3>Checkout Native First</h3><p>Mobile screens handle review, address, delivery, and payment selection. Only the provider payment form opens in a hosted Odoo wrapper.</p></div>
+        <div class="card"><h3>Storefront Extensions</h3><p>Optional brand browsing through <code>product.brand</code> and product lookup from standard product or packaging barcodes.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="section contact">
+    <div class="wrap">
+      <h2>Need Odoo Support in Oman?</h2>
+      <p>💡 <strong>Need Odoo implementation or support in Oman? Contact SynthoERP.</strong></p>
+      <p>We help businesses across Oman set up, customise, and support Odoo Community &amp; Enterprise — including mobile app publishing on Google Play and the App Store.</p>
+      <p>🌐 <a href="https://www.synthoerp.com/" style="color:#7ffcf9;">www.synthoerp.com</a> &nbsp;|&nbsp; 📧 <a href="mailto:info@synthoerp.com" style="color:#7ffcf9;">info@synthoerp.com</a></p>
+      <p><a href="https://wa.me/96871150483" style="display:inline-block;margin-top:8px;background:#25d366;color:white;padding:12px 24px;border-radius:999px;font-weight:700;text-decoration:none;">💬 WhatsApp: +968 7115 0483</a></p>
+    </div>
+  </section>
+</body>
+</html>

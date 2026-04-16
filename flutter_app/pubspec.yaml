@@ -1,0 +1,40 @@
+name: syntho_shop_flutter
+description: Customer-facing Flutter ecommerce app for the Odoo 19 mobile ecommerce module.
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.1.0 <4.0.0"
+  flutter: ">=3.13.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.1.0
+  url_launcher: ^6.1.14
+  app_links: ^3.5.0
+  mobile_scanner: ^5.0.0
+  cached_network_image: ^3.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/branding/app_icon.png"
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: "assets/branding/app_icon.png"
+    background_color: "#FFFFFF"
+    theme_color: "#00A09D"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/branding/

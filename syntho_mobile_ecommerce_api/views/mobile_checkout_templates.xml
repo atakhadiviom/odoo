@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="mobile_payment_page" name="Mobile Payment Page">
+        <t t-call="website.layout">
+            <div class="container py-5">
+                <div class="mx-auto" style="max-width: 560px;">
+                    <div class="card shadow-sm border-0 overflow-hidden">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="mb-4">
+                                <div
+                                    class="text-uppercase fw-semibold mb-2"
+                                    style="letter-spacing: 0.08em; color: #9a5130;"
+                                >
+                                    Mobile Checkout
+                                </div>
+                                <h1 class="h3 mb-2">Complete your payment</h1>
+                                <p class="text-muted mb-0">
+                                    Review the total below, then continue securely with
+                                    <t t-out="provider.name" />.
+                                </p>
+                            </div>
+
+                            <div class="rounded-4 px-4 py-3 mb-4" style="background: #f8efe3;">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="small text-muted">Order</div>
+                                        <div class="fw-semibold">
+                                            <t t-out="order.name" />
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="small text-muted">Total</div>
+                                        <div class="fw-semibold">
+                                            <t t-out="order.currency_id.name" />
+                                            <t t-out="' %.2f' % order.amount_total" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4" t-out="redirect_form_html" />
+
+                            <div class="d-flex flex-column gap-2">
+                                <a class="btn btn-primary btn-lg" href="#" id="mobile-payment-continue">
+                                    Continue to <t t-out="provider.name" />
+                                </a>
+                                <a class="btn btn-link text-decoration-none" t-att-href="cancel_url">
+                                    Cancel and return to the app
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                (function () {
+                    function submitRedirectForm() {
+                        const form = document.querySelector('form[action]');
+                        if (form) {
+                            form.submit();
+                        }
+                    }
+
+                    const trigger = document.getElementById('mobile-payment-continue');
+                    if (trigger) {
+                        trigger.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            submitRedirectForm();
+                        });
+                    }
+
+                    window.setTimeout(submitRedirectForm, 400);
+                })();
+            </script>
+        </t>
+    </template>
+</odoo>
