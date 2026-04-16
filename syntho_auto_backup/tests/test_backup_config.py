@@ -20,24 +20,21 @@ class TestBackupConfig(TransactionCase):
         })
 
     @patch('os.makedirs')
-    @patch('subprocess.run')
     @patch('odoo.service.db.dump_db')
     @patch('builtins.open', new_callable=mock_open)
-    def test_schedule_backup(self, mock_file, mock_dump_db, mock_run, mock_makedirs):
+    def test_schedule_backup(self, mock_file, mock_dump_db, mock_makedirs):
         self.config_model.schedule_backup()
 
         # Verify makedirs was called for both formats
         self.assertEqual(mock_makedirs.call_count, 2)
 
-        # Verify subprocess.run was called for 'dump' format
-        self.assertTrue(mock_run.called)
-        args, kwargs = mock_run.call_args
-        self.assertEqual(args[0][0], 'pg_dump')
-        self.assertTrue(kwargs.get('check'))
+        # Verify odoo.service.db.dump_db was called for both formats
+        self.assertEqual(mock_dump_db.call_count, 2)
 
-        # Verify odoo.service.db.dump_db was called for 'zip' format
-        self.assertTrue(mock_dump_db.called)
-        self.assertEqual(mock_dump_db.call_args[0][2], 'zip')
+        # Verify formats passed correctly
+        formats_used = [call[0][2] for call in mock_dump_db.call_args_list]
+        self.assertIn('zip', formats_used)
+        self.assertIn('sql', formats_used)
 
-        # Verify open was called for 'zip' format file writing
-        self.assertTrue(mock_file.called)
+        # Verify open was called for both file writings
+        self.assertEqual(mock_file.call_count, 2)
