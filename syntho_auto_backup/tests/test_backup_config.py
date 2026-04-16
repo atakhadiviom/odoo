@@ -41,3 +41,27 @@ class TestBackupConfig(TransactionCase):
 
         # Verify open was called for 'zip' format file writing
         self.assertTrue(mock_file.called)
+
+    @patch('os.makedirs')
+    @patch('subprocess.run')
+    @patch('odoo.service.db.dump_db')
+    @patch('builtins.open', new_callable=mock_open)
+    @patch('syntho_auto_backup.models.backup_config._logger.error')
+    def test_schedule_backup_pg_dump_error(self, mock_logger_error, mock_file, mock_dump_db, mock_run, mock_makedirs):
+        import subprocess
+        # Clear existing configs to test only the dump format
+        self.config_model.search([]).unlink()
+        self.config_model.create({
+            'name': 'Test Dump Error',
+            'folder': '/tmp/backup_dump_error',
+            'format': 'dump'
+        })
+
+        # Make subprocess.run raise CalledProcessError when called for dump
+        mock_run.side_effect = subprocess.CalledProcessError(1, ['pg_dump'])
+
+        self.config_model.schedule_backup()
+
+        # Verify that the logger was called with the error message
+        db_name = self.env.cr.dbname
+        mock_logger_error.assert_any_call(f"Error during pg_dump for {db_name}: Command '['pg_dump']' returned non-zero exit status 1.")
