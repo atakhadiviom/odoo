@@ -48,12 +48,13 @@ class BackupConfig(models.Model):
                 filepath = os.path.join(config.folder, filename)
 
                 if config.format == 'dump':
-                    # Use pg_dump for custom dump format
+                    # Use odoo built-in db dump_db with 'c' format instead of pg_dump subprocess to prevent command injection
                     try:
-                        subprocess.run(['pg_dump', '--format=c', f'--file={filepath}', db_name], check=True)
-                        _logger.info(f"Successfully backed up {db_name} to {filepath}")
-                    except subprocess.CalledProcessError as e:
-                        _logger.error(f"Error during pg_dump for {db_name}: {e}")
+                        with open(filepath, 'wb') as f:
+                            odoo.service.db.dump_db(db_name, f, 'c')
+                        _logger.info(f"Successfully backed up {db_name} to {filepath} in c format")
+                    except Exception as e:
+                        _logger.error(f"Error during odoo dump_db c format for {db_name}: {e}")
                 else:
                     # For zip format, use odoo built-in db dump_db
                     try:
