@@ -3,11 +3,11 @@ services:
     image: postgres:15
     environment:
       POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: odoo
-      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-odoo}
+      POSTGRES_USER: ${DB_USER:-odoo}
       PGDATA: /var/lib/postgresql/data/pgdata
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-odoo} -d postgres"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -21,8 +21,9 @@ services:
         condition: service_healthy
     environment:
       HOST: db
-      PASSWORD: odoo
-      USER: odoo
+      PASSWORD: ${DB_PASSWORD:-odoo}
+      USER: ${DB_USER:-odoo}
+      ODOO_ADMIN_PASSWORD: ${ODOO_ADMIN_PASSWORD:-admin}
     ports:
       - "8069:8069"
     command: ["odoo", "--config", "/etc/odoo/odoo.conf"]
