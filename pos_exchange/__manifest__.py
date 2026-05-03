@@ -11,7 +11,7 @@ the order already contains refunded lines. The POS payment screen then settles
 the net exchange amount in one receipt.
     """,
     'category': 'Point of Sale',
-    'author': 'Smartek',
+    'author': 'SynthoERP',
     'depends': ['point_of_sale'],
     'license': 'LGPL-3',
     'assets': {

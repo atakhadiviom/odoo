@@ -14,7 +14,7 @@ verifies the checkout session before confirming the Odoo transaction.
 Customer data sent to Thawani includes the transaction reference, order total,
 customer name, and related sale order reference when available.
     """,
-    "author": "Smartek",
+    "author": "SynthoERP",
     "depends": ["payment", "website_sale"],
     "data": [
         "views/payment_thawani_templates.xml",
