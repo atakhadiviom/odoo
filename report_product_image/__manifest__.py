@@ -38,7 +38,11 @@ Use Cases
             'report_product_image/static/src/css/report_product_image.css',
         ],
     },
-    'images': ['static/description/banner.png'],
+    'images': [
+        'static/description/banner.png',
+        'static/description/quotation_report.png',
+        'static/description/document_reports.png',
+    ],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',

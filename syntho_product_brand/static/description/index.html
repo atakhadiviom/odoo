@@ -1,147 +1,33 @@
-<section class="container my-5">
-    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
-        <div class="col-lg-6 p-5">
-            <div class="d-flex align-items-center mb-4">
-                <img src="icon.png" alt="Syntho Product Brand icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
-                <div>
-                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Catalog Structure</div>
-                    <h1 class="h2 font-weight-bold mb-0">Syntho Product Brand</h1>
-                </div>
-            </div>
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h1 class="display-4 font-weight-bold mb-3">Product Brand</h1>
             <p class="lead text-muted mb-4">
-                Add a dedicated brand master to Odoo 19 and link it directly to
-                product templates for cleaner catalog organization.
+                Add brand records, logos, and product links to organize your Odoo product catalog.
             </p>
-            <div class="d-flex flex-wrap">
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Product</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Brand Master</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Sales Ready</span>
+            <div class="row">
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Brand catalog</h3><p class="mb-0 text-muted">Create reusable brand records with descriptions and logos.</p></div></div>
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Product field</h3><p class="mb-0 text-muted">Assign a brand directly on the product template form.</p></div></div>
             </div>
         </div>
-        <div class="col-lg-6 p-4 bg-light text-center">
-            <img src="banner.png" alt="Syntho Product Brand preview" class="img-fluid rounded border shadow-sm"/>
+        <div class="col-lg-6">
+            <img class="img-fluid rounded border" src="banner.png" alt="Product brand overview"/>
         </div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-4">Key Features</h2>
     <div class="row">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h3 font-weight-bold">Core Features</h2>
-            <p class="text-muted mb-0">Everything needed to introduce brands without overcomplicating the product model.</p>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Dedicated Brand Model</h3>
-                <p class="text-muted mb-0">Create brand records with a name, description, logo, and related products.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Brand on Product Form</h3>
-                <p class="text-muted mb-0">A brand field is added to the product template form right next to core catalog fields.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Readable Catalog Data</h3>
-                <p class="text-muted mb-0">Give sales and inventory teams a cleaner way to capture brand information at source.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Controlled Access</h3>
-                <p class="text-muted mb-0">Internal users can read brands, while system administrators manage the master data.</p>
-            </div>
-        </div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Brand records</h3><p class="text-muted mb-0">Manage brand names, descriptions, and logo images.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Product organization</h3><p class="text-muted mb-0">Group product templates by brand for cleaner catalogs.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Sales menu access</h3><p class="text-muted mb-0">Access brands from the Sales product catalog menu.</p></div></div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
     <div class="row">
-        <div class="col-lg-7 mb-4">
-            <div class="bg-white border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Where It Fits</h2>
-                <ul class="text-muted mb-0 pl-3">
-                    <li class="mb-2">Businesses that sell multiple brands and want that relationship visible on products.</li>
-                    <li class="mb-2">Teams preparing cleaner catalogs before building custom reports, filters, or portals.</li>
-                    <li class="mb-0">Odoo instances where brand should be part of the core product record rather than free text.</li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-lg-5 mb-4">
-            <div class="bg-light border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Data Model</h2>
-                <p class="text-muted mb-0">
-                    The addon introduces a new <code>product.brand</code> model and links it
-                    to <code>product.template</code> through a many-to-one brand field.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-4">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Installation</h2>
-        <div class="row mt-3">
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
-                    <p class="text-muted mb-0">Copy <code>syntho_product_brand</code> into your addons path.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
-                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
-                    <p class="text-muted mb-0">Install <strong>Syntho Product Brand</strong>.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
-                    <p class="text-muted mb-0">Create brand records and assign them on product templates.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-5">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm mb-0">
-                <tbody>
-                    <tr>
-                        <td class="font-weight-bold">Dependencies</td>
-                        <td><code>product</code>, <code>sale</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">New Model</td>
-                        <td><code>product.brand</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Brand Fields</td>
-                        <td>Name, description, logo, and related products</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Access Rules</td>
-                        <td>Read for internal users, full management for system administrators</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Support Contact</td>
-                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="brand_catalog.png" alt="Brand catalog"/></div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="product_brand_field.png" alt="Product brand field"/></div>
     </div>
 </section>

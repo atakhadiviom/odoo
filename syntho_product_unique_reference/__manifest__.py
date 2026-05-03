@@ -1,7 +1,7 @@
 {
-    'name': 'Syntho Unique Prod Ref',
+    'name': 'Unique Product Ref',
     'version': '19.0.1.0.0',
-    'summary': 'Enforce unique internal references for products',
+    'summary': 'Prevent duplicate product internal references',
     'description': """
 Product Unique Internal Reference
 =================================
@@ -24,7 +24,11 @@ Use Cases
     'category': 'Sales/Sales',
     'website': 'https://www.synthoerp.com/',
     'depends': ['product'],
-    'images': ['static/description/banner.png'],
+    'images': [
+        'static/description/banner.png',
+        'static/description/reference_validation.png',
+        'static/description/quality_summary.png',
+    ],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',

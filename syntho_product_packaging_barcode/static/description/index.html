@@ -1,148 +1,33 @@
-<section class="container my-5">
-    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
-        <div class="col-lg-6 p-5">
-            <div class="d-flex align-items-center mb-4">
-                <img src="icon.png" alt="Syntho Product Packaging Barcode icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
-                <div>
-                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Inventory Usability</div>
-                    <h1 class="h2 font-weight-bold mb-0">Syntho Product Packaging Barcode</h1>
-                </div>
-            </div>
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h1 class="display-4 font-weight-bold mb-3">Packaging Barcodes</h1>
             <p class="lead text-muted mb-4">
-                Restore the Packaging / Barcodes block in the Odoo 19 product
-                Inventory tab for single-variant products so barcode packaging lines
-                are editable again from the product form.
+                Restore packaging barcode rows on the Odoo product Inventory tab for single-variant products.
             </p>
-            <div class="d-flex flex-wrap">
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Inventory</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Single Variant</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Packaging Barcodes</span>
+            <div class="row">
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Product form access</h3><p class="mb-0 text-muted">Manage package barcode rows where product users already work.</p></div></div>
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Packaging levels</h3><p class="mb-0 text-muted">Maintain unit, pack, box, and other UoM barcode values.</p></div></div>
             </div>
         </div>
-        <div class="col-lg-6 p-4 bg-light text-center">
-            <img src="banner.png" alt="Syntho Product Packaging Barcode preview" class="img-fluid rounded border shadow-sm"/>
+        <div class="col-lg-6">
+            <img class="img-fluid rounded border" src="banner.png" alt="Packaging barcodes overview"/>
         </div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-4">Key Features</h2>
     <div class="row">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h3 font-weight-bold">What This Restores</h2>
-            <p class="text-muted mb-0">A focused view enhancement for teams that manage packaging barcodes on the product form.</p>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Inventory Tab Block</h3>
-                <p class="text-muted mb-0">Brings back the Packaging / Barcodes group inside the product Inventory page.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Inline Editing</h3>
-                <p class="text-muted mb-0">Barcode packaging lines can be edited directly from the product form with an inline list.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Odoo 19 Relation</h3>
-                <p class="text-muted mb-0">Uses the current packaging relation on the underlying single product variant.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Minimal Scope</h3>
-                <p class="text-muted mb-0">The section is shown only when the product template has exactly one variant.</p>
-            </div>
-        </div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Packaging table</h3><p class="text-muted mb-0">Adds an editable Packaging / Barcodes section to products.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">UoM support</h3><p class="text-muted mb-0">Link barcode rows to units of measure for packaging identification.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Single-variant focus</h3><p class="text-muted mb-0">Shows the section when the product template has one variant.</p></div></div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
     <div class="row">
-        <div class="col-lg-7 mb-4">
-            <div class="bg-white border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">When It Helps</h2>
-                <ul class="text-muted mb-0 pl-3">
-                    <li class="mb-2">Warehouses maintaining multiple packaging barcodes for a single stock item.</li>
-                    <li class="mb-2">Teams that want packaging data available directly on the product template form.</li>
-                    <li class="mb-0">Odoo 19 databases where the standard view no longer exposes the desired block clearly.</li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-lg-5 mb-4">
-            <div class="bg-light border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Editable Fields</h2>
-                <p class="text-muted mb-0">
-                    The embedded list lets users maintain the packaging barcode and
-                    unit of measure for each packaging line.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-4">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Installation</h2>
-        <div class="row mt-3">
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
-                    <p class="text-muted mb-0">Copy <code>syntho_product_packaging_barcode</code> into your addons path.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
-                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
-                    <p class="text-muted mb-0">Install <strong>Syntho Product Packaging Barcode</strong>.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
-                    <p class="text-muted mb-0">Open a single-variant product and manage packaging barcodes from the Inventory tab.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-5">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm mb-0">
-                <tbody>
-                    <tr>
-                        <td class="font-weight-bold">Dependency</td>
-                        <td><code>stock</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">View Target</td>
-                        <td>Product template Inventory tab</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Related Field</td>
-                        <td><code>product_variant_id.product_uom_ids</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Visible When</td>
-                        <td>The product template has exactly one variant</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Support Contact</td>
-                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="packaging_table.png" alt="Packaging barcode table"/></div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="barcode_labels.png" alt="Packaging barcode labels"/></div>
     </div>
 </section>

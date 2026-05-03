@@ -1,148 +1,34 @@
-<section class="container my-5">
-    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
-        <div class="col-lg-6 p-5">
-            <div class="d-flex align-items-center mb-4">
-                <img src="icon.png" alt="Product Images on Reports icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
-                <div>
-                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Visual Documents</div>
-                    <h1 class="h2 font-weight-bold mb-0">Product Images on Reports</h1>
-                </div>
-            </div>
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h1 class="display-4 font-weight-bold mb-3">Product Images on Reports</h1>
             <p class="lead text-muted mb-4">
-                Add product thumbnails to quotations, sales orders, invoices, and
-                purchase orders so printed documents are easier to verify at a glance.
+                Add product thumbnail images to quotations, sales orders, invoices, and purchase
+                orders so every PDF is easier to review.
             </p>
-            <div class="d-flex flex-wrap">
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Sales</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Accounting</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Purchase</span>
+            <div class="row">
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Visual documents</h3><p class="mb-0 text-muted">Show product images beside report line descriptions.</p></div></div>
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Lightweight QWeb</h3><p class="mb-0 text-muted">Uses report inheritance with no new business models.</p></div></div>
             </div>
         </div>
-        <div class="col-lg-6 p-4 bg-light text-center">
-            <img src="banner.png" alt="Product Images on Reports preview" class="img-fluid rounded border shadow-sm"/>
+        <div class="col-lg-6">
+            <img class="img-fluid rounded border" src="banner.png" alt="Product images on reports overview"/>
         </div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-4">Key Features</h2>
     <div class="row">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h3 font-weight-bold">Document Coverage</h2>
-            <p class="text-muted mb-0">The module enhances standard PDF reports without adding new business objects.</p>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Quotations and Sales Orders</h3>
-                <p class="text-muted mb-0">Show item thumbnails on sales documents for clearer customer-facing proposals.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Customer Invoices</h3>
-                <p class="text-muted mb-0">Help customers match billed products visually and reduce confusion on final invoices.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Purchase Orders</h3>
-                <p class="text-muted mb-0">Give buyers and vendors a faster visual check when ordering similar-looking products.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Graceful Fallback</h3>
-                <p class="text-muted mb-0">If a product has no image, the report still renders cleanly without broken placeholders.</p>
-            </div>
-        </div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Sales documents</h3><p class="text-muted mb-0">Adds image columns to quotation and sale order PDF reports.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Invoice clarity</h3><p class="text-muted mb-0">Displays product thumbnails on customer invoice lines.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Purchase review</h3><p class="text-muted mb-0">Includes images on purchase orders for faster vendor checks.</p></div></div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
     <div class="row">
-        <div class="col-lg-7 mb-4">
-            <div class="bg-white border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Implementation Approach</h2>
-                <p class="text-muted mb-0">
-                    The addon uses QWeb template inheritance and report styling only.
-                    There are no new models, no business logic changes, and no extra
-                    settings screen to maintain.
-                </p>
-            </div>
-        </div>
-        <div class="col-lg-5 mb-4">
-            <div class="bg-light border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Best Fit</h2>
-                <ul class="text-muted mb-0 pl-3">
-                    <li class="mb-2">Product catalogs with many similar items</li>
-                    <li class="mb-2">Teams sending branded, visual quotations</li>
-                    <li class="mb-0">Companies wanting clearer vendor and customer PDFs</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-4">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Installation</h2>
-        <div class="row mt-3">
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
-                    <p class="text-muted mb-0">Copy <code>report_product_image</code> into your addons path.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
-                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
-                    <p class="text-muted mb-0">Install <strong>Product Images on Reports</strong>.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
-                    <p class="text-muted mb-0">Print a quotation, invoice, or purchase order and the thumbnails appear automatically.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-5">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm mb-0">
-                <tbody>
-                    <tr>
-                        <td class="font-weight-bold">Dependencies</td>
-                        <td><code>sale</code>, <code>account</code>, <code>purchase</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Report Targets</td>
-                        <td>Sale order, invoice, and purchase order PDFs</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Implementation</td>
-                        <td>QWeb view inheritance plus report asset styling</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Extra Models</td>
-                        <td>None</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Support Contact</td>
-                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="quotation_report.png" alt="Image-rich quotation report"/></div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="document_reports.png" alt="Reports with product images"/></div>
     </div>
 </section>

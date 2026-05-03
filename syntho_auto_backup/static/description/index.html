@@ -1,166 +1,38 @@
-<section class="container my-5">
-    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
-        <div class="col-lg-6 p-5">
-            <div class="d-flex align-items-center mb-4">
-                <img src="icon.png" alt="Syntho Auto Backup icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
-                <div>
-                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Database Safety</div>
-                    <h1 class="h2 font-weight-bold mb-0">Syntho Auto Backup</h1>
-                </div>
-            </div>
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h1 class="display-4 font-weight-bold mb-3">Auto Backup</h1>
             <p class="lead text-muted mb-4">
-                Schedule Odoo database backups from a simple administration screen,
-                choose the output format you need, and keep backup folders inside a
-                controlled base directory.
+                Schedule Odoo database backups to a protected server folder in ZIP or dump format.
             </p>
-            <div class="d-flex flex-wrap">
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Administration</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Zip or Dump</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Scheduled Cron</span>
+            <div class="row">
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Scheduled backups</h3><p class="mb-0 text-muted">Run automated backups from a cron-managed configuration.</p></div></div>
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Safe folder policy</h3><p class="mb-0 text-muted">Restricts backup paths to the configured base directory.</p></div></div>
             </div>
         </div>
-        <div class="col-lg-6 p-4 bg-light text-center">
-            <img src="banner.png" alt="Syntho Auto Backup preview" class="img-fluid rounded border shadow-sm"/>
+        <div class="col-lg-6">
+            <img class="img-fluid rounded border" src="banner.png" alt="Auto backup overview"/>
         </div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-4">Key Features</h2>
     <div class="row">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h3 font-weight-bold">What You Get</h2>
-            <p class="text-muted mb-0">A small Odoo 19 utility focused on repeatable, server-side database backups.</p>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Scheduled Execution</h3>
-                <p class="text-muted mb-0">
-                    The module ships with an Odoo scheduled action that processes all
-                    configured backup rules automatically.
-                </p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Two Output Formats</h3>
-                <p class="text-muted mb-0">
-                    Generate either a zip backup through Odoo or a PostgreSQL custom
-                    dump through <code>pg_dump</code>.
-                </p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Multiple Configurations</h3>
-                <p class="text-muted mb-0">
-                    Create more than one backup rule when different folders or formats
-                    are needed for the same database.
-                </p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Safer Paths</h3>
-                <p class="text-muted mb-0">
-                    Backup directories are validated against a configured base path to
-                    reduce accidental writes outside the intended storage area.
-                </p>
-            </div>
-        </div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Backup configurations</h3><p class="text-muted mb-0">Create one or more backup destinations from an Odoo menu.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">ZIP or dump</h3><p class="text-muted mb-0">Choose Odoo ZIP exports or PostgreSQL custom dump files.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Server-side storage</h3><p class="text-muted mb-0">Store backup files in an administrator-controlled directory.</p></div></div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
     <div class="row">
-        <div class="col-lg-7 mb-4">
-            <div class="bg-white border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">How It Works</h2>
-                <p class="text-muted">
-                    Administrators create backup configurations with a name, a folder,
-                    and a format. The scheduled action loops through those records,
-                    creates timestamped filenames, and writes the backup file on the server.
-                </p>
-                <ul class="text-muted mb-0 pl-3">
-                    <li class="mb-2">Each backup file includes the database name and a timestamp.</li>
-                    <li class="mb-2">Zip format uses Odoo's own database dump routine.</li>
-                    <li class="mb-0">Dump format uses PostgreSQL tools available on the host machine.</li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-lg-5 mb-4">
-            <div class="bg-light border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Operational Notes</h2>
-                <ul class="text-muted mb-0 pl-3">
-                    <li class="mb-2">The Odoo service user must be able to write to the selected folder.</li>
-                    <li class="mb-2"><code>pg_dump</code> must be available on the server for dump format.</li>
-                    <li class="mb-0">Configured folders must stay within the base backup directory.</li>
-                </ul>
-            </div>
-        </div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="backup_schedule.png" alt="Backup schedule configuration"/></div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="backup_history.png" alt="Backup history overview"/></div>
     </div>
 </section>
 
-<section class="container mb-4">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Installation</h2>
-        <div class="row mt-3">
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
-                    <p class="text-muted mb-0">Copy <code>syntho_auto_backup</code> into your custom addons path.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
-                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
-                    <p class="text-muted mb-0">Install <strong>Syntho Auto Backup</strong> from Apps.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
-                    <p class="text-muted mb-0">Open <strong>Auto Backup</strong>, create your configurations, and schedule the cron as needed.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-5">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm mb-0">
-                <tbody>
-                    <tr>
-                        <td class="font-weight-bold">Dependency</td>
-                        <td><code>base</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Configuration Model</td>
-                        <td><code>auto.backup.config</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Fields</td>
-                        <td>Name, backup directory, and backup format</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Output Naming</td>
-                        <td>Database name plus a timestamped filename for easier tracking</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Support Contact</td>
-                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-3">Operational Notice</h2>
+    <p class="text-muted">The server must have permission to write to the selected backup directory. PostgreSQL dump backups require the server environment to provide the `pg_dump` command.</p>
 </section>

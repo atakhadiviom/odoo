@@ -1,7 +1,7 @@
 {
-    'name': 'Barcode Nomenclature Enable',
+    'name': 'Barcode Nomenclature',
     'version': '19.0.1.0.0',
-    'summary': 'Unlock the Barcode Nomenclature menu in Inventory configuration',
+    'summary': 'Manage barcode nomenclature rules from Inventory',
     'description': """
 Barcode Nomenclature Enable
 ===========================
@@ -38,7 +38,11 @@ Installation
     'category': 'Inventory',
     'depends': ['barcodes', 'stock'],
     'data': ['views/menu_views.xml'],
-    'images': ['static/description/banner.png'],
+    'images': [
+        'static/description/banner.png',
+        'static/description/rule_management.png',
+        'static/description/scale_barcodes.png',
+    ],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',

@@ -1,8 +1,15 @@
 {
-    'name': 'Syntho Product Packaging Barcode',
+    'name': 'Packaging Barcodes',
     'version': '19.0.1.0.0',
-    'summary': 'Restores the Packaging/Barcode section in the product Inventory tab',
-    'description': 'Restores the hidden Packaging/Barcode section in the Odoo 19 product Inventory tab.',
+    'summary': 'Restore packaging barcode fields on products',
+    'description': """
+Packaging Barcodes
+==================
+
+Restore the Packaging / Barcodes section on the Odoo 19 product Inventory tab
+for single-variant products. Maintain package-level barcode rows directly from
+the product form.
+    """,
     'author': 'SynthoERP',
     'category': 'Inventory/Inventory',
     'website': 'https://www.synthoerp.com/',
@@ -10,7 +17,11 @@
     'data': [
         'views/product_template_views.xml',
     ],
-    'images': ['static/description/banner.png'],
+    'images': [
+        'static/description/banner.png',
+        'static/description/packaging_table.png',
+        'static/description/barcode_labels.png',
+    ],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',

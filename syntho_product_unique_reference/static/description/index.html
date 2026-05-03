@@ -1,149 +1,33 @@
-<section class="container my-5">
-    <div class="row align-items-center bg-white border rounded shadow-sm overflow-hidden">
-        <div class="col-lg-6 p-5">
-            <div class="d-flex align-items-center mb-4">
-                <img src="icon.png" alt="Syntho Unique Product Reference icon" width="72" height="72" class="img-fluid rounded border mr-3"/>
-                <div>
-                    <div class="text-uppercase small font-weight-bold text-muted mb-1">Catalog Integrity</div>
-                    <h1 class="h2 font-weight-bold mb-0">Syntho Unique Product Reference</h1>
-                </div>
-            </div>
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h1 class="display-4 font-weight-bold mb-3">Unique Product Ref</h1>
             <p class="lead text-muted mb-4">
-                Prevent duplicate internal references across products and variants
-                so the catalog stays clean, searchable, and safe for downstream
-                sales, stock, and purchasing flows.
+                Prevent duplicate internal references so product SKUs stay clean, reliable, and easy to search.
             </p>
-            <div class="d-flex flex-wrap">
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Odoo 19</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Product</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">SKU Control</span>
-                <span class="badge badge-light border mr-2 mb-2 px-3 py-2">Validation</span>
+            <div class="row">
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Duplicate protection</h3><p class="mb-0 text-muted">Blocks repeated non-empty internal references across products.</p></div></div>
+                <div class="col-md-6 mb-3"><div class="border rounded p-3 h-100"><h3 class="h5 mb-2">Catalog quality</h3><p class="mb-0 text-muted">Keeps product lookup and downstream operations predictable.</p></div></div>
             </div>
         </div>
-        <div class="col-lg-6 p-4 bg-light text-center">
-            <img src="banner.png" alt="Syntho Unique Product Reference preview" class="img-fluid rounded border shadow-sm"/>
+        <div class="col-lg-6">
+            <img class="img-fluid rounded border" src="banner.png" alt="Unique product reference overview"/>
         </div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-4">Key Features</h2>
     <div class="row">
-        <div class="col-12 text-center mb-4">
-            <h2 class="h3 font-weight-bold">Key Capabilities</h2>
-            <p class="text-muted mb-0">A focused safeguard for teams that rely on unique internal references.</p>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Single Source of Truth</h3>
-                <p class="text-muted mb-0">Stops the same internal reference from being reused elsewhere in the product catalog.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Batch-Safe Validation</h3>
-                <p class="text-muted mb-0">Checks duplicates inside the current create or update batch before anything is saved.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Database Check</h3>
-                <p class="text-muted mb-0">Also searches existing records so duplicates cannot slip through from earlier data.</p>
-            </div>
-        </div>
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="h-100 bg-white border rounded shadow-sm p-4">
-                <h3 class="h5 font-weight-bold">Blank Values Allowed</h3>
-                <p class="text-muted mb-0">The rule only applies when an internal reference is set, so optional SKUs still work.</p>
-            </div>
-        </div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Product variant check</h3><p class="text-muted mb-0">Validates `default_code` uniqueness on product variants.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Batch-safe validation</h3><p class="text-muted mb-0">Catches duplicates inside the current write batch before saving.</p></div></div>
+        <div class="col-md-4 mb-3"><div class="border rounded p-4 h-100"><h3 class="h5">Blank references allowed</h3><p class="text-muted mb-0">Empty references remain allowed for products that do not use SKUs.</p></div></div>
     </div>
 </section>
 
-<section class="container mb-4">
+<section class="container py-4">
     <div class="row">
-        <div class="col-lg-7 mb-4">
-            <div class="bg-white border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Where It Helps</h2>
-                <ul class="text-muted mb-0 pl-3">
-                    <li class="mb-2">Teams importing or creating products in bulk and needing SKU discipline.</li>
-                    <li class="mb-2">Companies where stock, sales, or purchasing rely on internal references for daily operations.</li>
-                    <li class="mb-0">Catalog clean-up projects where duplicate SKUs must be blocked going forward.</li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-lg-5 mb-4">
-            <div class="bg-light border rounded shadow-sm p-4 h-100">
-                <h2 class="h4 font-weight-bold">Implementation Style</h2>
-                <p class="text-muted mb-0">
-                    The module is intentionally lightweight: it adds a Python constraint on
-                    <code>product.product</code> and does not introduce new models, menus,
-                    or configuration screens.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-4">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Installation</h2>
-        <div class="row mt-3">
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 1</div>
-                    <p class="text-muted mb-0">Copy <code>syntho_product_unique_reference</code> into your addons path.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 2</div>
-                    <p class="text-muted mb-0">Restart Odoo and update the Apps list.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 3</div>
-                    <p class="text-muted mb-0">Install <strong>Syntho Unique Product Reference</strong>.</p>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="border rounded p-3 h-100">
-                    <div class="small text-uppercase font-weight-bold text-muted mb-2">Step 4</div>
-                    <p class="text-muted mb-0">From that point onward, duplicate internal references are blocked automatically.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="container mb-5">
-    <div class="bg-white border rounded shadow-sm p-4">
-        <h2 class="h4 font-weight-bold">Technical Snapshot</h2>
-        <div class="table-responsive">
-            <table class="table table-bordered table-sm mb-0">
-                <tbody>
-                    <tr>
-                        <td class="font-weight-bold">Dependency</td>
-                        <td><code>product</code></td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Target Field</td>
-                        <td><code>default_code</code> on product variants</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Validation Scope</td>
-                        <td>Current batch plus existing database records</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Blank References</td>
-                        <td>Allowed</td>
-                    </tr>
-                    <tr>
-                        <td class="font-weight-bold">Support Contact</td>
-                        <td><a href="mailto:info@synthoerp.com">info@synthoerp.com</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="reference_validation.png" alt="Product reference validation"/></div>
+        <div class="col-lg-6 mb-4"><img class="img-fluid rounded border" src="quality_summary.png" alt="Catalog quality summary"/></div>
     </div>
 </section>

@@ -1,7 +1,7 @@
 {
-    'name': 'Syntho Auto Backup',
+    'name': 'Auto Backup',
     'version': '19.0.1.0.0',
-    'summary': 'Automatic database backup',
+    'summary': 'Schedule automatic Odoo database backups',
     'description': """
 Auto Backup
 ===========
@@ -19,7 +19,11 @@ This is a very frequently requested feature on forums.
         'data/cron_data.xml',
         'views/backup_config_views.xml',
     ],
-    'images': ['static/description/banner.png'],
+    'images': [
+        'static/description/banner.png',
+        'static/description/backup_schedule.png',
+        'static/description/backup_history.png',
+    ],
     'installable': True,
     'auto_install': False,
     'license': 'LGPL-3',
