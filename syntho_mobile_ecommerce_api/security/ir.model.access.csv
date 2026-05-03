@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mobile_ecommerce_app_user,access.mobile.ecommerce.app.user,model_mobile_ecommerce_app,base.group_user,1,1,1,1
+access_mobile_ecommerce_banner_user,access.mobile.ecommerce.banner.user,model_mobile_ecommerce_banner,base.group_user,1,1,1,1
+access_mobile_ecommerce_home_section_user,access.mobile.ecommerce.home.section.user,model_mobile_ecommerce_home_section,base.group_user,1,1,1,1
+access_mobile_ecommerce_navigation_item_user,access.mobile.ecommerce.navigation.item.user,model_mobile_ecommerce_navigation_item,base.group_user,1,1,1,1
+access_mobile_ecommerce_content_page_user,access.mobile.ecommerce.content.page.user,model_mobile_ecommerce_content_page,base.group_user,1,1,1,1
+access_mobile_ecommerce_wishlist_user,access.mobile.ecommerce.wishlist.user,model_mobile_ecommerce_wishlist,base.group_user,1,1,1,1
+access_mobile_ecommerce_rating_user,access.mobile.ecommerce.rating.user,model_mobile_ecommerce_rating,base.group_user,1,1,1,1
+access_mobile_ecommerce_device_user,access.mobile.ecommerce.device.user,model_mobile_ecommerce_device,base.group_user,1,1,1,1
+access_mobile_ecommerce_notification_user,access.mobile.ecommerce.notification.user,model_mobile_ecommerce_notification,base.group_user,1,1,1,1

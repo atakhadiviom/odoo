@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mobile_ecommerce_app_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.app.list</field>
+        <field name="model">mobile.ecommerce.app</field>
+        <field name="arch" type="xml">
+            <list string="Mobile Apps">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="app_code"/>
+                <field name="website_id"/>
+                <field name="minimum_supported_version"/>
+                <field name="latest_version"/>
+                <field name="force_update"/>
+                <field name="maintenance_mode"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_app_form" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.app.form</field>
+        <field name="model">mobile.ecommerce.app</field>
+        <field name="arch" type="xml">
+            <form string="Mobile App">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="app_code"/>
+                            <field name="sequence"/>
+                            <field name="website_id"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="bundle_identifier"/>
+                            <field name="package_name"/>
+                            <field name="app_scheme"/>
+                            <field name="return_url"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Branding">
+                            <group>
+                                <group>
+                                    <field name="primary_color"/>
+                                    <field name="accent_color"/>
+                                    <field name="logo" widget="image" class="oe_avatar"/>
+                                </group>
+                                <group>
+                                    <field name="minimum_supported_version"/>
+                                    <field name="latest_version"/>
+                                    <field name="force_update"/>
+                                    <field name="splash_image" widget="image" class="oe_avatar"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="version_notes"/>
+                            </group>
+                        </page>
+                        <page string="Experience">
+                            <group>
+                                <field name="allow_guest_checkout"/>
+                                <field name="wishlist_enabled"/>
+                                <field name="search_enabled"/>
+                                <field name="maintenance_mode"/>
+                            </group>
+                            <group>
+                                <field name="maintenance_message" invisible="not maintenance_mode"/>
+                            </group>
+                        </page>
+                        <page string="Home Sections">
+                            <field name="home_section_ids">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="section_kind"/>
+                                    <field name="max_items"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Navigation">
+                            <field name="navigation_item_ids">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="label"/>
+                                    <field name="icon"/>
+                                    <field name="target_kind"/>
+                                    <field name="tab_key"/>
+                                    <field name="category_id"/>
+                                    <field name="content_page_id"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Content Pages">
+                            <field name="content_page_ids">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="title"/>
+                                    <field name="page_key"/>
+                                    <field name="slug"/>
+                                    <field name="active"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Push Notifications">
+                            <group string="Firebase Cloud Messaging (FCM) Configuration">
+                                <field name="fcm_project_id" placeholder="e.g. syntho-shop-12345"/>
+                                <field name="fcm_service_account_json" filename="fcm_service_account_filename"/>
+                                <field name="fcm_service_account_filename" invisible="1"/>
+                            </group>
+                            <p class="text-muted">
+                                <strong>Setup Instructions:</strong><br/>
+                                1. Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a>.<br/>
+                                2. Navigate to Project Settings -> Service Accounts.<br/>
+                                3. Click "Generate new private key" and upload the JSON file here.<br/>
+                                4. Copy the "Project ID" from the settings and paste it above.
+                            </p>
+                        </page>
+                        <page string="Social Login">
+                            <group string="Google Sign-In">
+                                <field name="google_login_enabled"/>
+                                <field name="google_client_id" invisible="not google_login_enabled" placeholder="Required for Odoo backend validation"/>
+                                <field name="google_client_id_ios" invisible="not google_login_enabled"/>
+                                <field name="google_client_id_android" invisible="not google_login_enabled"/>
+                            </group>
+                            <p class="text-muted" invisible="not google_login_enabled">
+                                <strong>Google setup:</strong> Create OAuth 2.0 Client IDs in your <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a>. 
+                                Ensure the "Web application" client ID is placed in the first field for Odoo to verify mobile tokens.
+                            </p>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_device_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.device.list</field>
+        <field name="model">mobile.ecommerce.device</field>
+        <field name="arch" type="xml">
+            <list string="Registered Devices" create="0">
+                <field name="partner_id"/>
+                <field name="platform"/>
+                <field name="token"/>
+                <field name="last_seen"/>
+                <button name="action_send_test_notification" type="object" string="Send Test" icon="fa-paper-plane"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_mobile_ecommerce_device" model="ir.actions.act_window">
+        <field name="name">Registered Devices</field>
+        <field name="res_model">mobile.ecommerce.device</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_mobile_ecommerce_notification_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.notification.list</field>
+        <field name="model">mobile.ecommerce.notification</field>
+        <field name="arch" type="xml">
+            <list string="Mobile Notifications" create="0">
+                <field name="create_date"/>
+                <field name="partner_id"/>
+                <field name="title"/>
+                <field name="notification_type"/>
+                <field name="is_read"/>
+                <field name="push_sent"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_notification_form" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.notification.form</field>
+        <field name="model">mobile.ecommerce.notification</field>
+        <field name="arch" type="xml">
+            <form string="Mobile Notification" create="0">
+                <sheet>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="website_id"/>
+                        <field name="notification_type"/>
+                        <field name="is_read"/>
+                        <field name="read_date"/>
+                        <field name="push_sent"/>
+                    </group>
+                    <group>
+                        <field name="title"/>
+                        <field name="body"/>
+                        <field name="data_json"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mobile_ecommerce_notification" model="ir.actions.act_window">
+        <field name="name">Notifications</field>
+        <field name="res_model">mobile.ecommerce.notification</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_mobile_ecommerce_home_section_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.home.section.list</field>
+        <field name="model">mobile.ecommerce.home.section</field>
+        <field name="arch" type="xml">
+            <list string="Home Sections">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="app_id"/>
+                <field name="title"/>
+                <field name="section_kind"/>
+                <field name="max_items"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_home_section_form" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.home.section.form</field>
+        <field name="model">mobile.ecommerce.home.section</field>
+        <field name="arch" type="xml">
+            <form string="Home Section">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="app_id"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="section_key"/>
+                            <field name="title"/>
+                            <field name="subtitle"/>
+                            <field name="section_kind"/>
+                            <field name="max_items"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="banner_ids" widget="many2many_tags" invisible="section_kind != 'hero_banners'"/>
+                        <field name="category_ids" widget="many2many_tags" invisible="section_kind != 'featured_categories'"/>
+                        <field name="product_tmpl_ids" widget="many2many_tags" invisible="section_kind != 'featured_products'"/>
+                        <field name="content_page_id" invisible="section_kind != 'content_page'"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_navigation_item_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.navigation.item.list</field>
+        <field name="model">mobile.ecommerce.navigation.item</field>
+        <field name="arch" type="xml">
+            <list string="Navigation Items">
+                <field name="sequence"/>
+                <field name="label"/>
+                <field name="app_id"/>
+                <field name="icon"/>
+                <field name="target_kind"/>
+                <field name="tab_key"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_navigation_item_form" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.navigation.item.form</field>
+        <field name="model">mobile.ecommerce.navigation.item</field>
+        <field name="arch" type="xml">
+            <form string="Navigation Item">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="app_id"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="label"/>
+                            <field name="icon"/>
+                            <field name="target_kind"/>
+                            <field name="tab_key" invisible="target_kind != 'tab'"/>
+                            <field name="category_id" invisible="target_kind != 'category'"/>
+                            <field name="content_page_id" invisible="target_kind != 'content_page'"/>
+                            <field name="external_url" invisible="target_kind != 'url'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_content_page_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.content.page.list</field>
+        <field name="model">mobile.ecommerce.content.page</field>
+        <field name="arch" type="xml">
+            <list string="Content Pages">
+                <field name="sequence"/>
+                <field name="title"/>
+                <field name="app_id"/>
+                <field name="page_key"/>
+                <field name="slug"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_content_page_form" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.content.page.form</field>
+        <field name="model">mobile.ecommerce.content.page</field>
+        <field name="arch" type="xml">
+            <form string="Content Page">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="app_id"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="page_key"/>
+                            <field name="slug"/>
+                            <field name="title"/>
+                            <field name="cover_image" widget="image" class="oe_avatar"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="summary"/>
+                    </group>
+                    <group>
+                        <field name="body_html" widget="html"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mobile_ecommerce_app" model="ir.actions.act_window">
+        <field name="name">Apps</field>
+        <field name="res_model">mobile.ecommerce.app</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_mobile_ecommerce_home_section" model="ir.actions.act_window">
+        <field name="name">Home Sections</field>
+        <field name="res_model">mobile.ecommerce.home.section</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_mobile_ecommerce_navigation_item" model="ir.actions.act_window">
+        <field name="name">Navigation</field>
+        <field name="res_model">mobile.ecommerce.navigation.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_mobile_ecommerce_content_page" model="ir.actions.act_window">
+        <field name="name">Content Pages</field>
+        <field name="res_model">mobile.ecommerce.content.page</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_mobile_ecommerce_root" name="Mobile Commerce" sequence="90"/>
+    <menuitem
+        id="menu_mobile_ecommerce_apps"
+        name="Apps"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_app"
+        sequence="5"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_home_sections"
+        name="Home Layout"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_home_section"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_navigation"
+        name="Navigation"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_navigation_item"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_banner"
+        name="Banners"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_banner"
+        sequence="30"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_content_pages"
+        name="Content Pages"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_content_page"
+        sequence="40"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_devices"
+        name="Devices"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_device"
+        sequence="50"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_notifications"
+        name="Notifications"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_notification"
+        sequence="60"
+    />
+</odoo>

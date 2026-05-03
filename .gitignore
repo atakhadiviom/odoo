@@ -1,2 +1,13 @@
 __pycache__/
 *.pyc
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+.DS_Store
