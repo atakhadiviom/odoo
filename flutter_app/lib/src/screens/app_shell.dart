@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../config/app_config.dart';
 import '../models/mobile_models.dart';
 import '../state/app_state.dart';
-import '../utils/app_utils.dart';
+import '../widgets/app_vector_icons.dart';
 import 'home_screen.dart';
 import 'catalog_screen.dart';
 import 'brands_screen.dart';
@@ -16,6 +16,17 @@ import 'account_screen.dart';
 import 'product_detail_screen.dart';
 import 'checkout_flow_screen.dart';
 import 'wishlist_screen.dart';
+import 'notifications_screen.dart';
+
+List<ManagedNavigationItem> visibleBottomNavigationItems(
+    Iterable<ManagedNavigationItem> items) {
+  return items
+      .where((item) =>
+          item.targetKind == 'tab' &&
+          item.tabKey != 'brands' &&
+          item.tabKey != 'scan')
+      .toList();
+}
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key, required this.appState});
@@ -37,6 +48,7 @@ class _AppShellState extends State<AppShell> {
   String? _selectedBrandName;
   String _catalogSearch = '';
   bool _checkoutVisible = false;
+  bool _notificationsVisible = false;
   Uri? _incomingCheckoutUri;
   bool _initializing = true;
   String? _initializationError;
@@ -74,6 +86,7 @@ class _AppShellState extends State<AppShell> {
     setState(() {
       _incomingCheckoutUri = uri;
       _checkoutVisible = true;
+      _notificationsVisible = false;
       _selectedProductId = null;
       _activeTab = AppTab.cart;
     });
@@ -83,6 +96,7 @@ class _AppShellState extends State<AppShell> {
     setState(() {
       _selectedProductId = productId;
       _checkoutVisible = false;
+      _notificationsVisible = false;
     });
   }
 
@@ -94,6 +108,7 @@ class _AppShellState extends State<AppShell> {
       _catalogSearch = '';
       _selectedProductId = null;
       _checkoutVisible = false;
+      _notificationsVisible = false;
       _activeTab = AppTab.shop;
     });
   }
@@ -106,6 +121,7 @@ class _AppShellState extends State<AppShell> {
       _catalogSearch = '';
       _selectedProductId = null;
       _checkoutVisible = false;
+      _notificationsVisible = false;
       _activeTab = AppTab.shop;
     });
   }
@@ -135,7 +151,7 @@ class _AppShellState extends State<AppShell> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    const Icon(Icons.error_outline_rounded,
+                    const Icon(Icons.error_outline,
                         size: 64, color: Colors.red),
                     const SizedBox(height: 24),
                     const Text(
@@ -168,11 +184,26 @@ class _AppShellState extends State<AppShell> {
           );
         }
 
-        final bool showingDetail =
-            _checkoutVisible || _selectedProductId != null;
+        final bool showingDetail = _checkoutVisible ||
+            _notificationsVisible ||
+            _selectedProductId != null;
         final int cartCount = widget.appState.cart.cartQuantity.round();
         final bootstrap = widget.appState.bootstrap;
         final navigationItems = _buildNavigationItems(bootstrap);
+        final website = bootstrap?.website;
+        final String companyName = website?.companyName.trim() ?? '';
+        final String websiteName = website?.name.trim() ?? '';
+        final String appName = bootstrap?.app.name.trim() ?? '';
+        final String title = companyName.isNotEmpty
+            ? companyName
+            : appName.isNotEmpty
+                ? appName
+                : 'Syntho Shop';
+        final String hostLabel = websiteName.isNotEmpty
+            ? websiteName
+            : AppConfig.trimmedBaseUrl.replaceFirst(RegExp(r'^https?://'), '');
+        final String? logoUrl = _nonEmpty(website?.companyLogoUrl) ??
+            _nonEmpty(bootstrap?.app.logoUrl);
 
         return Scaffold(
           body: SafeArea(
@@ -182,17 +213,16 @@ class _AppShellState extends State<AppShell> {
                 _AppHeader(
                   showingDetail: showingDetail,
                   cartCount: cartCount,
-                  title: bootstrap?.app.name ?? 'Syntho Shop',
-                  hostLabel: bootstrap?.website.baseUrl.isNotEmpty == true
-                      ? bootstrap!.website.baseUrl
-                          .replaceFirst(RegExp(r'^https?://'), '')
-                      : AppConfig.trimmedBaseUrl
-                          .replaceFirst(RegExp(r'^https?://'), ''),
+                  title: title,
+                  hostLabel: hostLabel,
+                  logoUrl: logoUrl,
                   onBack: () {
                     setState(() {
                       if (_checkoutVisible) {
                         _checkoutVisible = false;
                         _incomingCheckoutUri = null;
+                      } else if (_notificationsVisible) {
+                        _notificationsVisible = false;
                       } else {
                         _selectedProductId = null;
                       }
@@ -203,6 +233,7 @@ class _AppShellState extends State<AppShell> {
                       _activeTab = AppTab.cart;
                       _selectedProductId = null;
                       _checkoutVisible = false;
+                      _notificationsVisible = false;
                     });
                   },
                   onOpenWishlist: () {
@@ -210,8 +241,17 @@ class _AppShellState extends State<AppShell> {
                       _activeTab = AppTab.wishlist;
                       _selectedProductId = null;
                       _checkoutVisible = false;
+                      _notificationsVisible = false;
                     });
                   },
+                  onOpenNotifications: () {
+                    setState(() {
+                      _notificationsVisible = true;
+                      _selectedProductId = null;
+                      _checkoutVisible = false;
+                    });
+                  },
+                  notificationCount: widget.appState.notifications.unreadCount,
                 ),
                 if (bootstrap?.app.maintenanceMode == true)
                   Padding(
@@ -225,7 +265,7 @@ class _AppShellState extends State<AppShell> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.warning_amber_rounded,
+                          Icon(Icons.warning_amber,
                               color: Colors.orange.shade800),
                           const SizedBox(width: 12),
                           Expanded(
@@ -253,14 +293,15 @@ class _AppShellState extends State<AppShell> {
                       _handleNavigationTap(item);
                       _selectedProductId = null;
                       _checkoutVisible = false;
+                      _notificationsVisible = false;
                     });
                   },
                   destinations: navigationItems
                       .map(
                         (item) => NavigationDestination(
-                          icon: Icon(iconForName(item.icon, outlined: true)),
+                          icon: AppVectorIcon(item.icon),
                           selectedIcon:
-                              Icon(iconForName(item.icon, outlined: false)),
+                              AppVectorIcon(item.icon, selected: true),
                           label: item.label,
                         ),
                       )
@@ -320,23 +361,7 @@ class _AppShellState extends State<AppShell> {
               externalUrl: null,
             ),
           ];
-    void addIfMissing(String tabKey, String label, String icon) {
-      if (items.any((item) => item.tabKey == tabKey)) return;
-      items.add(ManagedNavigationItem(
-        id: 1000 + items.length,
-        label: label,
-        icon: icon,
-        targetKind: 'tab',
-        tabKey: tabKey,
-        categoryId: null,
-        contentPageId: null,
-        externalUrl: null,
-      ));
-    }
-
-    addIfMissing('brands', 'Brands', 'brands');
-    addIfMissing('scan', 'Scan', 'scan');
-    return items;
+    return visibleBottomNavigationItems(items);
   }
 
   int _selectedNavigationIndex(List<ManagedNavigationItem> items) {
@@ -391,6 +416,18 @@ class _AppShellState extends State<AppShell> {
       );
     }
 
+    if (_notificationsVisible) {
+      return NotificationsScreen(
+        appState: widget.appState,
+        onGoToAccount: () {
+          setState(() {
+            _notificationsVisible = false;
+            _activeTab = AppTab.account;
+          });
+        },
+      );
+    }
+
     if (_selectedProductId != null) {
       return ProductDetailScreen(
         appState: widget.appState,
@@ -424,6 +461,7 @@ class _AppShellState extends State<AppShell> {
           onStartCheckout: () {
             setState(() {
               _checkoutVisible = true;
+              _notificationsVisible = false;
               _selectedProductId = null;
               _incomingCheckoutUri = null;
             });
@@ -446,6 +484,18 @@ class _AppShellState extends State<AppShell> {
           appState: widget.appState,
           onSelectProduct: _openProduct,
           onOpenCategory: _openCategory,
+          onSearchProducts: (query) {
+            setState(() {
+              _catalogSearch = query;
+              _selectedCategoryId = null;
+              _selectedBrandId = null;
+              _selectedBrandName = null;
+              _selectedProductId = null;
+              _checkoutVisible = false;
+              _notificationsVisible = false;
+              _activeTab = AppTab.shop;
+            });
+          },
         );
     }
   }
@@ -457,18 +507,24 @@ class _AppHeader extends StatelessWidget {
     required this.cartCount,
     required this.title,
     required this.hostLabel,
+    required this.logoUrl,
     required this.onBack,
     required this.onOpenCart,
     required this.onOpenWishlist,
+    required this.onOpenNotifications,
+    required this.notificationCount,
   });
 
   final bool showingDetail;
   final int cartCount;
   final String title;
   final String hostLabel;
+  final String? logoUrl;
   final VoidCallback onBack;
   final VoidCallback onOpenCart;
   final VoidCallback onOpenWishlist;
+  final VoidCallback onOpenNotifications;
+  final int notificationCount;
 
   @override
   Widget build(BuildContext context) {
@@ -483,17 +539,29 @@ class _AppHeader extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: IconButton.filledTonal(
                       onPressed: onBack,
-                      icon: const Icon(Icons.arrow_back_rounded),
+                      icon: const AppVectorIcon('back'),
                     ),
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        title,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w900,
-                        ),
+                      Row(
+                        children: <Widget>[
+                          if (logoUrl != null) ...<Widget>[
+                            _CompanyLogo(url: logoUrl!),
+                            const SizedBox(width: 10),
+                          ],
+                          Expanded(
+                            child: Text(
+                              title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 2),
                       Text(
@@ -509,7 +577,17 @@ class _AppHeader extends StatelessWidget {
           if (!showingDetail)
             IconButton.filledTonal(
               onPressed: onOpenWishlist,
-              icon: const Icon(Icons.favorite_border),
+              icon: const AppVectorIcon('wishlist'),
+            ),
+          if (!showingDetail) const SizedBox(width: 8),
+          if (!showingDetail)
+            Badge.count(
+              count: notificationCount,
+              isLabelVisible: notificationCount > 0,
+              child: IconButton.filledTonal(
+                onPressed: onOpenNotifications,
+                icon: const AppVectorIcon('bell'),
+              ),
             ),
           if (!showingDetail) const SizedBox(width: 8),
           if (!showingDetail)
@@ -518,10 +596,45 @@ class _AppHeader extends StatelessWidget {
               isLabelVisible: cartCount > 0,
               child: IconButton.filledTonal(
                 onPressed: onOpenCart,
-                icon: const Icon(Icons.shopping_bag_outlined),
+                icon: const AppVectorIcon('cart'),
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+String? _nonEmpty(String? value) {
+  final trimmed = value?.trim() ?? '';
+  return trimmed.isEmpty ? null : trimmed;
+}
+
+class _CompanyLogo extends StatelessWidget {
+  const _CompanyLogo({required this.url});
+
+  final String url;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      width: 42,
+      height: 42,
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer.withOpacity(0.7),
+        shape: BoxShape.circle,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Image.network(
+        url,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) => AppVectorIcon(
+          'shop',
+          color: colorScheme.onPrimaryContainer,
+          size: 24,
+        ),
       ),
     );
   }

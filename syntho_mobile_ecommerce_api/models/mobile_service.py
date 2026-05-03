@@ -1,11 +1,46 @@
-from odoo import api, models
+import base64
+import json
+import logging
+import urllib.parse
+
+import requests
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import html2plaintext
+
+_logger = logging.getLogger(__name__)
+
+try:
+    from google.auth.transport.requests import Request as GoogleRequest
+    from google.oauth2 import service_account, id_token as google_id_token
+except ImportError:
+    _logger.warning("FCM/Google dependencies (google-auth) not installed. Social login will be disabled.")
+    service_account = None
+    google_id_token = None
 
 
 class MobileEcommerceApi(models.AbstractModel):
     _name = 'mobile.ecommerce.api'
     _description = 'Mobile Ecommerce API'
+
+    _MOBILE_TEXT_TRANSLATION = str.maketrans({
+        '\u2010': '-',
+        '\u2011': '-',
+        '\u2012': '-',
+        '\u2013': '-',
+        '\u2014': '-',
+        '\u2015': '-',
+        '\u2018': "'",
+        '\u2019': "'",
+        '\u201a': "'",
+        '\u201b': "'",
+        '\u201c': '"',
+        '\u201d': '"',
+        '\u201e': '"',
+        '\u2022': '-',
+        '\u2026': '...',
+        '\u00a0': ' ',
+    })
 
     @api.model
     def _get_website(self, website_id=None):
@@ -29,6 +64,14 @@ class MobileEcommerceApi(models.AbstractModel):
         return f'{self._base_url()}/web/image/{model_name}/{record_id}/{field_name}'
 
     @api.model
+    def _absolute_url(self, url):
+        if not url:
+            return False
+        if url.startswith(('http://', 'https://')):
+            return url
+        return urllib.parse.urljoin(f'{self._base_url()}/', url.lstrip('/'))
+
+    @api.model
     def _get_mobile_app(self, website_id=None):
         website = self._get_website(website_id)
         app = self.env['mobile.ecommerce.app'].sudo().search(
@@ -41,7 +84,8 @@ class MobileEcommerceApi(models.AbstractModel):
     @api.model
     def _clean_text(self, value):
         text_value = html2plaintext(value or '')
-        return ' '.join(text_value.split())
+        normalized = text_value.translate(self._MOBILE_TEXT_TRANSLATION)
+        return ' '.join(normalized.split())
 
     @api.model
     def _serialize_category(self, category):
@@ -76,9 +120,23 @@ class MobileEcommerceApi(models.AbstractModel):
             )
         )
         price = pricelist._get_product_price(variant, 1.0) if pricelist else product.list_price
-        description = self._clean_text(product.website_description or product.description_sale)
+        website_description = (
+            product.description_ecommerce
+            if 'description_ecommerce' in product._fields
+            else False
+        ) or product.website_description
+        description = self._clean_text(website_description or product.description_sale)
         brand = product.brand_id if 'brand_id' in product._fields else False
         average_rating, rating_count = self._get_product_rating_summary(product)
+        
+        # Get extra images from product.template (Odoo standard ecommerce)
+        extra_images = []
+        if 'product_template_image_ids' in product._fields:
+            extra_images = [
+                self._image_url('product.image', img.id, 'image_1920')
+                for img in product.product_template_image_ids
+            ]
+
         return {
             'id': product.id,
             'variant_id': variant.id,
@@ -90,6 +148,7 @@ class MobileEcommerceApi(models.AbstractModel):
             'description': description,
             'short_description': description[:160],
             'image_url': self._image_url('product.template', product.id),
+            'extra_image_urls': extra_images,
             'website_url': f'{self._base_url()}{product.website_url}',
             'category_ids': product.public_categ_ids.ids,
             'category_names': product.public_categ_ids.mapped('name'),
@@ -171,6 +230,22 @@ class MobileEcommerceApi(models.AbstractModel):
         }
 
     @api.model
+    def _serialize_website(self, website):
+        company = website.company_id
+        return {
+            'id': website.id,
+            'name': website.name,
+            'company_name': company.name,
+            'company_logo_url': (
+                self._image_url('res.company', company.id, 'logo')
+                if company and company.logo
+                else False
+            ),
+            'currency': website.currency_id.name,
+            'base_url': self._base_url(),
+        }
+
+    @api.model
     def _serialize_home_section(self, section, website):
         payload = {
             'id': section.id,
@@ -226,9 +301,18 @@ class MobileEcommerceApi(models.AbstractModel):
 
     @api.model
     def _serialize_mobile_app(self, app, website):
+        configured_name = app.name if app else False
+        company_name = website.company_id.name
+        display_name = company_name or configured_name or website.name
+        company_logo_url = (
+            self._image_url('res.company', website.company_id.id, 'logo')
+            if website.company_id and website.company_id.logo
+            else False
+        )
         return {
             'id': app.id if app else False,
-            'name': app.name if app else website.name,
+            'name': display_name,
+            'configured_name': configured_name,
             'app_code': app.app_code if app else 'main',
             'bundle_identifier': app.bundle_identifier if app else False,
             'package_name': app.package_name if app else False,
@@ -238,8 +322,16 @@ class MobileEcommerceApi(models.AbstractModel):
                 if app and app.return_url
                 else 'synthoshop://checkout/result'
             ),
-            'logo_url': (
-                self._image_url('mobile.ecommerce.app', app.id, 'logo') if app and app.logo else False
+            'logo_url': company_logo_url
+            or (
+                self._image_url('mobile.ecommerce.app', app.id, 'logo')
+                if app and app.logo
+                else False
+            ),
+            'configured_logo_url': (
+                self._image_url('mobile.ecommerce.app', app.id, 'logo')
+                if app and app.logo
+                else False
             ),
             'splash_image_url': (
                 self._image_url('mobile.ecommerce.app', app.id, 'splash_image')
@@ -256,6 +348,10 @@ class MobileEcommerceApi(models.AbstractModel):
             'allow_guest_checkout': bool(not app or app.allow_guest_checkout),
             'wishlist_enabled': bool(not app or app.wishlist_enabled),
             'search_enabled': bool(not app or app.search_enabled),
+            'google_login_enabled': bool(app and app.google_login_enabled),
+            'google_client_id': app.google_client_id if app else False,
+            'google_client_id_ios': app.google_client_id_ios if app else False,
+            'google_client_id_android': app.google_client_id_android if app else False,
             'version_notes': app.version_notes if app else False,
         }
 
@@ -264,6 +360,7 @@ class MobileEcommerceApi(models.AbstractModel):
         if not partner or not partner.id:
             return False
 
+        partner = partner.sudo()
         return {
             'id': partner.id,
             'name': partner.name,
@@ -316,6 +413,7 @@ class MobileEcommerceApi(models.AbstractModel):
 
     @api.model
     def _serialize_order(self, order, website):
+        portal_url = order.get_portal_url() if hasattr(order, 'get_portal_url') else False
         lines = [
             self._serialize_cart_line(line, website)
             for line in order.order_line.filtered(
@@ -331,6 +429,9 @@ class MobileEcommerceApi(models.AbstractModel):
             'amount_tax': order.amount_tax,
             'amount_untaxed': order.amount_untaxed,
             'currency': order.currency_id.name,
+            'portal_url': self._absolute_url(portal_url),
+            'access_token': order._portal_ensure_token(),
+            'needs_payment': order.state in ('draft', 'sent'),
             'lines': lines,
         }
 
@@ -340,16 +441,33 @@ class MobileEcommerceApi(models.AbstractModel):
             delivery_line = order.order_line.filtered('is_delivery')[:1]
             amount = delivery_line.price_total if delivery_line else 0.0
         amount = amount or 0.0
+        countries = (
+            carrier.country_ids
+            if carrier and 'country_ids' in carrier._fields
+            else self.env['res.country']
+        )
+        shipping_country = order.partner_shipping_id.sudo().country_id if order else False
         return {
             'id': carrier.id,
             'name': carrier.name,
             'amount': amount,
             'currency': order.currency_id.name if order else self.env.company.currency_id.name,
             'selected': bool(order and order.carrier_id == carrier),
+            'country_ids': countries.ids,
+            'countries': [self._serialize_country(country) for country in countries],
+            'country_names': countries.mapped('name'),
+            'restricted_to_countries': bool(countries),
+            'shipping_country_id': shipping_country.id if shipping_country else False,
+            'shipping_country_name': shipping_country.name if shipping_country else False,
         }
 
     @api.model
     def _serialize_payment_option(self, provider, payment_method):
+        countries = (
+            provider.available_country_ids
+            if provider and 'available_country_ids' in provider._fields
+            else self.env['res.country']
+        )
         return {
             'provider_id': provider.id,
             'provider_code': provider.code,
@@ -358,6 +476,28 @@ class MobileEcommerceApi(models.AbstractModel):
             'payment_method_code': payment_method.code,
             'payment_method_name': payment_method.name,
             'flow': 'redirect',
+            'country_ids': countries.ids,
+            'countries': [self._serialize_country(country) for country in countries],
+            'country_names': countries.mapped('name'),
+            'restricted_to_countries': bool(countries),
+        }
+
+    @api.model
+    def _serialize_quotation_payment_option(self, order):
+        billing_country = order.partner_invoice_id.sudo().country_id if order else False
+        countries = billing_country if billing_country else self.env['res.country']
+        return {
+            'provider_id': 0,
+            'provider_code': 'odoo_quotation',
+            'provider_name': 'Odoo quotation',
+            'payment_method_id': 0,
+            'payment_method_code': 'odoo_quotation',
+            'payment_method_name': 'Pay on Odoo quotation',
+            'flow': 'in_app_browser',
+            'country_ids': countries.ids,
+            'countries': [self._serialize_country(country) for country in countries],
+            'country_names': countries.mapped('name'),
+            'restricted_to_countries': bool(billing_country),
         }
 
     @api.model
@@ -385,12 +525,7 @@ class MobileEcommerceApi(models.AbstractModel):
         )
 
         return {
-            'website': {
-                'id': website.id,
-                'name': website.name,
-                'currency': website.currency_id.name,
-                'base_url': self._base_url(),
-            },
+            'website': self._serialize_website(website),
             'banners': [self._serialize_banner(banner) for banner in banners],
             'categories': [self._serialize_category(category) for category in categories],
             'featured_products': [self._serialize_product(product, website) for product in products],
@@ -450,12 +585,7 @@ class MobileEcommerceApi(models.AbstractModel):
             ]
 
         return {
-            'website': {
-                'id': website.id,
-                'name': website.name,
-                'currency': website.currency_id.name,
-                'base_url': self._base_url(),
-            },
+            'website': self._serialize_website(website),
             'app': self._serialize_mobile_app(app, website),
             'navigation': [
                 self._serialize_navigation_item(item)
@@ -702,6 +832,7 @@ class MobileEcommerceApi(models.AbstractModel):
 
     @api.model
     def get_delivery_methods_payload(self, order, methods):
+        shipping_country = order.partner_shipping_id.sudo().country_id if order else False
         return {
             'items': methods,
             'selected_delivery_method': next(
@@ -713,10 +844,14 @@ class MobileEcommerceApi(models.AbstractModel):
             'currency': (
                 order.currency_id.name if order else self.env.company.currency_id.name
             ),
+            'shipping_country': (
+                self._serialize_country(shipping_country) if shipping_country else False
+            ),
         }
 
     @api.model
     def get_payment_options_payload(self, order, options, errors=None):
+        billing_country = order.partner_invoice_id.sudo().country_id if order else False
         return {
             'items': options,
             'errors': errors or [],
@@ -724,6 +859,9 @@ class MobileEcommerceApi(models.AbstractModel):
             'amount_total': order.amount_total if order else 0.0,
             'currency': (
                 order.currency_id.name if order else self.env.company.currency_id.name
+            ),
+            'billing_country': (
+                self._serialize_country(billing_country) if billing_country else False
             ),
         }
 
@@ -831,10 +969,12 @@ class MobileEcommerceApi(models.AbstractModel):
             })
             added = True
 
-        return {
-            'added': added,
-            'wishlist': self.get_wishlist_payload(partner, website_id=website.id),
-        }
+        payload = self.get_wishlist_payload(partner, website_id=website.id)
+        payload.update({
+            'product_id': product_tmpl.id,
+            'wished': added,
+        })
+        return payload
 
     @api.model
     def rate_product(self, partner, product_tmpl_id, rating, review=None):
@@ -869,7 +1009,8 @@ class MobileEcommerceApi(models.AbstractModel):
         order_domain = [
             ('partner_id', 'child_of', partner.commercial_partner_id.id),
             ('website_id', '=', website.id),
-            ('state', '!=', 'draft'),
+            ('state', 'in', ['draft', 'sent', 'sale', 'done']),
+            ('order_line', '!=', False),
         ]
         orders = self.env['sale.order'].sudo().search(
             order_domain,
@@ -880,6 +1021,58 @@ class MobileEcommerceApi(models.AbstractModel):
             'items': [self._serialize_order(order, website) for order in orders],
             'total': self.env['sale.order'].sudo().search_count(order_domain),
         }
+
+    @api.model
+    def authenticate_google(self, token):
+        if not google_id_token:
+            return False, "Google Auth libraries not installed"
+
+        app, website = self._get_mobile_app()
+        if not app or not app.google_login_enabled or not app.google_client_id:
+            return False, "Google Login not configured for this app"
+
+        try:
+            # Verify the token with Google
+            # We use the web client ID because mobile apps usually pass the ID token
+            # issued for the web backend audience.
+            id_info = google_id_token.verify_oauth2_token(
+                token, 
+                GoogleRequest(), 
+                app.google_client_id
+            )
+
+            email = id_info.get('email')
+            name = id_info.get('name')
+            if not email:
+                return False, "Email not provided by Google"
+
+            # Find or create user
+            user = self.env['res.users'].sudo().search([('login', '=', email)], limit=1)
+            if not user:
+                # Find or create partner
+                partner = self.env['res.partner'].sudo().search([('email', '=', email)], limit=1)
+                if not partner:
+                    partner = self.env['res.partner'].sudo().create({
+                        'name': name,
+                        'email': email,
+                        'website_id': website.id,
+                    })
+                
+                # Create user
+                user = self.env['res.users'].sudo().create({
+                    'name': name,
+                    'login': email,
+                    'partner_id': partner.id,
+                    'groups_id': [(6, 0, [self.env.ref('base.group_portal').id])],
+                })
+            
+            return user, None
+        except ValueError as e:
+            _logger.error("Google Token Validation Failed: %s", e)
+            return False, "Invalid Google Token"
+        except Exception as e:
+            _logger.error("Google Auth Exception: %s", e)
+            return False, str(e)
 
     @api.model
     def get_account_payload(self, partner, website_id=None, order_limit=10):
@@ -899,3 +1092,195 @@ class MobileEcommerceApi(models.AbstractModel):
             'orders': orders_payload['items'],
             'orders_count': orders_payload['total'],
         }
+
+    @api.model
+    def register_device(self, partner, token, platform):
+        if not token or not platform:
+            return False
+
+        device = self.env['mobile.ecommerce.device'].sudo().search([
+            ('token', '=', token),
+        ], limit=1)
+
+        values = {
+            'token': token,
+            'platform': platform,
+            'partner_id': partner.id if partner else False,
+            'last_seen': fields.Datetime.now(),
+        }
+
+        if device:
+            device.write(values)
+        else:
+            self.env['mobile.ecommerce.device'].sudo().create(values)
+        return True
+
+    @api.model
+    def _notification_type_from_data(self, data=None):
+        data = data or {}
+        action = data.get('action') or data.get('type')
+        if action in ('open_order', 'order'):
+            return 'order'
+        if action in ('promotion', 'promo'):
+            return 'promotion'
+        if action in ('system', 'test'):
+            return 'system'
+        return 'info'
+
+    @api.model
+    def _serialize_notification(self, notification):
+        notification = notification.sudo()
+        return {
+            'id': notification.id,
+            'title': notification.title,
+            'body': notification.body,
+            'type': notification.notification_type,
+            'data': notification.data(),
+            'is_read': notification.is_read,
+            'push_sent': notification.push_sent,
+            'created_at': (
+                notification.create_date.isoformat()
+                if notification.create_date else False
+            ),
+            'read_at': notification.read_date.isoformat() if notification.read_date else False,
+        }
+
+    @api.model
+    def _create_in_app_notifications(self, partner_ids, title, body, data=None, push_sent=False):
+        partner_ids = [partner_id for partner_id in set(partner_ids or []) if partner_id]
+        if not partner_ids:
+            return self.env['mobile.ecommerce.notification']
+
+        app, website = self._get_mobile_app()
+        notifications = self.env['mobile.ecommerce.notification']
+        payload_json = json.dumps({key: str(value) for key, value in (data or {}).items()})
+        notification_type = self._notification_type_from_data(data)
+        for partner in self.env['res.partner'].sudo().browse(partner_ids).exists():
+            recipient = partner.commercial_partner_id
+            notifications |= self.env['mobile.ecommerce.notification'].sudo().create({
+                'partner_id': recipient.id,
+                'website_id': website.id if website else False,
+                'title': title,
+                'body': body,
+                'notification_type': notification_type,
+                'data_json': payload_json,
+                'push_sent': push_sent,
+            })
+        return notifications
+
+    @api.model
+    def get_notifications_payload(self, partner, limit=30, unread_only=False):
+        domain = [('partner_id', '=', partner.commercial_partner_id.id)]
+        if unread_only:
+            domain.append(('is_read', '=', False))
+        notifications = self.env['mobile.ecommerce.notification'].sudo().search(
+            domain,
+            limit=int(limit),
+        )
+        unread_count = self.env['mobile.ecommerce.notification'].sudo().search_count([
+            ('partner_id', '=', partner.commercial_partner_id.id),
+            ('is_read', '=', False),
+        ])
+        return {
+            'items': [self._serialize_notification(item) for item in notifications],
+            'unread_count': unread_count,
+        }
+
+    @api.model
+    def mark_notifications_read(self, partner, notification_ids=None):
+        domain = [('partner_id', '=', partner.commercial_partner_id.id)]
+        if notification_ids:
+            domain.append(('id', 'in', [int(item) for item in notification_ids]))
+        notifications = self.env['mobile.ecommerce.notification'].sudo().search(domain)
+        notifications.write({
+            'is_read': True,
+            'read_date': fields.Datetime.now(),
+        })
+        return self.get_notifications_payload(partner)
+
+    @api.model
+    def _get_fcm_access_token(self, app):
+        if not service_account or not app.fcm_service_account_json:
+            return None
+
+        try:
+            # Decode the binary JSON from Odoo
+            service_account_info = json.loads(base64.b64decode(app.fcm_service_account_json))
+            scopes = ['https://www.googleapis.com/auth/firebase.messaging']
+            
+            credentials = service_account.Credentials.from_service_account_info(
+                service_account_info, 
+                scopes=scopes
+            )
+            credentials.refresh(GoogleRequest())
+            return credentials.token
+        except Exception as e:
+            _logger.error("Failed to get FCM access token: %s", e)
+            return None
+
+    @api.model
+    def _send_push_notification(self, partner_ids, title, body, data=None):
+        """
+        Dispatches push notifications to the registered devices of the provided partners using FCM v1.
+        """
+        notifications = self._create_in_app_notifications(
+            partner_ids,
+            title,
+            body,
+            data=data,
+            push_sent=False,
+        )
+        devices = self.env['mobile.ecommerce.device'].sudo().search([
+            ('partner_id', 'in', partner_ids),
+        ])
+        if not devices:
+            return bool(notifications)
+
+        app, website = self._get_mobile_app()
+        if not app or not app.fcm_project_id:
+            _logger.warning("FCM Project ID not configured for app %s", app.name if app else "Unknown")
+            return bool(notifications)
+
+        access_token = self._get_fcm_access_token(app)
+        if not access_token:
+            _logger.error("Could not obtain FCM access token. Check your service account JSON.")
+            return bool(notifications)
+
+        fcm_url = f'https://fcm.googleapis.com/v1/projects/{app.fcm_project_id}/messages:send'
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json',
+        }
+
+        success_count = 0
+        for device in devices:
+            message_payload = {
+                'message': {
+                    'token': device.token,
+                    'notification': {
+                        'title': title,
+                        'body': body,
+                    },
+                }
+            }
+            if data:
+                # FCM data values must be strings
+                message_payload['message']['data'] = {k: str(v) for k, v in data.items()}
+
+            try:
+                response = requests.post(fcm_url, headers=headers, json=message_payload, timeout=10)
+                if response.status_code == 200:
+                    success_count += 1
+                elif response.status_code == 404:
+                    # Token no longer valid, clean it up
+                    _logger.info("FCM Token 404 for partner %s. Unlinking device.", device.partner_id.name)
+                    device.unlink()
+                else:
+                    _logger.error("FCM Send Error (%s): %s", response.status_code, response.text)
+            except Exception as e:
+                _logger.error("FCM Request Exception: %s", e)
+
+        _logger.info("PUSH NOTIFICATION: Successfully sent %s/%s messages.", success_count, len(devices))
+        if success_count:
+            notifications.sudo().write({'push_sent': True})
+        return success_count > 0

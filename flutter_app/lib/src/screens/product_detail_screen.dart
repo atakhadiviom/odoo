@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import '../models/mobile_models.dart';
 import '../state/app_state.dart';
 import '../utils/app_utils.dart';
+import '../widgets/app_vector_icons.dart';
 import '../widgets/common.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -164,21 +166,56 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final product = _product;
     if (product == null) return const SizedBox.shrink();
 
+    final allImages = [product.imageUrl, ...product.extraImageUrls];
+
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 40),
       children: <Widget>[
         Hero(
           tag: 'product_${product.id}',
-          child: Card(
-            elevation: 8,
-            shadowColor: Theme.of(context).colorScheme.shadow.withOpacity(0.1),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: AspectRatio(
-                aspectRatio: 1.0,
-                child: AppNetworkImage(url: product.imageUrl),
+          child: Column(
+            children: [
+              Card(
+                elevation: 8,
+                shadowColor:
+                    Theme.of(context).colorScheme.shadow.withOpacity(0.1),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: AspectRatio(
+                    aspectRatio: 1.0,
+                    child: allImages.length > 1
+                        ? PageView.builder(
+                            itemCount: allImages.length,
+                            itemBuilder: (context, index) {
+                              return AppNetworkImage(url: allImages[index]);
+                            },
+                          )
+                        : AppNetworkImage(url: product.imageUrl),
+                  ),
+                ),
               ),
-            ),
+              if (allImages.length > 1) ...[
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    allImages.length,
+                    (index) => Container(
+                      width: 8,
+                      height: 8,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.4),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
         const SizedBox(height: 24),
@@ -205,18 +242,34 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                 ),
-                IconButton(
-                  onPressed:
-                      widget.appState.account == null ? null : _toggleWishlist,
-                  icon: Icon(
-                    widget.appState.wishlistIds.contains(product.id)
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                  ),
-                  color: Theme.of(context).colorScheme.primary,
-                  tooltip: widget.appState.account == null
-                      ? 'Sign in to use wishlist'
-                      : 'Toggle wishlist',
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Share.share(
+                          'Check out ${product.name} on Syntho Shop: ${product.websiteUrl}',
+                          subject: product.name,
+                        );
+                      },
+                      icon: const AppVectorIcon('share'),
+                      tooltip: 'Share product',
+                    ),
+                    IconButton(
+                      onPressed: widget.appState.account == null
+                          ? null
+                          : _toggleWishlist,
+                      icon: AppVectorIcon(
+                        'wishlist',
+                        selected:
+                            widget.appState.wishlistIds.contains(product.id),
+                      ),
+                      color: Theme.of(context).colorScheme.primary,
+                      tooltip: widget.appState.account == null
+                          ? 'Sign in to use wishlist'
+                          : 'Toggle wishlist',
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -289,7 +342,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: CircularProgressIndicator(
                         strokeWidth: 2, color: Colors.white),
                   )
-                : const Icon(Icons.add_shopping_cart_rounded),
+                : const AppVectorIcon('cart', color: Colors.white),
             label: Text(_adding ? 'Updating...' : 'Add to cart'),
             style: ElevatedButton.styleFrom(
               textStyle:
@@ -337,12 +390,9 @@ class _RatingSummary extends StatelessWidget {
     return Row(
       children: <Widget>[
         for (var index = 1; index <= 5; index++)
-          Icon(
-            index <= product.avgRating.round()
-                ? Icons.star_rounded
-                : Icons.star_border_rounded,
+          AppStarIcon(
+            filled: index <= product.avgRating.round(),
             size: 20,
-            color: const Color(0xFFF5A623),
           ),
         const SizedBox(width: 8),
         Text(
@@ -405,12 +455,9 @@ class _ReviewPanel extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           for (var index = 1; index <= 5; index++)
-                            Icon(
-                              index <= rating.rating
-                                  ? Icons.star_rounded
-                                  : Icons.star_border_rounded,
+                            AppStarIcon(
+                              filled: index <= rating.rating,
                               size: 16,
-                              color: const Color(0xFFF5A623),
                             ),
                         ],
                       ),
@@ -434,12 +481,7 @@ class _ReviewPanel extends StatelessWidget {
                 for (var index = 1; index <= 5; index++)
                   IconButton(
                     onPressed: signedIn ? () => onRatingChanged(index) : null,
-                    icon: Icon(
-                      index <= selectedRating
-                          ? Icons.star_rounded
-                          : Icons.star_border_rounded,
-                      color: const Color(0xFFF5A623),
-                    ),
+                    icon: AppStarIcon(filled: index <= selectedRating),
                   ),
               ],
             ),
@@ -460,7 +502,7 @@ class _ReviewPanel extends StatelessWidget {
                       height: 16,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.rate_review_outlined),
+                  : const AppVectorIcon('review', color: Colors.white),
               label: Text(submitting ? 'Submitting...' : 'Submit review'),
             ),
           ],

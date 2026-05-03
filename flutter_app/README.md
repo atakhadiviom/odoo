@@ -18,6 +18,7 @@ From the repository root:
 cd flutter_app
 /Users/atakhadivi/development/flutter/bin/flutter pub get
 /Users/atakhadivi/development/flutter/bin/flutter build web --no-tree-shake-icons --no-wasm-dry-run \
+  --web-renderer html \
   --dart-define=ODOO_BASE_URL=http://127.0.0.1:8123 \
   --dart-define=ODOO_DATABASE=syntho_mobile_ecommerce_20260415 \
   --dart-define=ODOO_RETURN_URL=synthoshop://checkout/result

@@ -43,4 +43,7 @@ Features
     'license': 'LGPL-3',
     'price': 0.0,
     'currency': 'USD',
+    'external_dependencies': {
+        'python': ['requests'],
+    },
 }

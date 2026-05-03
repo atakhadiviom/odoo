@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/mobile_models.dart';
 import '../utils/app_utils.dart';
+import 'app_vector_icons.dart';
 import 'common.dart';
 
 class ProductCard extends StatelessWidget {
@@ -19,89 +20,75 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onPressed,
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 120,
-              height: 120,
-              child: AppNetworkImage(url: product.imageUrl),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: SizedBox(
+                  width: 64,
+                  height: 64,
+                  child: AppNetworkImage(url: product.imageUrl),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
                       product.name,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                          ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     if ((product.brandName ?? '').isNotEmpty) ...<Widget>[
                       const SizedBox(height: 2),
                       Text(
                         product.brandName!,
-                        style:
-                            Theme.of(context).textTheme.labelMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
-                    const SizedBox(height: 4),
-                    Text(
-                      product.shortDescription.isEmpty
-                          ? 'View more details.'
-                          : product.shortDescription,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                    ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     Text(
                       formatMoney(product.currency, product.price),
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                    ),
-                    if (product.ratingCount > 0) ...<Widget>[
-                      const SizedBox(height: 6),
-                      Row(
-                        children: <Widget>[
-                          const Icon(Icons.star_rounded,
-                              size: 16, color: Color(0xFFF5A623)),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${product.avgRating.toStringAsFixed(1)} (${product.ratingCount})',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ],
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
                       ),
-                    ],
+                    ),
                   ],
                 ),
               ),
-            ),
-            if (onToggleWishlist != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: IconButton(
+              const SizedBox(width: 8),
+              if (onToggleWishlist != null)
+                IconButton(
                   onPressed: onToggleWishlist,
-                  icon: Icon(isWished ? Icons.favorite : Icons.favorite_border),
-                  color:
-                      isWished ? Theme.of(context).colorScheme.primary : null,
-                ),
-              ),
-          ],
+                  visualDensity: VisualDensity.compact,
+                  icon: AppVectorIcon(
+                    'wishlist',
+                    selected: isWished,
+                    color: isWished ? theme.colorScheme.primary : null,
+                  ),
+                )
+              else
+                const SizedBox(width: 40),
+            ],
+          ),
         ),
       ),
     );

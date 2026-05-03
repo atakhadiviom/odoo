@@ -1,0 +1,26 @@
+{
+  "name": "syntho-shop-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~55.0.2",
+    "expo-device": "~55.0.0",
+    "expo-notifications": "~55.0.0",
+    "expo-status-bar": "~55.0.4",
+    "expo-web-browser": "~55.0.9",
+    "@react-native-google-signin/google-signin": "^11.0.1",
+    "react": "19.2.3",
+    "react-native": "0.85.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "typescript": "~5.9.2"
+  }
+}

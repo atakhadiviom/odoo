@@ -23,6 +23,8 @@ ThemeData buildAppTheme({Color? primaryColor, Color? accentColor}) {
 
   return ThemeData(
     useMaterial3: true,
+    fontFamily: 'NotoSans',
+    fontFamilyFallback: const ['NotoSansSymbols2'],
     colorScheme: scheme,
     scaffoldBackgroundColor: background,
     appBarTheme: const AppBarTheme(

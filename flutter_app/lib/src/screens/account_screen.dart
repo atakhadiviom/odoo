@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../models/mobile_models.dart';
 import '../state/app_state.dart';
 import '../utils/app_utils.dart';
+import '../widgets/app_vector_icons.dart';
 import '../widgets/common.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -34,6 +38,51 @@ class _AccountScreenState extends State<AccountScreen> {
       if (!mounted) return;
       _showErrorDialog(context, 'Login failed', error.toString());
     }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    final app = widget.appState.bootstrap?.app;
+    if (app == null || !app.googleLoginEnabled) {
+      _showErrorDialog(context, 'Not available',
+          'Google login is not enabled for this app.');
+      return;
+    }
+
+    try {
+      final googleSignIn = GoogleSignIn(
+        clientId: app.googleClientId, // Web client ID for token verification
+        scopes: ['email', 'profile'],
+      );
+      final account = await googleSignIn.signIn();
+      if (account == null) return;
+
+      final auth = await account.authentication;
+      if (auth.idToken == null) {
+        throw Exception('Failed to get ID token from Google');
+      }
+
+      await widget.appState.loginWithGoogle(auth.idToken!);
+    } catch (error) {
+      if (!mounted) return;
+      _showErrorDialog(context, 'Google Sign-In failed', error.toString());
+    }
+  }
+
+  Future<void> _openOrder(OrderSummary order) async {
+    final url = order.portalUrl;
+    if (url == null || url.isEmpty) return;
+    final uri = Uri.parse(url);
+    try {
+      final openedInApp = await launchUrl(
+        uri,
+        mode: LaunchMode.inAppBrowserView,
+        webOnlyWindowName: '_self',
+      );
+      if (openedInApp) return;
+    } catch (_) {
+      // Web builds can reject in-app browser mode; fall back to same-tab launch.
+    }
+    await launchUrl(uri, mode: LaunchMode.platformDefault);
   }
 
   @override
@@ -72,7 +121,7 @@ class _AccountScreenState extends State<AccountScreen> {
             obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Password',
-              hintText: '••••••••',
+              hintText: '********',
             ),
           ),
           const SizedBox(height: 32),
@@ -83,6 +132,42 @@ class _AccountScreenState extends State<AccountScreen> {
               onPressed: widget.appState.accountLoading ? null : _login,
               child: Text(
                 widget.appState.accountLoading ? 'Signing in...' : 'Sign in',
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Row(
+            children: [
+              Expanded(
+                  child: Divider(
+                      color: Theme.of(context).colorScheme.outlineVariant)),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text('OR',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+              ),
+              Expanded(
+                  child: Divider(
+                      color: Theme.of(context).colorScheme.outlineVariant)),
+            ],
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: OutlinedButton.icon(
+              onPressed:
+                  widget.appState.accountLoading ? null : _loginWithGoogle,
+              icon: Image.network(
+                'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
+                height: 24,
+                errorBuilder: (_, __, ___) => const Icon(Icons.login),
+              ),
+              label: const Text('Sign in with Google'),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                    color: Theme.of(context).colorScheme.outlineVariant),
               ),
             ),
           ),
@@ -150,7 +235,7 @@ class _AccountScreenState extends State<AccountScreen> {
           title: 'Recent Orders',
           trailing: IconButton(
             onPressed: widget.appState.refreshAccount,
-            icon: const Icon(Icons.refresh, size: 20),
+            icon: const AppVectorIcon('refresh', size: 20),
           ),
         ),
         if (account.orders.isEmpty)
@@ -164,19 +249,40 @@ class _AccountScreenState extends State<AccountScreen> {
               padding: const EdgeInsets.only(bottom: 12),
               child: Card(
                 child: ListTile(
+                  onTap:
+                      order.portalUrl == null ? null : () => _openOrder(order),
                   title: Text(
                     order.name,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    '${order.state.toUpperCase()} • ${order.dateOrder?.split('T').first ?? ''}',
+                    order.needsPayment
+                        ? 'Needs payment - ${order.dateOrder?.split('T').first ?? ''}'
+                        : '${order.state.toUpperCase()} - ${order.dateOrder?.split('T').first ?? ''}',
                   ),
-                  trailing: Text(
-                    formatMoney(order.currency, order.amountTotal),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        formatMoney(order.currency, order.amountTotal),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      if (order.needsPayment && order.portalUrl != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          'Open',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ),
@@ -186,7 +292,7 @@ class _AccountScreenState extends State<AccountScreen> {
           onPressed: widget.appState.accountLoading
               ? null
               : () => widget.appState.logout(),
-          icon: const Icon(Icons.logout_rounded),
+          icon: const AppVectorIcon('logout', size: 20),
           label: Text(
             widget.appState.accountLoading ? 'Signing out...' : 'Sign out',
           ),

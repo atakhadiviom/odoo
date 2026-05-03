@@ -126,12 +126,12 @@ class _BarcodeScreenState extends State<BarcodeScreen> {
             children: [
               IconButton.filledTonal(
                 onPressed: () => _controller.toggleTorch(),
-                icon: const Icon(Icons.flashlight_on_rounded),
+                icon: const Icon(Icons.flashlight_on),
                 padding: const EdgeInsets.all(16),
               ),
               IconButton.filledTonal(
                 onPressed: () => _controller.switchCamera(),
-                icon: const Icon(Icons.flip_camera_ios_rounded),
+                icon: const Icon(Icons.flip_camera_ios),
                 padding: const EdgeInsets.all(16),
               ),
             ],

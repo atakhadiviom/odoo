@@ -154,8 +154,11 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
     setState(() {
       _paymentOptions = payload;
       if (_selectedPaymentKey == null && payload.items.isNotEmpty) {
-        final first = payload.items.first;
-        _selectedPaymentKey = '${first.providerId}:${first.paymentMethodId}';
+        final first = payload.items.firstWhere(
+          (item) => item.providerCode == 'odoo_quotation',
+          orElse: () => payload.items.first,
+        );
+        _selectedPaymentKey = first.selectionKey;
       }
     });
   }
@@ -171,6 +174,8 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
       var state = await widget.appState.api.upsertCheckoutAddress(
         values: _billingForm,
         addressType: 'billing',
+        useDeliveryAsBilling:
+            _checkoutState?.requiresDelivery == true && _useBillingForShipping,
       );
       if (_checkoutState?.requiresDelivery == true && !_useBillingForShipping) {
         state = await widget.appState.api.upsertCheckoutAddress(
@@ -232,14 +237,7 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
       _startingPayment = true;
     });
     try {
-      PaymentOption? selectedOption;
-      if (_selectedPaymentKey != null) {
-        selectedOption = _paymentOptions?.items.firstWhere(
-          (item) =>
-              '${item.providerId}:${item.paymentMethodId}' ==
-              _selectedPaymentKey,
-        );
-      }
+      final selectedOption = _selectedPaymentOption;
       final session = await widget.appState.api.createPaymentSession(
         providerId: selectedOption?.providerId,
         paymentMethodId: selectedOption?.paymentMethodId,
@@ -251,17 +249,15 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
         return;
       }
 
-      final launched = await launchUrl(
-        Uri.parse(session.paymentPageUrl!),
-        mode: LaunchMode.inAppBrowserView,
-      );
+      final launched = await _openPaymentPage(session.paymentPageUrl!);
       if (!launched && mounted) {
         _showErrorDialog(
           context,
-          'Unable to open payment page',
-          'The payment browser could not be opened.',
+          'Unable to open Odoo quotation',
+          'The in-app browser could not open ${session.paymentPageUrl}.',
         );
       }
+      await widget.appState.refreshAccount(silent: true);
     } catch (error) {
       if (!mounted) return;
       _showErrorDialog(context, 'Unable to start payment', error.toString());
@@ -272,6 +268,27 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
         });
       }
     }
+  }
+
+  Future<bool> _openPaymentPage(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      final openedInApp = await launchUrl(
+        uri,
+        mode: LaunchMode.inAppBrowserView,
+        webOnlyWindowName: '_self',
+      );
+      if (openedInApp) {
+        return true;
+      }
+    } catch (_) {
+      // Web builds can reject in-app browser mode; fall back to same-tab launch.
+    }
+    return launchUrl(
+      uri,
+      mode: LaunchMode.platformDefault,
+      webOnlyWindowName: '_self',
+    );
   }
 
   Future<void> _resolvePaymentStatus(PaymentSession session) async {
@@ -335,6 +352,46 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
     await _resolvePaymentStatus(session);
   }
 
+  bool get _canGoBackInCheckout =>
+      _step != CheckoutStep.review && _step != CheckoutStep.result;
+
+  String get _checkoutBackLabel {
+    switch (_step) {
+      case CheckoutStep.address:
+        return 'Back to review';
+      case CheckoutStep.delivery:
+        return 'Back to address';
+      case CheckoutStep.payment:
+        return _checkoutState?.requiresDelivery == true
+            ? 'Back to delivery'
+            : 'Back to address';
+      case CheckoutStep.review:
+      case CheckoutStep.result:
+        return 'Back';
+    }
+  }
+
+  void _goBackInCheckout() {
+    setState(() {
+      switch (_step) {
+        case CheckoutStep.address:
+          _step = CheckoutStep.review;
+          break;
+        case CheckoutStep.delivery:
+          _step = CheckoutStep.address;
+          break;
+        case CheckoutStep.payment:
+          _step = _checkoutState?.requiresDelivery == true
+              ? CheckoutStep.delivery
+              : CheckoutStep.address;
+          break;
+        case CheckoutStep.review:
+        case CheckoutStep.result:
+          break;
+      }
+    });
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
@@ -359,7 +416,11 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
       children: <Widget>[
-        CheckoutStepHeader(step: _step),
+        CheckoutStepHeader(
+          step: _step,
+          onBack: _canGoBackInCheckout ? _goBackInCheckout : null,
+          backLabel: _checkoutBackLabel,
+        ),
         const SizedBox(height: 24),
         if (checkoutState.loginRequired && !checkoutState.isAuthenticated)
           LoginRequiredCard(onGoToAccount: widget.onGoToAccount)
@@ -540,6 +601,15 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SectionTitle(title: 'Choose delivery method'),
+        if (payload.shippingCountry != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: MessageCard(
+              title: 'Shipping country',
+              message:
+                  'Showing Odoo delivery methods available for ${payload.shippingCountry!.name}.',
+            ),
+          ),
         if (payload.items.isEmpty)
           const MessageCard(
             title: 'No delivery methods available',
@@ -563,7 +633,9 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
                         },
                   title: Text(method.name,
                       style: const TextStyle(fontWeight: FontWeight.bold)),
-                  subtitle: Text(formatMoney(method.currency, method.amount)),
+                  subtitle: Text(
+                    '${formatMoney(method.currency, method.amount)}\n${method.countrySummary}',
+                  ),
                 ),
               ),
             ),
@@ -596,12 +668,12 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        const SectionTitle(title: 'Select payment provider'),
+        const SectionTitle(title: 'Choose payment method'),
         if (!checkoutState.canProceedToPayment &&
             !checkoutState.canFinalizeWithoutPayment)
-          const MessageCard(
-            title: 'Payment not available',
-            message: 'Please complete the address and delivery steps first.',
+          _PaymentBlockedCard(
+            checkoutState: checkoutState,
+            onBack: _goBackInCheckout,
           )
         else if (checkoutState.canFinalizeWithoutPayment)
           const MessageCard(
@@ -611,6 +683,15 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
         else if (payload == null)
           const Center(child: CircularProgressIndicator())
         else ...<Widget>[
+          if (payload.billingCountry != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: MessageCard(
+                title: 'Billing country',
+                message:
+                    'Showing Odoo payment methods available for ${payload.billingCountry!.name}.',
+              ),
+            ),
           if (payload.errors.isNotEmpty)
             CheckoutErrorList(errors: payload.errors),
           if (payload.items.isEmpty)
@@ -624,7 +705,7 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Card(
                   child: RadioListTile<String>(
-                    value: '${item.providerId}:${item.paymentMethodId}',
+                    value: item.selectionKey,
                     groupValue: _selectedPaymentKey,
                     onChanged: (value) {
                       setState(() {
@@ -635,7 +716,11 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
                       item.paymentMethodName,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(item.providerName),
+                    subtitle: Text(
+                      item.providerCode == 'odoo_quotation'
+                          ? 'Opens your Odoo quotation in the in-app browser so you can pay there.'
+                          : '${item.providerName}\n${item.countrySummary}',
+                    ),
                   ),
                 ),
               ),
@@ -658,12 +743,26 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
                       ? 'Verifying...'
                       : checkoutState.canFinalizeWithoutPayment
                           ? 'Confirm order'
-                          : 'Pay securely',
+                          : _selectedPaymentOption?.providerCode ==
+                                  'odoo_quotation'
+                              ? 'Open Odoo quotation'
+                              : 'Pay securely',
             ),
           ),
         ),
       ],
     );
+  }
+
+  PaymentOption? get _selectedPaymentOption {
+    final selectedKey = _selectedPaymentKey;
+    if (selectedKey == null) return null;
+    for (final item in _paymentOptions?.items ?? <PaymentOption>[]) {
+      if (item.selectionKey == selectedKey) {
+        return item;
+      }
+    }
+    return null;
   }
 
   Widget _buildResultStep(BuildContext context) {
@@ -676,15 +775,15 @@ class _CheckoutFlowScreenState extends State<CheckoutFlowScreen>
     switch (result.status) {
       case 'success':
         tone = theme.colorScheme.primary;
-        icon = Icons.check_circle_outline_rounded;
+        icon = Icons.check_circle_outline;
         break;
       case 'pending':
         tone = Colors.orange.shade700;
-        icon = Icons.hourglass_empty_rounded;
+        icon = Icons.hourglass_empty;
         break;
       default:
         tone = theme.colorScheme.error;
-        icon = Icons.error_outline_rounded;
+        icon = Icons.error_outline;
         break;
     }
     return Card(
@@ -808,6 +907,50 @@ class _ResultRow extends StatelessWidget {
           Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
           Text(value),
         ],
+      ),
+    );
+  }
+}
+
+class _PaymentBlockedCard extends StatelessWidget {
+  const _PaymentBlockedCard({
+    required this.checkoutState,
+    required this.onBack,
+  });
+
+  final CheckoutState checkoutState;
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    final reasons = checkoutState.checkoutErrors
+        .map((error) => error.message?.isNotEmpty == true
+            ? '${error.title} ${error.message}'
+            : error.title)
+        .where((message) => message.trim().isNotEmpty)
+        .toList();
+
+    if (reasons.isEmpty) {
+      if (!checkoutState.billingComplete) {
+        reasons.add('Billing address is not complete.');
+      }
+      if (checkoutState.requiresDelivery && !checkoutState.shippingComplete) {
+        reasons.add('Shipping address is not complete.');
+      }
+      if (checkoutState.requiresDelivery &&
+          checkoutState.selectedDeliveryMethod == null) {
+        reasons.add('Select a delivery method before payment.');
+      }
+    }
+
+    return MessageCard(
+      title: 'Payment is waiting for checkout details',
+      message: reasons.isEmpty
+          ? 'Go back and confirm the previous checkout step.'
+          : reasons.join('\n'),
+      action: TextButton(
+        onPressed: onBack,
+        child: const Text('Go back and fix'),
       ),
     );
   }

@@ -132,3 +132,25 @@ class TestMobileEcommerceApi(TransactionCase):
         self.assertEqual(payload['order_id'], self.order.id)
         self.assertEqual(payload['status'], 'success')
         self.assertEqual(payload['access_token'], 'token-123')
+
+    def test_toggle_wishlist_returns_mobile_payload_shape(self):
+        added_payload = self.service.toggle_wishlist(
+            self.partner,
+            self.product.id,
+            website_id=self.website.id,
+        )
+
+        self.assertTrue(added_payload['wished'])
+        self.assertEqual(added_payload['product_id'], self.product.id)
+        self.assertIn(self.product.id, added_payload['product_ids'])
+        self.assertTrue(any(item['id'] == self.product.id for item in added_payload['items']))
+
+        removed_payload = self.service.toggle_wishlist(
+            self.partner,
+            self.product.id,
+            website_id=self.website.id,
+        )
+
+        self.assertFalse(removed_payload['wished'])
+        self.assertEqual(removed_payload['product_id'], self.product.id)
+        self.assertNotIn(self.product.id, removed_payload['product_ids'])

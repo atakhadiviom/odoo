@@ -16,6 +16,10 @@ dependencies:
   app_links: ^3.5.0
   mobile_scanner: ^5.0.0
   cached_network_image: ^3.3.0
+  firebase_core: ^2.24.2
+  firebase_messaging: ^14.7.10
+  share_plus: ^13.0.0
+  google_sign_in: ^6.1.6
 
 dev_dependencies:
   flutter_test:
@@ -38,3 +42,13 @@ flutter:
   uses-material-design: true
   assets:
     - assets/branding/
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSans-Bold.ttf
+          weight: 700
+    - family: NotoSansSymbols2
+      fonts:
+        - asset: assets/fonts/NotoSansSymbols2-Regular.ttf

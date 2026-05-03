@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Odoo Ecommerce Flutter – Wireframes</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Caveat+Brush&display=swap" rel="stylesheet"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="ios-frame.jsx"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #F5F3EE;
+    font-family: 'Caveat', cursive;
+    min-height: 100vh;
+    overflow-x: auto;
+  }
+  #root { min-height: 100vh; }
+
+  /* Tweaks panel */
+  #tweaks-panel {
+    position: fixed; bottom: 24px; right: 24px;
+    background: white; border: 1.5px solid #ddd; border-radius: 16px;
+    padding: 20px; width: 240px; z-index: 9999;
+    display: none; box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    font-family: 'Caveat', cursive;
+  }
+  #tweaks-panel.visible { display: block; }
+  #tweaks-panel h3 { font-size: 18px; margin-bottom: 14px; color: #182126; }
+  .tweak-row { margin-bottom: 12px; }
+  .tweak-row label { display: block; font-size: 15px; color: #555; margin-bottom: 4px; }
+  .tweak-row select, .tweak-row input[type=range] { width: 100%; font-family: 'Caveat', cursive; font-size: 15px; }
+  .tweak-row input[type=color] { width: 40px; height: 28px; border: none; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="tweaks-panel">
+  <h3>✏ Tweaks</h3>
+  <div class="tweak-row">
+    <label>Active screen</label>
+    <select id="tw-screen">
+      <option value="all">All screens</option>
+      <option value="home">Home only</option>
+      <option value="catalog">Catalog only</option>
+      <option value="detail">Product Detail only</option>
+      <option value="checkout">Checkout only</option>
+      <option value="account">Account only</option>
+    </select>
+  </div>
+  <div class="tweak-row">
+    <label>Accent color</label>
+    <input type="color" id="tw-accent" value="#C65D3D"/>
+  </div>
+  <div class="tweak-row">
+    <label>Sketch weight <span id="tw-weight-val">1.5</span>px</label>
+    <input type="range" id="tw-weight" min="1" max="3" step="0.5" value="1.5"/>
+  </div>
+  <div class="tweak-row">
+    <label>Show annotations</label>
+    <input type="checkbox" id="tw-annot" checked/>
+  </div>
+</div>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#C65D3D",
+  "strokeWeight": 1.5,
+  "showAnnotations": true,
+  "activeScreen": "all"
+}/*EDITMODE-END*/;
+
+// ── Helpers ──────────────────────────────────────────────────────────
+const sf = (family = 'Caveat, cursive') => family;
+const STROKE = (w = 1.5, color = '#182126') => ({ stroke: color, strokeWidth: w, fill: 'none', strokeLinecap: 'round', strokeLinejoin: 'round' });
+
+// Hatched placeholder box
+function HatchBox({ w, h, label, accent }) {
+  const id = `hatch-${Math.random().toString(36).slice(2,6)}`;
+  return (
+    <svg width={w} height={h} style={{ display: 'block', flexShrink: 0 }}>
+      <defs>
+        <pattern id={id} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="8" stroke="#ccc" strokeWidth="1"/>
+        </pattern>
+      </defs>
+      <rect width={w} height={h} fill={`url(#${id})`} rx="6"/>
+      <rect width={w} height={h} fill="none" stroke="#bbb" strokeWidth="1" rx="6"/>
+      {label && <text x={w/2} y={h/2+5} textAnchor="middle" fontFamily="Caveat,cursive" fontSize="11" fill="#999">{label}</text>}
+    </svg>
+  );
+}
+
+// Annotation bubble
+function Annot({ children, show, accent }) {
+  if (!show) return null;
+  return (
+    <div style={{
+      background: accent + '18', border: `1px solid ${accent}55`,
+      borderRadius: 8, padding: '3px 8px',
+      fontSize: 13, color: accent, fontFamily: sf(), lineHeight: 1.4,
+      display: 'inline-block', marginTop: 4,
+    }}>{children}</div>
+  );
+}
+
+// Sketch button
+function SBtn({ label, filled, accent, small }) {
+  return (
+    <div style={{
+      background: filled ? accent : 'transparent',
+      border: `1.5px solid ${filled ? accent : '#888'}`,
+      borderRadius: 12,
+      padding: small ? '4px 12px' : '8px 18px',
+      fontSize: small ? 13 : 15,
+      color: filled ? '#fff' : '#333',
+      fontFamily: sf(), textAlign: 'center', cursor: 'default',
+      display: 'inline-block',
+    }}>{label}</div>
+  );
+}
+
+// Chip
+function Chip({ label, active, accent }) {
+  return (
+    <div style={{
+      border: `1.5px solid ${active ? accent : '#bbb'}`,
+      borderRadius: 20, padding: '3px 12px', fontSize: 13,
+      color: active ? accent : '#666', fontFamily: sf(), whiteSpace: 'nowrap',
+      background: active ? accent + '18' : 'transparent',
+    }}>{label}</div>
+  );
+}
+
+// Bottom nav bar
+function BottomNav({ active = 0, accent }) {
+  const items = [
+    { label: 'Home', icon: '⌂' },
+    { label: 'Shop', icon: '⊞' },
+    { label: 'Cart', icon: '⊠' },
+    { label: 'Saved', icon: '♡' },
+    { label: 'Account', icon: '◯' },
+  ];
+  return (
+    <div style={{
+      display: 'flex', borderTop: '1.5px solid #e5ded5',
+      background: '#FAFAF8', paddingBottom: 16, paddingTop: 6,
+    }}>
+      {items.map((it, i) => (
+        <div key={i} style={{
+          flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2,
+          fontFamily: sf(), fontSize: 20,
+          color: i === active ? accent : '#aaa',
+        }}>
+          <span>{it.icon}</span>
+          <span style={{ fontSize: 10, color: i === active ? accent : '#bbb' }}>{it.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Section title
+function SectionTitle({ title, sw }) {
+  return (
+    <div style={{ fontFamily: sf(), fontSize: 17, fontWeight: 700, color: '#182126', marginBottom: 8,
+      borderBottom: `${sw}px solid #e5ded5`, paddingBottom: 4 }}>{title}</div>
+  );
+}
+
+// ── SCREEN 1: Home ────────────────────────────────────────────────────
+function HomeScreen({ accent, sw, annot }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#FBF9F7' }}>
+      {/* App bar */}
+      <div style={{ padding: '10px 16px 6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontFamily: sf(), fontSize: 22, fontWeight: 700, color: '#182126' }}>syntho shop</div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ width: 32, height: 32, border: `${sw}px solid #bbb`, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: '#666' }}>⊡</div>
+          <div style={{ width: 32, height: 32, border: `${sw}px solid #bbb`, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: '#666' }}>⊠</div>
+        </div>
+      </div>
+
+      {/* Search bar */}
+      <div style={{ margin: '0 16px 12px', border: `${sw}px solid #bbb`, borderRadius: 14, padding: '8px 14px', fontSize: 14, color: '#aaa', fontFamily: sf(), display: 'flex', gap: 8, background: '#fff' }}>
+        <span>⊙</span><span>Search products…</span>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px 8px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+        {/* Hero banner */}
+        <div>
+          <Annot show={annot} accent={accent}>hero banner · tap → category or product</Annot>
+          <div style={{ marginTop: 4, borderRadius: 16, overflow: 'hidden', border: `${sw}px solid #bbb`, position: 'relative' }}>
+            <HatchBox w={330} h={140} label="campaign image"/>
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(24,33,38,0.72)', padding: '10px 14px' }}>
+              <div style={{ fontFamily: sf(), fontSize: 18, fontWeight: 700, color: '#fff' }}>Summer Collection</div>
+              <div style={{ fontFamily: sf(), fontSize: 13, color: 'rgba(255,255,255,0.7)' }}>Shop the new arrivals</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Category chips */}
+        <div>
+          <SectionTitle title="Shop by category" sw={sw}/>
+          <Annot show={annot} accent={accent}>horizontal scroll · onOpenCategory(id)</Annot>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
+            {['Electronics', 'Clothing', 'Books', 'Home', 'Sport'].map((c, i) => (
+              <Chip key={c} label={c} active={i === 0} accent={accent}/>
+            ))}
+          </div>
+        </div>
+
+        {/* Featured products */}
+        <div>
+          <SectionTitle title="Featured products" sw={sw}/>
+          <Annot show={annot} accent={accent}>ProductCard · wishlist toggle · onSelectProduct(id)</Annot>
+          {['Wireless Headset', 'Leather Wallet'].map((p, i) => (
+            <div key={p} style={{ display: 'flex', gap: 12, marginBottom: 10, border: `${sw}px solid #e5ded5`, borderRadius: 14, padding: 10, background: '#fff' }}>
+              <HatchBox w={64} h={64} label="product"/>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div style={{ fontFamily: sf(), fontSize: 15, fontWeight: 600, color: '#182126' }}>{p}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontFamily: sf(), fontSize: 15, color: accent, fontWeight: 700 }}>${(49 + i * 30).toFixed(2)}</div>
+                  <span style={{ fontSize: 18, color: i === 0 ? accent : '#ccc' }}>♡</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+      <BottomNav active={0} accent={accent}/>
+    </div>
+  );
+}
+
+// ── SCREEN 2: Catalog ─────────────────────────────────────────────────
+function CatalogScreen({ accent, sw, annot }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#FBF9F7' }}>
+      {/* header */}
+      <div style={{ padding: '10px 16px 6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontFamily: sf(), fontSize: 20, fontWeight: 700, color: '#182126' }}>Electronics</div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ width: 32, height: 32, border: `${sw}px solid #bbb`, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: '#666' }}>⊞</div>
+          <div style={{ width: 32, height: 32, border: `${sw}px solid #bbb`, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, color: '#666' }}>≡</div>
+        </div>
+      </div>
+      {/* search */}
+      <div style={{ margin: '0 16px 8px', border: `${sw}px solid #bbb`, borderRadius: 14, padding: '6px 12px', fontSize: 14, color: '#aaa', fontFamily: sf(), display: 'flex', gap: 8, background: '#fff' }}>
+        <span>⊙</span><span>Search in Electronics…</span>
+      </div>
+      {/* filter chips */}
+      <div style={{ padding: '0 16px 8px', display: 'flex', gap: 8, overflowX: 'auto' }}>
+        <Annot show={annot} accent={accent}>filter / sort chips</Annot>
+      </div>
+      <div style={{ padding: '0 16px 0', display: 'flex', gap: 8 }}>
+        {['Brand', 'Price ↑', 'New'].map((f, i) => (
+          <Chip key={f} label={f} active={i===1} accent={accent}/>
+        ))}
+      </div>
+
+      {/* 2-col grid */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '10px 16px 8px' }}>
+        <Annot show={annot} accent={accent}>product grid · 2 cols · onSelectProduct(id)</Annot>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 6 }}>
+          {['Headset', 'Mouse', 'Keyboard', 'Monitor', 'Webcam', 'Charger'].map((p, i) => (
+            <div key={p} style={{ border: `${sw}px solid #e5ded5`, borderRadius: 14, background: '#fff', overflow: 'hidden' }}>
+              <HatchBox w="100%" h={100} label="product"/>
+              <div style={{ padding: '8px 10px 10px' }}>
+                <div style={{ fontFamily: sf(), fontSize: 13, fontWeight: 600, color: '#182126', marginBottom: 2 }}>{p}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontFamily: sf(), fontSize: 13, color: accent, fontWeight: 700 }}>${(29 + i * 22).toFixed(0)}</span>
+                  <span style={{ fontSize: 14, color: '#ccc' }}>♡</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <BottomNav active={1} accent={accent}/>
+    </div>
+  );
+}
+
+// ── SCREEN 3: Product Detail ──────────────────────────────────────────
+function DetailScreen({ accent, sw, annot }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#FBF9F7' }}>
+      {/* back + wishlist */}
+      <div style={{ padding: '10px 16px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontSize: 22, color: '#555' }}>←</span>
+        <span style={{ fontSize: 22, color: accent }}>♡</span>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 16px 80px' }}>
+
+        {/* Product image */}
+        <Annot show={annot} accent={accent}>Hero image · aspect ratio 1:1</Annot>
+        <div style={{ borderRadius: 18, overflow: 'hidden', border: `${sw}px solid #e5ded5`, marginBottom: 16, marginTop: 4 }}>
+          <HatchBox w="100%" h={220} label="product photo"/>
+        </div>
+
+        {/* Name + price */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
+          <div style={{ fontFamily: sf(), fontSize: 22, fontWeight: 700, color: '#182126', flex: 1, lineHeight: 1.2 }}>Wireless Headset Pro</div>
+          <div style={{ fontFamily: sf(), fontSize: 22, fontWeight: 700, color: accent, marginLeft: 8 }}>$79.00</div>
+        </div>
+
+        {/* Brand + rating */}
+        <div style={{ fontFamily: sf(), fontSize: 14, color: accent, fontWeight: 600, marginBottom: 6 }}>Sony</div>
+        <div style={{ fontFamily: sf(), fontSize: 14, color: '#888', marginBottom: 14, display: 'flex', gap: 4, alignItems: 'center' }}>
+          <span style={{ color: '#F5A623' }}>★★★★☆</span> 4.2 from 18 reviews
+        </div>
+
+        {/* Description */}
+        <SectionTitle title="Description" sw={sw}/>
+        <Annot show={annot} accent={accent}>product.description · bodyLarge</Annot>
+        <div style={{ fontFamily: sf(), fontSize: 14, color: '#666', lineHeight: 1.7, marginBottom: 16 }}>
+          Premium noise-cancelling headset with 30h battery. Foldable design for travel. USB-C charging.
+        </div>
+
+        {/* Attributes */}
+        <div style={{ marginBottom: 14 }}>
+          <SectionTitle title="Variants" sw={sw}/>
+          <Annot show={annot} accent={accent}>product variant chips (colors / sizes)</Annot>
+          <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+            {['Black', 'White', 'Blue'].map((c, i) => (
+              <Chip key={c} label={c} active={i===0} accent={accent}/>
+            ))}
+          </div>
+        </div>
+
+        {/* Reviews */}
+        <div style={{ border: `${sw}px solid #e5ded5`, borderRadius: 14, padding: 12, marginBottom: 16, background: '#fff' }}>
+          <SectionTitle title="Reviews" sw={sw}/>
+          <Annot show={annot} accent={accent}>_ReviewPanel · ratings.take(3)</Annot>
+          {['Alex M.', 'Sara K.'].map((name) => (
+            <div key={name} style={{ marginBottom: 8, fontFamily: sf() }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#182126' }}>{name} <span style={{ color: '#F5A623' }}>★★★★★</span></div>
+              <div style={{ fontSize: 13, color: '#777' }}>Great product, very satisfied with quality.</div>
+            </div>
+          ))}
+          <div style={{ border: `1px dashed #ccc`, borderRadius: 10, padding: '8px 10px', marginTop: 6 }}>
+            <div style={{ fontFamily: sf(), fontSize: 13, color: '#aaa' }}>Write a review…</div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Sticky add to cart */}
+      <div style={{ position: 'absolute', bottom: 34, left: 0, right: 0, padding: '10px 16px', background: 'linear-gradient(transparent, #FBF9F7 40%)' }}>
+        <Annot show={annot} accent={accent}>sticky CTA · ElevatedButton · addToCart(variantId)</Annot>
+        <div style={{ background: accent, borderRadius: 16, padding: '14px', textAlign: 'center', fontFamily: sf(), fontSize: 18, fontWeight: 700, color: '#fff', marginTop: 4 }}>+ Add to cart</div>
+      </div>
+    </div>
+  );
+}
+
+// ── SCREEN 4: Checkout flow ───────────────────────────────────────────
+function CheckoutScreen({ accent, sw, annot }) {
+  const steps = ['Review', 'Address', 'Delivery', 'Payment'];
+  const active = 0;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#FBF9F7' }}>
+      {/* header */}
+      <div style={{ padding: '10px 16px 6px', display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontSize: 20, color: '#555' }}>←</span>
+        <div style={{ fontFamily: sf(), fontSize: 20, fontWeight: 700, color: '#182126' }}>Checkout</div>
+      </div>
+
+      {/* step indicator */}
+      <div style={{ padding: '0 16px 10px', display: 'flex', gap: 4, alignItems: 'center' }}>
+        <Annot show={annot} accent={accent}>CheckoutStepHeader · 4 steps</Annot>
+      </div>
+      <div style={{ padding: '0 16px 12px', display: 'flex', gap: 0, alignItems: 'center' }}>
+        {steps.map((s, i) => (
+          <React.Fragment key={s}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{
+                width: 26, height: 26, borderRadius: 13,
+                background: i === active ? accent : i < active ? accent + '55' : '#ddd',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: sf(), fontSize: 12, color: i <= active ? '#fff' : '#999',
+                fontWeight: 700,
+              }}>{i + 1}</div>
+              <div style={{ fontFamily: sf(), fontSize: 10, color: i === active ? accent : '#aaa', marginTop: 2 }}>{s}</div>
+            </div>
+            {i < steps.length - 1 && <div style={{ flex: 1, height: 1.5, background: i < active ? accent : '#ddd', marginBottom: 14 }}/>}
+          </React.Fragment>
+        ))}
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px 80px' }}>
+        <SectionTitle title="Review order items" sw={sw}/>
+        <Annot show={annot} accent={accent}>cart.lines list · qty + price · SummaryPanel below</Annot>
+
+        {/* Cart lines */}
+        {[{ name: 'Wireless Headset', qty: 1, price: 79 }, { name: 'USB-C Cable', qty: 2, price: 12.5 }].map(item => (
+          <div key={item.name} style={{ display: 'flex', gap: 12, marginBottom: 10, border: `${sw}px solid #e5ded5`, borderRadius: 14, padding: 10, background: '#fff', alignItems: 'center' }}>
+            <HatchBox w={52} h={52} label="img"/>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontFamily: sf(), fontSize: 14, fontWeight: 600, color: '#182126' }}>{item.name}</div>
+              <div style={{ fontFamily: sf(), fontSize: 13, color: '#888' }}>Qty: {item.qty}</div>
+            </div>
+            <div style={{ fontFamily: sf(), fontSize: 14, fontWeight: 700, color: accent }}>${(item.price * item.qty).toFixed(2)}</div>
+          </div>
+        ))}
+
+        {/* Summary */}
+        <div style={{ border: `${sw}px solid #e5ded5`, borderRadius: 14, padding: '10px 14px', background: '#fff', marginTop: 4, marginBottom: 14 }}>
+          <Annot show={annot} accent={accent}>SummaryPanel · subtotal / tax / shipping / total</Annot>
+          {[['Subtotal', '$104.00'], ['Shipping', 'TBD'], ['Tax', '$8.32'], ['Total', '$112.32']].map(([k, v]) => (
+            <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontFamily: sf(), fontSize: 14, color: k === 'Total' ? '#182126' : '#666', fontWeight: k === 'Total' ? 700 : 400, marginBottom: 4 }}>
+              <span>{k}</span><span style={{ color: k === 'Total' ? accent : '#666' }}>{v}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Address form preview */}
+        <SectionTitle title="Address (step 2)" sw={sw}/>
+        <Annot show={annot} accent={accent}>AddressFormCard · billing + optional shipping toggle</Annot>
+        <div style={{ border: `${sw}px dashed #ccc`, borderRadius: 14, padding: '10px 12px', background: '#fff', marginBottom: 12 }}>
+          {['Full name', 'Email', 'Street', 'City, ZIP', 'Country'].map(f => (
+            <div key={f} style={{ borderBottom: '1px solid #eee', padding: '7px 0', fontFamily: sf(), fontSize: 14, color: '#bbb' }}>{f}…</div>
+          ))}
+        </div>
+
+        <SectionTitle title="Delivery (step 3)" sw={sw}/>
+        <Annot show={annot} accent={accent}>RadioListTile per delivery method · price label</Annot>
+        {['Standard — Free', 'Express — $9.99'].map((d, i) => (
+          <div key={d} style={{ display: 'flex', gap: 10, alignItems: 'center', border: `${sw}px solid ${i===0 ? accent : '#e5ded5'}`, borderRadius: 12, padding: '10px 12px', background: '#fff', marginBottom: 8 }}>
+            <div style={{ width: 16, height: 16, borderRadius: 8, border: `2px solid ${i===0 ? accent : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {i===0 && <div style={{ width: 8, height: 8, borderRadius: 4, background: accent }}/>}
+            </div>
+            <div style={{ fontFamily: sf(), fontSize: 14, color: '#182126' }}>{d}</div>
+          </div>
+        ))}
+
+        <SectionTitle title="Payment (step 4)" sw={sw}/>
+        <Annot show={annot} accent={accent}>RadioListTile per payment provider · Pay securely CTA</Annot>
+        {['Credit Card (Stripe)', 'PayPal'].map((p, i) => (
+          <div key={p} style={{ display: 'flex', gap: 10, alignItems: 'center', border: `${sw}px solid ${i===0 ? accent : '#e5ded5'}`, borderRadius: 12, padding: '10px 12px', background: '#fff', marginBottom: 8 }}>
+            <div style={{ width: 16, height: 16, borderRadius: 8, border: `2px solid ${i===0 ? accent : '#ccc'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {i===0 && <div style={{ width: 8, height: 8, borderRadius: 4, background: accent }}/>}
+            </div>
+            <div style={{ fontFamily: sf(), fontSize: 14, color: '#182126' }}>{p}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <div style={{ position: 'absolute', bottom: 34, left: 0, right: 0, padding: '10px 16px', background: 'linear-gradient(transparent, #FBF9F7 40%)' }}>
+        <div style={{ background: accent, borderRadius: 16, padding: '14px', textAlign: 'center', fontFamily: sf(), fontSize: 18, fontWeight: 700, color: '#fff' }}>Continue to address →</div>
+      </div>
+    </div>
+  );
+}
+
+// ── SCREEN 5: Account ─────────────────────────────────────────────────
+function AccountScreen({ accent, sw, annot }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: '#FBF9F7' }}>
+      {/* header */}
+      <div style={{ padding: '10px 16px 14px' }}>
+        <div style={{ fontFamily: sf(), fontSize: 22, fontWeight: 700, color: '#182126' }}>My Account</div>
+      </div>
+
+      {/* avatar + name */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '0 16px 20px' }}>
+        <div style={{ width: 60, height: 60, borderRadius: 30, border: `${sw}px solid #bbb`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, background: '#fff' }}>◯</div>
+        <div>
+          <div style={{ fontFamily: sf(), fontSize: 18, fontWeight: 700, color: '#182126' }}>Alex Martin</div>
+          <div style={{ fontFamily: sf(), fontSize: 14, color: '#888' }}>alex@example.com</div>
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '0 16px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <Annot show={annot} accent={accent}>account_screen.dart · orders, address, wishlist, logout</Annot>
+
+        {/* Orders */}
+        <div>
+          <SectionTitle title="My Orders" sw={sw}/>
+          {['ORD-2024-001 · Delivered', 'ORD-2024-002 · In Transit'].map(o => (
+            <div key={o} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: `1px solid #eee`, fontFamily: sf(), fontSize: 14, color: '#333' }}>
+              <span>{o}</span><span style={{ color: accent }}>›</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Wishlist */}
+        <div>
+          <SectionTitle title="Wishlist" sw={sw}/>
+          <Annot show={annot} accent={accent}>wishlist_screen.dart · toggleWishlist(id)</Annot>
+          <div style={{ display: 'flex', gap: 10 }}>
+            {['Headset', 'Wallet'].map(p => (
+              <div key={p} style={{ border: `${sw}px solid #e5ded5`, borderRadius: 12, overflow: 'hidden', flex: 1, background: '#fff' }}>
+                <HatchBox w="100%" h={70} label="product"/>
+                <div style={{ padding: '6px 8px', fontFamily: sf(), fontSize: 13, color: '#182126' }}>{p}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Scan barcode */}
+        <div>
+          <SectionTitle title="Scan barcode" sw={sw}/>
+          <Annot show={annot} accent={accent}>barcode_screen.dart · mobile_scanner pkg</Annot>
+          <div style={{ border: `${sw}px dashed #bbb`, borderRadius: 14, padding: '14px', textAlign: 'center', background: '#fff' }}>
+            <div style={{ fontSize: 28, marginBottom: 4 }}>⊡</div>
+            <div style={{ fontFamily: sf(), fontSize: 14, color: '#888' }}>Tap to scan a product barcode</div>
+          </div>
+        </div>
+
+        {/* Settings / logout */}
+        <div>
+          <SectionTitle title="Settings" sw={sw}/>
+          {['Addresses', 'Notifications', 'Sign out'].map((s, i) => (
+            <div key={s} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid #eee', fontFamily: sf(), fontSize: 15, color: i === 2 ? accent : '#333' }}>
+              <span>{s}</span><span>›</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <BottomNav active={4} accent={accent}/>
+    </div>
+  );
+}
+
+// ── Label badge ───────────────────────────────────────────────────────
+function ScreenLabel({ label, accent }) {
+  return (
+    <div style={{ textAlign: 'center', marginTop: 16, fontFamily: sf(), fontSize: 18, fontWeight: 700, color: accent, letterSpacing: 0.5 }}>
+      {label}
+    </div>
+  );
+}
+
+// ── Main App ──────────────────────────────────────────────────────────
+function App() {
+  const [accent, setAccent] = React.useState(TWEAK_DEFAULTS.accent);
+  const [sw, setSw] = React.useState(TWEAK_DEFAULTS.strokeWeight);
+  const [annot, setAnnot] = React.useState(TWEAK_DEFAULTS.showAnnotations);
+  const [activeScreen, setActiveScreen] = React.useState(TWEAK_DEFAULTS.activeScreen);
+
+  // Tweaks panel wiring
+  React.useEffect(() => {
+    window.addEventListener('message', (e) => {
+      if (e.data?.type === '__activate_edit_mode') {
+        document.getElementById('tweaks-panel').classList.add('visible');
+      }
+      if (e.data?.type === '__deactivate_edit_mode') {
+        document.getElementById('tweaks-panel').classList.remove('visible');
+      }
+    });
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+    document.getElementById('tw-accent').addEventListener('input', (e) => {
+      setAccent(e.target.value);
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { accent: e.target.value } }, '*');
+    });
+    document.getElementById('tw-weight').addEventListener('input', (e) => {
+      const v = parseFloat(e.target.value);
+      setSw(v);
+      document.getElementById('tw-weight-val').textContent = v;
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { strokeWeight: v } }, '*');
+    });
+    document.getElementById('tw-annot').addEventListener('change', (e) => {
+      setAnnot(e.target.checked);
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { showAnnotations: e.target.checked } }, '*');
+    });
+    document.getElementById('tw-screen').addEventListener('change', (e) => {
+      setActiveScreen(e.target.value);
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { activeScreen: e.target.value } }, '*');
+    });
+  }, []);
+
+  const PHONE_W = 340;
+  const PHONE_H = 700;
+
+  const screens = [
+    { key: 'home', label: '① Home', comp: <HomeScreen accent={accent} sw={sw} annot={annot}/> },
+    { key: 'catalog', label: '② Catalog', comp: <CatalogScreen accent={accent} sw={sw} annot={annot}/> },
+    { key: 'detail', label: '③ Product Detail', comp: <DetailScreen accent={accent} sw={sw} annot={annot}/> },
+    { key: 'checkout', label: '④ Cart & Checkout', comp: <CheckoutScreen accent={accent} sw={sw} annot={annot}/> },
+    { key: 'account', label: '⑤ Account', comp: <AccountScreen accent={accent} sw={sw} annot={annot}/> },
+  ];
+
+  const visible = activeScreen === 'all' ? screens : screens.filter(s => s.key === activeScreen);
+
+  return (
+    <div style={{ minHeight: '100vh', padding: '36px 40px 60px' }}>
+      {/* Title */}
+      <div style={{ marginBottom: 32, textAlign: 'center' }}>
+        <div style={{ fontFamily: sf(), fontSize: 36, fontWeight: 700, color: '#182126' }}>
+          syntho shop — Odoo ecommerce
+        </div>
+        <div style={{ fontFamily: sf(), fontSize: 20, color: '#888', marginTop: 4 }}>
+          Flutter mobile app wireframes · {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+        </div>
+        {/* legend line */}
+        <div style={{ display: 'flex', gap: 20, justifyContent: 'center', marginTop: 12, flexWrap: 'wrap' }}>
+          {[['accent', accent, 'Primary #C65D3D'], ['#182126', '#182126', 'Dark ink'], ['#FBF9F7', '#ddd', 'Background']].map(([c, sw2, label]) => (
+            <div key={label} style={{ display: 'flex', gap: 6, alignItems: 'center', fontFamily: sf(), fontSize: 14, color: '#666' }}>
+              <div style={{ width: 14, height: 14, borderRadius: 4, background: c === 'accent' ? accent : c, border: '1px solid #ccc' }}/>
+              {label}
+            </div>
+          ))}
+          <div style={{ fontFamily: sf(), fontSize: 14, color: '#888', fontStyle: 'italic' }}>↗ hatched = image placeholder</div>
+        </div>
+      </div>
+
+      {/* Phones */}
+      <div style={{
+        display: 'flex', gap: 32, flexWrap: 'wrap', justifyContent: 'center',
+        alignItems: 'flex-start',
+      }}>
+        {visible.map(({ key, label, comp }) => (
+          <div key={key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Phone shell */}
+            <div style={{
+              width: PHONE_W, height: PHONE_H,
+              borderRadius: 44, overflow: 'hidden', position: 'relative',
+              background: '#FBF9F7',
+              boxShadow: `0 0 0 10px #1a1a1a, 0 0 0 11px #333, 0 28px 60px rgba(0,0,0,0.22)`,
+            }}>
+              {/* notch */}
+              <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 110, height: 28, background: '#1a1a1a', borderRadius: '0 0 18px 18px', zIndex: 20 }}/>
+              {/* status bar */}
+              <div style={{ height: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '0 20px 4px', fontFamily: sf(), fontSize: 12, color: '#555', position: 'relative', zIndex: 10 }}>
+                <span>9:41</span>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  <span>●●●</span><span>WiFi</span><span>🔋</span>
+                </div>
+              </div>
+              {/* screen content */}
+              <div style={{ height: 'calc(100% - 32px)', position: 'relative', overflow: 'hidden' }}>
+                {comp}
+              </div>
+              {/* home indicator */}
+              <div style={{ position: 'absolute', bottom: 6, left: '50%', transform: 'translateX(-50%)', width: 100, height: 4, borderRadius: 2, background: 'rgba(0,0,0,0.2)', zIndex: 30 }}/>
+            </div>
+            <ScreenLabel label={label} accent={accent}/>
+          </div>
+        ))}
+      </div>
+
+      {/* Flow arrows annotation */}
+      {activeScreen === 'all' && (
+        <div style={{ maxWidth: 860, margin: '40px auto 0', border: `1.5px dashed #ccc`, borderRadius: 16, padding: 20, fontFamily: sf(), fontSize: 16, color: '#666', lineHeight: 1.8 }}>
+          <span style={{ fontWeight: 700, color: '#182126' }}>User flow: </span>
+          Home → (tap category) → Catalog → (tap product) → Product Detail → (Add to cart) → Checkout [Review → Address → Delivery → Payment → Result] · Account (orders, wishlist, barcode)
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+    <rect width="120" height="80" fill="#F5F3EE"/>
+    <rect x="18" y="12" width="22" height="56" rx="4" fill="none" stroke="#C65D3D" stroke-width="2"/>
+    <rect x="46" y="12" width="22" height="56" rx="4" fill="none" stroke="#C65D3D" stroke-width="2"/>
+    <rect x="74" y="12" width="22" height="56" rx="4" fill="none" stroke="#C65D3D" stroke-width="2"/>
+    <rect x="23" y="20" width="12" height="8" rx="2" fill="#C65D3D" opacity=".4"/>
+    <rect x="51" y="20" width="12" height="8" rx="2" fill="#C65D3D" opacity=".4"/>
+    <rect x="79" y="20" width="12" height="8" rx="2" fill="#C65D3D" opacity=".4"/>
+  </svg>
+</template>
+</body>
+</html>

@@ -6,3 +6,5 @@ access_mobile_ecommerce_navigation_item_user,access.mobile.ecommerce.navigation.
 access_mobile_ecommerce_content_page_user,access.mobile.ecommerce.content.page.user,model_mobile_ecommerce_content_page,base.group_user,1,1,1,1
 access_mobile_ecommerce_wishlist_user,access.mobile.ecommerce.wishlist.user,model_mobile_ecommerce_wishlist,base.group_user,1,1,1,1
 access_mobile_ecommerce_rating_user,access.mobile.ecommerce.rating.user,model_mobile_ecommerce_rating,base.group_user,1,1,1,1
+access_mobile_ecommerce_device_user,access.mobile.ecommerce.device.user,model_mobile_ecommerce_device,base.group_user,1,1,1,1
+access_mobile_ecommerce_notification_user,access.mobile.ecommerce.notification.user,model_mobile_ecommerce_notification,base.group_user,1,1,1,1

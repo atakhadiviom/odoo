@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../config/app_config.dart';
 import '../models/mobile_models.dart';
+import 'odoo_http_client.dart';
 
 class OdooApiException implements Exception {
   OdooApiException(this.message);
@@ -15,7 +16,7 @@ class OdooApiException implements Exception {
 }
 
 class OdooApi {
-  OdooApi({http.Client? client}) : _client = client ?? http.Client();
+  OdooApi({http.Client? client}) : _client = client ?? createOdooHttpClient();
 
   final http.Client _client;
   final Map<String, String> _cookieJar = <String, String>{};
@@ -90,6 +91,14 @@ class OdooApi {
   Future<void> logout() async {
     await _callJsonRpc('/web/session/destroy');
     _cookieJar.clear();
+  }
+
+  Future<AccountPayload> loginWithGoogle(String idToken) async {
+    final json = await _callJsonRpc(
+      '/mobile_api/auth/google',
+      params: <String, dynamic>{'token': idToken},
+    );
+    return AccountPayload.fromJson(json);
   }
 
   Future<HomePayload> getHome() async {
@@ -192,6 +201,45 @@ class OdooApi {
   Future<AccountPayload> getAccount() async {
     final json = await _callJsonRpc('/mobile_api/account');
     return AccountPayload.fromJson(json);
+  }
+
+  Future<void> registerDevice({
+    required String token,
+    required String platform,
+  }) async {
+    await _callJsonRpc(
+      '/mobile_api/device/register',
+      params: <String, dynamic>{
+        'token': token,
+        'platform': platform,
+      },
+    );
+  }
+
+  Future<NotificationPayload> getNotifications({
+    int limit = 30,
+    bool unreadOnly = false,
+  }) async {
+    final json = await _callJsonRpc(
+      '/mobile_api/notifications',
+      params: <String, dynamic>{
+        'limit': limit,
+        'unread_only': unreadOnly,
+      },
+    );
+    return NotificationPayload.fromJson(json);
+  }
+
+  Future<NotificationPayload> markNotificationsRead({
+    List<int>? notificationIds,
+  }) async {
+    final json = await _callJsonRpc(
+      '/mobile_api/notifications/read',
+      params: <String, dynamic>{
+        if (notificationIds != null) 'notification_ids': notificationIds,
+      },
+    );
+    return NotificationPayload.fromJson(json);
   }
 
   Future<WishlistPayload> getWishlist() async {

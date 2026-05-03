@@ -30,6 +30,18 @@ class MobileEcommerceApp(models.Model):
     wishlist_enabled = fields.Boolean(default=True)
     search_enabled = fields.Boolean(default=True)
     version_notes = fields.Text()
+
+    # Push Notification Config
+    fcm_project_id = fields.Char(string='Firebase Project ID')
+    fcm_service_account_json = fields.Binary(string='Service Account JSON', help='The google-services JSON file from Firebase Console')
+    fcm_service_account_filename = fields.Char()
+
+    # Google Login Config
+    google_login_enabled = fields.Boolean(string='Enable Google Login')
+    google_client_id = fields.Char(string='Google Client ID (Web/Odoo)')
+    google_client_id_ios = fields.Char(string='Google Client ID (iOS)')
+    google_client_id_android = fields.Char(string='Google Client ID (Android)')
+
     home_section_ids = fields.One2many(
         'mobile.ecommerce.home.section',
         'app_id',
@@ -86,8 +98,20 @@ class MobileEcommerceNavigationItem(models.Model):
     active = fields.Boolean(default=True)
     app_id = fields.Many2one('mobile.ecommerce.app', required=True, ondelete='cascade')
     label = fields.Char(required=True)
-    icon = fields.Char(
-        help='Free-form icon token for the mobile app, such as home, shop, cart, or person.'
+    icon = fields.Selection(
+        [
+            ('home', 'Home'),
+            ('shop', 'Shop'),
+            ('cart', 'Cart'),
+            ('account', 'Account'),
+            ('brands', 'Brands'),
+            ('scan', 'Scan'),
+            ('wishlist', 'Wishlist'),
+            ('info', 'Info'),
+            ('search', 'Search'),
+        ],
+        default='home',
+        help='Icon to display in the mobile app navigation bar.'
     )
     target_kind = fields.Selection(
         [

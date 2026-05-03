@@ -16,7 +16,12 @@ class MobileEcommerceApiController(WebsiteSale):
         return request.env['mobile.ecommerce.api']
 
     def _base_url(self):
-        return request.env['ir.config_parameter'].sudo().get_param('web.base.url', '').rstrip('/')
+        config = request.env['ir.config_parameter'].sudo()
+        return (
+            config.get_param('syntho_mobile_ecommerce_api.public_base_url')
+            or config.get_param('mobile_ecommerce_app.public_base_url')
+            or config.get_param('web.base.url', '')
+        ).rstrip('/')
 
     def _ensure_ecommerce_access(self):
         if not request.website.has_ecommerce_access():
@@ -49,11 +54,13 @@ class MobileEcommerceApiController(WebsiteSale):
         if not order or not order.exists() or order._is_anonymous_cart():
             return False, False
 
+        billing_partner = order.partner_invoice_id.sudo()
+        shipping_partner = order.partner_shipping_id.sudo()
         billing_complete = bool(
-            order.partner_invoice_id and self._check_billing_address(order.partner_invoice_id)
+            billing_partner and self._check_billing_address(billing_partner)
         )
         shipping_complete = bool(
-            order.partner_shipping_id and self._check_delivery_address(order.partner_shipping_id)
+            shipping_partner and self._check_delivery_address(shipping_partner)
         )
         return billing_complete, shipping_complete
 
@@ -116,6 +123,8 @@ class MobileEcommerceApiController(WebsiteSale):
             provider_payment_methods = payment_methods_sudo.filtered(
                 lambda payment_method: provider_sudo in payment_method.provider_ids
             )
+            if not provider_payment_methods and provider_sudo.payment_method_ids:
+                provider_payment_methods = provider_sudo.payment_method_ids
             for payment_method_sudo in provider_payment_methods:
                 options.append(
                     self._service()._serialize_payment_option(
@@ -177,6 +186,19 @@ class MobileEcommerceApiController(WebsiteSale):
             },
         )
         return f'{self._base_url()}{path}'
+
+    def _build_quotation_payment_url(self, order):
+        if hasattr(order, 'get_portal_url'):
+            portal_url = order.get_portal_url()
+        else:
+            portal_url = f'/my/orders/{order.id}'
+        portal_url = self._append_query_params(
+            portal_url,
+            {'access_token': self._get_order_access_token(order)},
+        )
+        if portal_url.startswith(('http://', 'https://')):
+            return portal_url
+        return f'{self._base_url()}{portal_url}'
 
     def _build_mobile_deep_link(
         self,
@@ -764,6 +786,8 @@ class MobileEcommerceApiController(WebsiteSale):
                 errors=state_payload['checkout_errors'],
             )
         options, errors = self._get_redirect_payment_options(order)
+        if order.amount_total:
+            options.insert(0, self._service()._serialize_quotation_payment_option(order))
         if not options and order.amount_total:
             errors = errors or [
                 self._format_error(
@@ -772,7 +796,11 @@ class MobileEcommerceApiController(WebsiteSale):
                     code='no_payment_option',
                 )
             ]
-        return self._service().get_payment_options_payload(order, options, errors=errors)
+        return self._service().get_payment_options_payload(
+            order,
+            options,
+            errors=[] if options else errors,
+        )
 
     @http.route(
         '/mobile_api/checkout/payment_session',
@@ -813,11 +841,22 @@ class MobileEcommerceApiController(WebsiteSale):
             )
 
         payment_options, errors = self._get_redirect_payment_options(order)
-        if errors:
-            raise ValidationError(errors[0].get('message') or errors[0].get('title'))
 
         provider_id = int(provider_id)
         payment_method_id = int(payment_method_id)
+        if provider_id == 0 and payment_method_id == 0:
+            return self._service().get_payment_session_payload(
+                order=order,
+                tx=False,
+                payment_page_url=self._build_quotation_payment_url(order),
+                return_url=mobile_return_url,
+                access_token=order_access_token,
+                status='pending',
+            )
+
+        if errors and not payment_options:
+            raise ValidationError(errors[0].get('message') or errors[0].get('title'))
+
         selected_option = next(
             (
                 option for option in payment_options
@@ -956,6 +995,22 @@ class MobileEcommerceApiController(WebsiteSale):
         )
 
     @http.route(
+        '/mobile_api/auth/google',
+        type='jsonrpc',
+        auth='none',
+        methods=['POST'],
+        csrf=False,
+    )
+    def mobile_auth_google(self, token):
+        user, error = self._service().authenticate_google(token)
+        if error:
+            return self._format_error("Authentication Failed", error)
+
+        # Log the user in
+        request.session.authenticate(request.db, user.login, user.password)
+        return self._service().get_account_payload(user.partner_id)
+
+    @http.route(
         '/mobile_api/account',
         type='jsonrpc',
         auth='user',
@@ -1006,11 +1061,56 @@ class MobileEcommerceApiController(WebsiteSale):
         methods=['POST'],
         website=True,
     )
-    def mobile_wishlist_toggle(self, product_tmpl_id, website_id=None):
+    def mobile_wishlist_toggle(self, product_tmpl_id=None, product_id=None, website_id=None):
+        self._ensure_ecommerce_access()
+        product_tmpl_id = product_tmpl_id or product_id
+        if not product_tmpl_id:
+            raise ValidationError(_("Missing product for wishlist."))
         return self._service().toggle_wishlist(
             request.env.user.partner_id,
             product_tmpl_id,
             website_id=website_id,
+        )
+
+    @http.route(
+        '/mobile_api/device/register',
+        type='jsonrpc',
+        auth='public',
+        methods=['POST'],
+        website=True,
+    )
+    def mobile_device_register(self, token, platform):
+        partner = request.env.user.partner_id if self._is_authenticated() else False
+        return self._service().register_device(partner, token, platform)
+
+    @http.route(
+        '/mobile_api/notifications',
+        type='jsonrpc',
+        auth='user',
+        methods=['POST'],
+        website=True,
+        readonly=True,
+    )
+    def mobile_notifications(self, limit=30, unread_only=False):
+        self._ensure_ecommerce_access()
+        return self._service().get_notifications_payload(
+            request.env.user.partner_id,
+            limit=limit,
+            unread_only=unread_only,
+        )
+
+    @http.route(
+        '/mobile_api/notifications/read',
+        type='jsonrpc',
+        auth='user',
+        methods=['POST'],
+        website=True,
+    )
+    def mobile_notifications_read(self, notification_ids=None):
+        self._ensure_ecommerce_access()
+        return self._service().mark_notifications_read(
+            request.env.user.partner_id,
+            notification_ids=notification_ids,
         )
 
     @http.route(

@@ -3,10 +3,27 @@ import 'package:flutter/material.dart';
 import 'src/screens/app_shell.dart';
 import 'src/state/app_state.dart';
 import 'src/theme/app_theme.dart';
+import 'src/services/push_service.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(SynthoShopFlutterApp(appState: AppState()));
+  final appState = AppState();
+  int? lastRegisteredPartnerId;
+
+  // Initialize Push Notifications
+  await PushService.initialize(appState);
+  appState.addListener(() {
+    final partnerId = appState.account?.partner.id;
+    if (partnerId != null && partnerId != lastRegisteredPartnerId) {
+      lastRegisteredPartnerId = partnerId;
+      PushService.registerCurrentDevice(appState);
+    }
+    if (partnerId == null) {
+      lastRegisteredPartnerId = null;
+    }
+  });
+
+  runApp(SynthoShopFlutterApp(appState: appState));
 }
 
 class SynthoShopFlutterApp extends StatelessWidget {

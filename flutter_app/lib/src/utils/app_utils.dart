@@ -24,6 +24,11 @@ IconData iconForName(String value, {required bool outlined}) {
     case 'account':
     case 'person':
       return outlined ? Icons.person_outline : Icons.person;
+    case 'info':
+    case 'help':
+      return outlined ? Icons.info_outline : Icons.info;
+    case 'search':
+      return outlined ? Icons.search_outlined : Icons.search;
     case 'home':
     default:
       return outlined ? Icons.home_outlined : Icons.home;

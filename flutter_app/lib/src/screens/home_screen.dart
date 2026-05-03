@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/mobile_models.dart';
 import '../state/app_state.dart';
+import '../widgets/app_vector_icons.dart';
 import '../widgets/common.dart';
 import '../widgets/product_card.dart';
 
@@ -10,11 +11,13 @@ class HomeScreen extends StatelessWidget {
     required this.appState,
     required this.onSelectProduct,
     required this.onOpenCategory,
+    required this.onSearchProducts,
   });
 
   final AppState appState;
   final ValueChanged<int> onSelectProduct;
   final ValueChanged<int> onOpenCategory;
+  final ValueChanged<String> onSearchProducts;
 
   @override
   Widget build(BuildContext context) {
@@ -37,96 +40,77 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
-      children: <Widget>[
-        HeroCard(payload: payload, bootstrap: bootstrap),
-        const SizedBox(height: 32),
-        if ((bootstrap?.homeSections ?? <ManagedHomeSection>[]).isNotEmpty)
-          for (final section in bootstrap!.homeSections) ...<Widget>[
-            _ManagedHomeSectionWidget(
-              section: section,
-              appState: appState,
-              onSelectProduct: onSelectProduct,
+    final heroBanners = _heroBanners(payload, bootstrap);
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await appState.refreshBootstrap();
+        await appState.refreshHome();
+      },
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        children: <Widget>[
+          HomeSearchBar(onSearch: onSearchProducts),
+          const SizedBox(height: 12),
+          HeroCard(
+            payload: payload,
+            bootstrap: bootstrap,
+            banners: heroBanners,
+            onSelectProduct: onSelectProduct,
+            onOpenCategory: onOpenCategory,
+          ),
+          const SizedBox(height: 24),
+          if ((bootstrap?.homeSections ?? <ManagedHomeSection>[]).isNotEmpty)
+            for (final section in bootstrap!.homeSections.where((section) =>
+                section.sectionKind != 'hero_banners')) ...<Widget>[
+              _ManagedHomeSectionWidget(
+                section: section,
+                appState: appState,
+                onSelectProduct: onSelectProduct,
+                onOpenCategory: onOpenCategory,
+              ),
+              const SizedBox(height: 24),
+            ]
+          else if (payload != null) ...<Widget>[
+            const SectionTitle(title: 'Shop by category'),
+            const SizedBox(height: 8),
+            CategoryScroller(
+              categories: payload.categories,
               onOpenCategory: onOpenCategory,
             ),
             const SizedBox(height: 24),
-          ]
-        else if (payload != null) ...<Widget>[
-          const SectionTitle(title: 'Campaign banners'),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 260,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: payload.banners.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 16),
-              itemBuilder: (context, index) {
-                final banner = payload.banners[index];
-                return _BannerCard(
-                  banner: banner,
-                  onTap: () {
-                    if (banner.actionKind == 'product' &&
-                        banner.productTemplateId != null) {
-                      onSelectProduct(banner.productTemplateId!);
-                    } else if (banner.actionKind == 'category' &&
-                        banner.categoryId != null) {
-                      onOpenCategory(banner.categoryId!);
-                    }
-                  },
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 32),
-          const SectionTitle(title: 'Shop by category'),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: payload.categories
-                .map(
-                  (category) => ActionChip(
-                    label: Text(category.name),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    onPressed: () => onOpenCategory(category.id),
-                  ),
-                )
-                .toList(),
-          ),
-          const SizedBox(height: 32),
-          const SectionTitle(title: 'Featured products'),
-          const SizedBox(height: 8),
-          for (final product in payload.featuredProducts)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: ProductCard(
-                product: product,
-                isWished: appState.wishlistIds.contains(product.id),
-                onToggleWishlist: appState.account == null
-                    ? null
-                    : () async {
-                        await appState.toggleWishlist(product.id);
-                      },
-                onPressed: () => onSelectProduct(product.id),
+            const SectionTitle(title: 'Featured products'),
+            const SizedBox(height: 8),
+            for (final product in payload.featuredProducts)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: ProductCard(
+                  product: product,
+                  isWished: appState.wishlistIds.contains(product.id),
+                  onToggleWishlist: appState.account == null
+                      ? null
+                      : () async {
+                          await appState.toggleWishlist(product.id);
+                        },
+                  onPressed: () => onSelectProduct(product.id),
+                ),
               ),
-            ),
+          ],
         ],
-        const SizedBox(height: 20),
-        Center(
-          child: TextButton.icon(
-            onPressed: () async {
-              await appState.refreshBootstrap();
-              await appState.refreshHome();
-            },
-            icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('Refresh home'),
-          ),
-        ),
-      ],
+      ),
     );
   }
+}
+
+List<MobileBanner> _heroBanners(
+    HomePayload? payload, BootstrapPayload? bootstrap) {
+  final managedSections = bootstrap?.homeSections ?? <ManagedHomeSection>[];
+  for (final section in managedSections) {
+    if (section.sectionKind == 'hero_banners') {
+      return section.banners;
+    }
+  }
+  return payload?.banners ?? <MobileBanner>[];
 }
 
 class _ManagedHomeSectionWidget extends StatelessWidget {
@@ -203,17 +187,9 @@ class _ManagedHomeSectionWidget extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: categories
-                .map(
-                  (category) => ActionChip(
-                    label: Text(category.name),
-                    onPressed: () => onOpenCategory(category.id),
-                  ),
-                )
-                .toList(),
+          CategoryScroller(
+            categories: categories,
+            onOpenCategory: onOpenCategory,
           ),
         ],
       );
@@ -259,6 +235,62 @@ class _ManagedHomeSectionWidget extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+class CategoryScroller extends StatelessWidget {
+  const CategoryScroller({
+    super.key,
+    required this.categories,
+    required this.onOpenCategory,
+  });
+
+  final List<MobileCategory> categories;
+  final ValueChanged<int> onOpenCategory;
+
+  @override
+  Widget build(BuildContext context) {
+    if (categories.isEmpty) return const SizedBox.shrink();
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: categories
+          .map(
+            (category) => ActionChip(
+              label: Text(category.name),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              onPressed: () => onOpenCategory(category.id),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class HomeSearchBar extends StatelessWidget {
+  const HomeSearchBar({super.key, required this.onSearch});
+
+  final ValueChanged<String> onSearch;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      textInputAction: TextInputAction.search,
+      onSubmitted: (value) {
+        final query = value.trim();
+        if (query.isNotEmpty) {
+          onSearch(query);
+        }
+      },
+      decoration: InputDecoration(
+        hintText: 'Search products...',
+        prefixIcon: const Padding(
+          padding: EdgeInsets.all(14),
+          child: AppVectorIcon('search', size: 20),
+        ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 48),
+      ),
     );
   }
 }

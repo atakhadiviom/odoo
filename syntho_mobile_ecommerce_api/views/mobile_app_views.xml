@@ -106,10 +106,101 @@
                                 </list>
                             </field>
                         </page>
+                        <page string="Push Notifications">
+                            <group string="Firebase Cloud Messaging (FCM) Configuration">
+                                <field name="fcm_project_id" placeholder="e.g. syntho-shop-12345"/>
+                                <field name="fcm_service_account_json" filename="fcm_service_account_filename"/>
+                                <field name="fcm_service_account_filename" invisible="1"/>
+                            </group>
+                            <p class="text-muted">
+                                <strong>Setup Instructions:</strong><br/>
+                                1. Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a>.<br/>
+                                2. Navigate to Project Settings -> Service Accounts.<br/>
+                                3. Click "Generate new private key" and upload the JSON file here.<br/>
+                                4. Copy the "Project ID" from the settings and paste it above.
+                            </p>
+                        </page>
+                        <page string="Social Login">
+                            <group string="Google Sign-In">
+                                <field name="google_login_enabled"/>
+                                <field name="google_client_id" invisible="not google_login_enabled" placeholder="Required for Odoo backend validation"/>
+                                <field name="google_client_id_ios" invisible="not google_login_enabled"/>
+                                <field name="google_client_id_android" invisible="not google_login_enabled"/>
+                            </group>
+                            <p class="text-muted" invisible="not google_login_enabled">
+                                <strong>Google setup:</strong> Create OAuth 2.0 Client IDs in your <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a>. 
+                                Ensure the "Web application" client ID is placed in the first field for Odoo to verify mobile tokens.
+                            </p>
+                        </page>
                     </notebook>
                 </sheet>
             </form>
         </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_device_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.device.list</field>
+        <field name="model">mobile.ecommerce.device</field>
+        <field name="arch" type="xml">
+            <list string="Registered Devices" create="0">
+                <field name="partner_id"/>
+                <field name="platform"/>
+                <field name="token"/>
+                <field name="last_seen"/>
+                <button name="action_send_test_notification" type="object" string="Send Test" icon="fa-paper-plane"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_mobile_ecommerce_device" model="ir.actions.act_window">
+        <field name="name">Registered Devices</field>
+        <field name="res_model">mobile.ecommerce.device</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_mobile_ecommerce_notification_list" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.notification.list</field>
+        <field name="model">mobile.ecommerce.notification</field>
+        <field name="arch" type="xml">
+            <list string="Mobile Notifications" create="0">
+                <field name="create_date"/>
+                <field name="partner_id"/>
+                <field name="title"/>
+                <field name="notification_type"/>
+                <field name="is_read"/>
+                <field name="push_sent"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_mobile_ecommerce_notification_form" model="ir.ui.view">
+        <field name="name">mobile.ecommerce.notification.form</field>
+        <field name="model">mobile.ecommerce.notification</field>
+        <field name="arch" type="xml">
+            <form string="Mobile Notification" create="0">
+                <sheet>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="website_id"/>
+                        <field name="notification_type"/>
+                        <field name="is_read"/>
+                        <field name="read_date"/>
+                        <field name="push_sent"/>
+                    </group>
+                    <group>
+                        <field name="title"/>
+                        <field name="body"/>
+                        <field name="data_json"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mobile_ecommerce_notification" model="ir.actions.act_window">
+        <field name="name">Notifications</field>
+        <field name="res_model">mobile.ecommerce.notification</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <record id="view_mobile_ecommerce_home_section_list" model="ir.ui.view">
@@ -309,5 +400,19 @@
         parent="menu_mobile_ecommerce_root"
         action="action_mobile_ecommerce_content_page"
         sequence="40"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_devices"
+        name="Devices"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_device"
+        sequence="50"
+    />
+    <menuitem
+        id="menu_mobile_ecommerce_notifications"
+        name="Notifications"
+        parent="menu_mobile_ecommerce_root"
+        action="action_mobile_ecommerce_notification"
+        sequence="60"
     />
 </odoo>

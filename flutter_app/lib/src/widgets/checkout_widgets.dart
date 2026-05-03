@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import '../models/mobile_models.dart';
+import 'app_vector_icons.dart';
 
 class CheckoutStepHeader extends StatelessWidget {
-  const CheckoutStepHeader({super.key, required this.step});
+  const CheckoutStepHeader({
+    super.key,
+    required this.step,
+    this.onBack,
+    this.backLabel,
+  });
 
   final CheckoutStep step;
+  final VoidCallback? onBack;
+  final String? backLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -16,31 +24,45 @@ class CheckoutStepHeader extends StatelessWidget {
       CheckoutStep.result: 'Result',
     };
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: CheckoutStep.values.map((item) {
-          final selected = item.index <= step.index;
-          final isCurrent = item == step;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Chip(
-              side: isCurrent
-                  ? BorderSide(color: Theme.of(context).colorScheme.primary)
-                  : null,
-              backgroundColor: selected
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Theme.of(context).colorScheme.surfaceVariant,
-              label: Text(
-                labels[item]!,
-                style: TextStyle(
-                  fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        if (onBack != null) ...<Widget>[
+          TextButton.icon(
+            onPressed: onBack,
+            icon: const AppVectorIcon('back', size: 18),
+            label: Text(backLabel ?? 'Back'),
+          ),
+          const SizedBox(height: 8),
+        ],
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: CheckoutStep.values.map((item) {
+              final selected = item.index <= step.index;
+              final isCurrent = item == step;
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: Chip(
+                  side: isCurrent
+                      ? BorderSide(color: Theme.of(context).colorScheme.primary)
+                      : null,
+                  backgroundColor: selected
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.surfaceVariant,
+                  label: Text(
+                    labels[item]!,
+                    style: TextStyle(
+                      fontWeight:
+                          isCurrent ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -295,7 +317,7 @@ class CheckoutErrorList extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('• ',
+                    const Text('- ',
                         style: TextStyle(fontWeight: FontWeight.bold)),
                     Expanded(child: Text(error.message ?? error.title)),
                   ],

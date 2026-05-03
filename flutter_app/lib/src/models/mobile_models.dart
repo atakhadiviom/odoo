@@ -23,6 +23,8 @@ class WebsiteInfo {
   WebsiteInfo({
     required this.id,
     required this.name,
+    required this.companyName,
+    required this.companyLogoUrl,
     required this.currency,
     required this.baseUrl,
   });
@@ -31,6 +33,8 @@ class WebsiteInfo {
     return WebsiteInfo(
       id: json['id'] as int,
       name: (json['name'] ?? '') as String,
+      companyName: (json['company_name'] ?? '') as String,
+      companyLogoUrl: _stringOrNull(json['company_logo_url']),
       currency: (json['currency'] ?? 'USD') as String,
       baseUrl: (json['base_url'] ?? '') as String,
     );
@@ -38,6 +42,8 @@ class WebsiteInfo {
 
   final int id;
   final String name;
+  final String companyName;
+  final String? companyLogoUrl;
   final String currency;
   final String baseUrl;
 }
@@ -118,6 +124,7 @@ class MobileProduct {
     required this.description,
     required this.shortDescription,
     required this.imageUrl,
+    required this.extraImageUrls,
     required this.websiteUrl,
     required this.categoryIds,
     required this.categoryNames,
@@ -140,6 +147,10 @@ class MobileProduct {
       description: (json['description'] ?? '') as String,
       shortDescription: (json['short_description'] ?? '') as String,
       imageUrl: (json['image_url'] ?? '') as String,
+      extraImageUrls:
+          (json['extra_image_urls'] as List<dynamic>? ?? <dynamic>[])
+              .map((item) => item as String)
+              .toList(),
       websiteUrl: (json['website_url'] ?? '') as String,
       categoryIds: (json['category_ids'] as List<dynamic>? ?? <dynamic>[])
           .map((item) => item as int)
@@ -167,6 +178,7 @@ class MobileProduct {
   final String description;
   final String shortDescription;
   final String imageUrl;
+  final List<String> extraImageUrls;
   final String websiteUrl;
   final List<int> categoryIds;
   final List<String> categoryNames;
@@ -298,6 +310,7 @@ class ManagedMobileApp {
     required this.appScheme,
     required this.returnUrl,
     required this.logoUrl,
+    required this.configuredLogoUrl,
     required this.splashImageUrl,
     required this.primaryColor,
     required this.accentColor,
@@ -309,6 +322,10 @@ class ManagedMobileApp {
     required this.allowGuestCheckout,
     required this.wishlistEnabled,
     required this.searchEnabled,
+    required this.googleLoginEnabled,
+    required this.googleClientId,
+    required this.googleClientIdIos,
+    required this.googleClientIdAndroid,
     required this.versionNotes,
   });
 
@@ -323,6 +340,7 @@ class ManagedMobileApp {
       returnUrl:
           (json['return_url'] ?? 'synthoshop://checkout/result') as String,
       logoUrl: _stringOrNull(json['logo_url']),
+      configuredLogoUrl: _stringOrNull(json['configured_logo_url']),
       splashImageUrl: _stringOrNull(json['splash_image_url']),
       primaryColor: (json['primary_color'] ?? '#C06E52') as String,
       accentColor: (json['accent_color'] ?? '#142633') as String,
@@ -334,6 +352,10 @@ class ManagedMobileApp {
       allowGuestCheckout: json['allow_guest_checkout'] as bool? ?? true,
       wishlistEnabled: json['wishlist_enabled'] as bool? ?? true,
       searchEnabled: json['search_enabled'] as bool? ?? true,
+      googleLoginEnabled: json['google_login_enabled'] as bool? ?? false,
+      googleClientId: _stringOrNull(json['google_client_id']),
+      googleClientIdIos: _stringOrNull(json['google_client_id_ios']),
+      googleClientIdAndroid: _stringOrNull(json['google_client_id_android']),
       versionNotes: _stringOrNull(json['version_notes']),
     );
   }
@@ -346,6 +368,7 @@ class ManagedMobileApp {
   final String appScheme;
   final String returnUrl;
   final String? logoUrl;
+  final String? configuredLogoUrl;
   final String? splashImageUrl;
   final String primaryColor;
   final String accentColor;
@@ -357,6 +380,10 @@ class ManagedMobileApp {
   final bool allowGuestCheckout;
   final bool wishlistEnabled;
   final bool searchEnabled;
+  final bool googleLoginEnabled;
+  final String? googleClientId;
+  final String? googleClientIdIos;
+  final String? googleClientIdAndroid;
   final String? versionNotes;
 }
 
@@ -707,7 +734,10 @@ class OrderSummary {
     required this.amountUntaxed,
     required this.currency,
     required this.lines,
+    required this.needsPayment,
     this.dateOrder,
+    this.portalUrl,
+    this.accessToken,
   });
 
   factory OrderSummary.fromJson(Map<String, dynamic> json) {
@@ -722,7 +752,10 @@ class OrderSummary {
       lines: (json['lines'] as List<dynamic>? ?? <dynamic>[])
           .map((item) => CartLine.fromJson(item as Map<String, dynamic>))
           .toList(),
+      needsPayment: json['needs_payment'] as bool? ?? false,
       dateOrder: _stringOrNull(json['date_order']),
+      portalUrl: _stringOrNull(json['portal_url']),
+      accessToken: _stringOrNull(json['access_token']),
     );
   }
 
@@ -734,7 +767,10 @@ class OrderSummary {
   final double amountUntaxed;
   final String currency;
   final List<CartLine> lines;
+  final bool needsPayment;
   final String? dateOrder;
+  final String? portalUrl;
+  final String? accessToken;
 }
 
 class AccountPayload {
@@ -757,6 +793,67 @@ class AccountPayload {
   final PartnerSummary partner;
   final List<OrderSummary> orders;
   final int ordersCount;
+}
+
+class AppNotification {
+  AppNotification({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.type,
+    required this.data,
+    required this.isRead,
+    required this.pushSent,
+    this.createdAt,
+    this.readAt,
+  });
+
+  factory AppNotification.fromJson(Map<String, dynamic> json) {
+    return AppNotification(
+      id: _intOrNull(json['id']) ?? 0,
+      title: (json['title'] ?? '') as String,
+      body: (json['body'] ?? '') as String,
+      type: (json['type'] ?? 'info') as String,
+      data: (json['data'] as Map<String, dynamic>?) ?? <String, dynamic>{},
+      isRead: json['is_read'] as bool? ?? false,
+      pushSent: json['push_sent'] as bool? ?? false,
+      createdAt: _stringOrNull(json['created_at']),
+      readAt: _stringOrNull(json['read_at']),
+    );
+  }
+
+  final int id;
+  final String title;
+  final String body;
+  final String type;
+  final Map<String, dynamic> data;
+  final bool isRead;
+  final bool pushSent;
+  final String? createdAt;
+  final String? readAt;
+}
+
+class NotificationPayload {
+  NotificationPayload({
+    required this.items,
+    required this.unreadCount,
+  });
+
+  factory NotificationPayload.empty() {
+    return NotificationPayload(items: <AppNotification>[], unreadCount: 0);
+  }
+
+  factory NotificationPayload.fromJson(Map<String, dynamic> json) {
+    return NotificationPayload(
+      items: (json['items'] as List<dynamic>? ?? <dynamic>[])
+          .map((item) => AppNotification.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      unreadCount: _intOrNull(json['unread_count']) ?? 0,
+    );
+  }
+
+  final List<AppNotification> items;
+  final int unreadCount;
 }
 
 class CheckoutError {
@@ -1002,6 +1099,11 @@ class DeliveryMethod {
     required this.amount,
     required this.currency,
     required this.selected,
+    required this.countries,
+    required this.countryNames,
+    required this.restrictedToCountries,
+    this.shippingCountryId,
+    this.shippingCountryName,
   });
 
   factory DeliveryMethod.fromJson(Map<String, dynamic> json) {
@@ -1011,6 +1113,15 @@ class DeliveryMethod {
       amount: (json['amount'] as num?)?.toDouble() ?? 0,
       currency: (json['currency'] ?? 'USD') as String,
       selected: json['selected'] as bool? ?? false,
+      countries: (json['countries'] as List<dynamic>? ?? <dynamic>[])
+          .map((item) => CountryOption.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      countryNames: (json['country_names'] as List<dynamic>? ?? <dynamic>[])
+          .map((item) => item.toString())
+          .toList(),
+      restrictedToCountries: json['restricted_to_countries'] as bool? ?? false,
+      shippingCountryId: _intOrNull(json['shipping_country_id']),
+      shippingCountryName: _stringOrNull(json['shipping_country_name']),
     );
   }
 
@@ -1019,6 +1130,21 @@ class DeliveryMethod {
   final double amount;
   final String currency;
   final bool selected;
+  final List<CountryOption> countries;
+  final List<String> countryNames;
+  final bool restrictedToCountries;
+  final int? shippingCountryId;
+  final String? shippingCountryName;
+
+  String get countrySummary {
+    if (!restrictedToCountries || countryNames.isEmpty) {
+      return 'Available for all configured shipping countries';
+    }
+    if (countryNames.length <= 3) {
+      return 'Ships to ${countryNames.join(', ')}';
+    }
+    return 'Ships to ${countryNames.take(3).join(', ')} +${countryNames.length - 3} more';
+  }
 }
 
 class DeliveryMethodsPayload {
@@ -1028,6 +1154,7 @@ class DeliveryMethodsPayload {
     this.orderId,
     required this.amountTotal,
     required this.currency,
+    this.shippingCountry,
   });
 
   factory DeliveryMethodsPayload.fromJson(Map<String, dynamic> json) {
@@ -1044,6 +1171,12 @@ class DeliveryMethodsPayload {
       orderId: _intOrNull(json['order_id']),
       amountTotal: (json['amount_total'] as num?)?.toDouble() ?? 0,
       currency: (json['currency'] ?? 'USD') as String,
+      shippingCountry:
+          json['shipping_country'] == null || json['shipping_country'] == false
+              ? null
+              : CountryOption.fromJson(
+                  json['shipping_country'] as Map<String, dynamic>,
+                ),
     );
   }
 
@@ -1052,6 +1185,7 @@ class DeliveryMethodsPayload {
   final int? orderId;
   final double amountTotal;
   final String currency;
+  final CountryOption? shippingCountry;
 }
 
 class PaymentOption {
@@ -1063,6 +1197,9 @@ class PaymentOption {
     required this.paymentMethodCode,
     required this.paymentMethodName,
     required this.flow,
+    required this.countries,
+    required this.countryNames,
+    required this.restrictedToCountries,
   });
 
   factory PaymentOption.fromJson(Map<String, dynamic> json) {
@@ -1074,6 +1211,13 @@ class PaymentOption {
       paymentMethodCode: (json['payment_method_code'] ?? '') as String,
       paymentMethodName: (json['payment_method_name'] ?? '') as String,
       flow: (json['flow'] ?? 'redirect') as String,
+      countries: (json['countries'] as List<dynamic>? ?? <dynamic>[])
+          .map((item) => CountryOption.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      countryNames: (json['country_names'] as List<dynamic>? ?? <dynamic>[])
+          .map((item) => item.toString())
+          .toList(),
+      restrictedToCountries: json['restricted_to_countries'] as bool? ?? false,
     );
   }
 
@@ -1084,6 +1228,21 @@ class PaymentOption {
   final String paymentMethodCode;
   final String paymentMethodName;
   final String flow;
+  final List<CountryOption> countries;
+  final List<String> countryNames;
+  final bool restrictedToCountries;
+
+  String get selectionKey => '$providerId:$paymentMethodId';
+
+  String get countrySummary {
+    if (!restrictedToCountries || countryNames.isEmpty) {
+      return 'Available for all billing countries';
+    }
+    if (countryNames.length <= 3) {
+      return 'Available in ${countryNames.join(', ')}';
+    }
+    return 'Available in ${countryNames.take(3).join(', ')} +${countryNames.length - 3} more';
+  }
 }
 
 class PaymentOptionsPayload {
@@ -1093,6 +1252,7 @@ class PaymentOptionsPayload {
     this.orderId,
     required this.amountTotal,
     required this.currency,
+    this.billingCountry,
   });
 
   factory PaymentOptionsPayload.fromJson(Map<String, dynamic> json) {
@@ -1106,6 +1266,12 @@ class PaymentOptionsPayload {
       orderId: _intOrNull(json['order_id']),
       amountTotal: (json['amount_total'] as num?)?.toDouble() ?? 0,
       currency: (json['currency'] ?? 'USD') as String,
+      billingCountry:
+          json['billing_country'] == null || json['billing_country'] == false
+              ? null
+              : CountryOption.fromJson(
+                  json['billing_country'] as Map<String, dynamic>,
+                ),
     );
   }
 
@@ -1114,6 +1280,7 @@ class PaymentOptionsPayload {
   final int? orderId;
   final double amountTotal;
   final String currency;
+  final CountryOption? billingCountry;
 }
 
 class CheckoutState {

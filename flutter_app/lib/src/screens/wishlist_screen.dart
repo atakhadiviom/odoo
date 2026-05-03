@@ -71,7 +71,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.favorite_border_rounded, size: 80, opacity: 0.2),
+            Icon(
+              Icons.favorite_border,
+              size: 80,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+            ),
             const SizedBox(height: 24),
             Text(
               'Your Wishlist',
@@ -126,7 +130,8 @@ class _WishlistScreenState extends State<WishlistScreen> {
             padding: EdgeInsets.only(top: 40),
             child: MessageCard(
               title: 'Your wishlist is empty',
-              message: 'Tap the heart icon on any product to save it for later.',
+              message:
+                  'Tap the heart icon on any product to save it for later.',
             ),
           )
         else
