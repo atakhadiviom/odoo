@@ -1,0 +1,72 @@
+<section class="container py-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6">
+            <h1 class="display-4 font-weight-bold mb-3">Thawani Payment</h1>
+            <p class="lead text-muted mb-4">
+                Accept Thawani Pay checkout payments from Odoo eCommerce and confirm
+                transactions only after the checkout session is verified.
+            </p>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="border rounded p-3 h-100">
+                        <h3 class="h5 mb-2">Hosted checkout</h3>
+                        <p class="mb-0 text-muted">Redirect customers to Thawani Pay for card payment.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="border rounded p-3 h-100">
+                        <h3 class="h5 mb-2">Verified return</h3>
+                        <p class="mb-0 text-muted">Checks the Thawani session before Odoo confirms payment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <img class="img-fluid rounded border" src="banner.png" alt="Thawani payment overview"/>
+        </div>
+    </div>
+</section>
+
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-4">Key Features</h2>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <div class="border rounded p-4 h-100">
+                <h3 class="h5">Payment provider setup</h3>
+                <p class="text-muted mb-0">Adds Thawani as an Odoo payment provider with secure credential fields.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="border rounded p-4 h-100">
+                <h3 class="h5">OMR checkout session</h3>
+                <p class="text-muted mb-0">Creates Thawani checkout sessions with order reference and total amount.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="border rounded p-4 h-100">
+                <h3 class="h5">Odoo status update</h3>
+                <p class="text-muted mb-0">Maps verified Thawani payment statuses to Odoo transaction states.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-4">
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <img class="img-fluid rounded border" src="provider_settings.png" alt="Thawani provider configuration"/>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <img class="img-fluid rounded border" src="payment_flow.png" alt="Thawani checkout flow"/>
+        </div>
+    </div>
+</section>
+
+<section class="container py-4">
+    <h2 class="h3 font-weight-bold mb-3">External Service Notice</h2>
+    <p class="text-muted">
+        This module sends checkout data to Thawani Pay, including the transaction reference,
+        order total, customer name, and sale order reference when available. A valid Thawani
+        merchant account, secret key, and publishable key are required.
+    </p>
+</section>
