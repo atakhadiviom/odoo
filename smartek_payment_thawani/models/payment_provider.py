@@ -4,7 +4,7 @@ import requests
 
 from odoo import _, fields, models
 from odoo.exceptions import ValidationError
-from odoo.addons.payment_thawani import const
+from odoo.addons.smartek_payment_thawani import const
 
 _logger = logging.getLogger(__name__)
 
