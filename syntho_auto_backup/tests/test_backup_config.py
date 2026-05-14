@@ -21,7 +21,7 @@ class TestBackupConfig(TransactionCase):
 
     @patch('os.makedirs')
     @patch('subprocess.run')
-    @patch('odoo.service.db.dump_db')
+    @patch('syntho_auto_backup.models.backup_config.dump_db')
     @patch('builtins.open', new_callable=mock_open)
     def test_schedule_backup(self, mock_file, mock_dump_db, mock_run, mock_makedirs):
         self.config_model.schedule_backup()

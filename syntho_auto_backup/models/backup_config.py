@@ -1,6 +1,6 @@
-import odoo
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from odoo.service.db import dump_db
 import os
 import datetime
 import subprocess
@@ -58,7 +58,7 @@ class BackupConfig(models.Model):
                     # For zip format, use odoo built-in db dump_db
                     try:
                         with open(filepath, 'wb') as f:
-                            odoo.service.db.dump_db(db_name, f, 'zip')
+                            dump_db(db_name, f, 'zip')
                         _logger.info(f"Successfully backed up {db_name} to {filepath} in zip format")
                     except Exception as e:
                         _logger.error(f"Error during odoo dump_db for {db_name}: {e}")
