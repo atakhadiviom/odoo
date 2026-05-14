@@ -1,8 +1,11 @@
 import logging
 import pprint
 
+import werkzeug
+
 from odoo import http
 from odoo.http import request
+from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +21,11 @@ class ThawaniController(http.Controller):
         csrf=False,
         save_session=False,
     )
-    def thawani_return_from_redirect(self, reference="", success=True):
+    def thawani_return_from_redirect(self, reference="", success=True, **kwargs):
+        access_token = kwargs.get("access_token")
+        if not access_token or not payment_utils.check_access_token(access_token, reference, str(success)):
+            raise werkzeug.exceptions.Forbidden()
+
         data = {"reference": reference, "success": success}
         _logger.info("received Thawani return data : %s", pprint.pformat(data))
         tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("thawani", data)
