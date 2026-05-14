@@ -1,5 +1,4 @@
 import logging
-import pprint
 
 from odoo import http
 from odoo.http import request
@@ -20,10 +19,10 @@ class ThawaniController(http.Controller):
     )
     def thawani_return_from_redirect(self, reference="", success=True):
         data = {"reference": reference, "success": success}
-        _logger.info("received Thawani return data : %s", pprint.pformat(data))
+        _logger.info("received Thawani return data for reference: %s", data.get("reference"))
         tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("thawani", data)
         if tx_sudo:
             verified_data = tx_sudo._thawani_retrieve_session_data()
-            _logger.info("verified Thawani session data : %s", pprint.pformat(verified_data))
+            _logger.info("verified Thawani session data for reference: %s", verified_data.get("client_reference_id"))
             tx_sudo._process("thawani", verified_data)
         return request.redirect("/payment/status")
