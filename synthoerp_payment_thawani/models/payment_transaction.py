@@ -1,5 +1,4 @@
 import logging
-import pprint
 
 from urllib.parse import urljoin as url_join
 
@@ -32,7 +31,7 @@ class PaymentTransaction(models.Model):
 
         payment_session_payload = self._thawani_prepare_payment_session_request_payload()
         _logger.info(
-            "sending '/checkout/session' request for link creation:\n%s", pprint.pformat(payment_session_payload)
+            "sending '/checkout/session' request for link creation for transaction reference: %s", self.reference
         )
         session_data = provider._thawani_make_request("/checkout/session", payload=payment_session_payload)
         if session_data["success"]:
