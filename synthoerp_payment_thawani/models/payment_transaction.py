@@ -59,8 +59,10 @@ class PaymentTransaction(models.Model):
 
         provider = self.provider_id
         return_url = url_join(provider.get_base_url(), ThawaniController.return_url)
-        success_url = return_url + "%s/True" % self.reference
-        failure_url = return_url + "%s/False" % self.reference
+
+        success_url = f"{return_url}{self.reference}/True?access_token={payment_utils.generate_access_token(self.reference, 'True')}"
+        failure_url = f"{return_url}{self.reference}/False?access_token={payment_utils.generate_access_token(self.reference, 'False')}"
+
         omr = self.env['res.currency'].search([('name', '=', 'OMR')], limit=1)
         if not omr:
             raise ValidationError(_("Thawani requires the OMR currency to be active."))
