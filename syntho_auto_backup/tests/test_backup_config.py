@@ -1,4 +1,5 @@
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import ValidationError
 from unittest.mock import patch, mock_open
 
 class TestBackupConfig(TransactionCase):
@@ -41,3 +42,12 @@ class TestBackupConfig(TransactionCase):
 
         # Verify open was called for 'zip' format file writing
         self.assertTrue(mock_file.called)
+
+    def test_invalid_folder_path(self):
+        """Test that an invalid folder path raises a ValidationError."""
+        with self.assertRaises(ValidationError):
+            self.config_model.create({
+                'name': 'Test Invalid Folder',
+                'folder': '/invalid_path/backup',
+                'format': 'zip'
+            })
