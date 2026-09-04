@@ -45,12 +45,12 @@ class BackupConfig(models.Model):
                 db_name = self.env.cr.dbname
                 date_str = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
                 filename = f"{db_name}_{date_str}.{config.format}"
-                filepath = os.path.join(config.folder, filename)
+                filepath = os.path.abspath(os.path.join(config.folder, filename))
 
                 if config.format == 'dump':
                     # Use pg_dump for custom dump format
                     try:
-                        subprocess.run(['pg_dump', '--format=c', f'--file={filepath}', db_name], check=True)
+                        subprocess.run(['pg_dump', '--format=c', f'--file={filepath}', '--', db_name], check=True)
                         _logger.info(f"Successfully backed up {db_name} to {filepath}")
                     except subprocess.CalledProcessError as e:
                         _logger.error(f"Error during pg_dump for {db_name}: {e}")

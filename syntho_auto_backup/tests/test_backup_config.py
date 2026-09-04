@@ -34,6 +34,9 @@ class TestBackupConfig(TransactionCase):
         args, kwargs = mock_run.call_args
         self.assertEqual(args[0][0], 'pg_dump')
         self.assertTrue(kwargs.get('check'))
+        self.assertIn('--', args[0])
+        file_arg = next(arg for arg in args[0] if arg.startswith('--file='))
+        self.assertTrue(file_arg.startswith('--file=/'))
 
         # Verify odoo.service.db.dump_db was called for 'zip' format
         self.assertTrue(mock_dump_db.called)
